@@ -68,10 +68,14 @@
 /* Espaciado general del contenido principal */
 main {
     padding: 40px;
+    flex: 1;
 }
 
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 section {
@@ -96,4 +100,34 @@ p {
     color: #333;
     text-decoration: none;
     border-radius: 8px;
+}
+
+/* Nombre de la clínica en el pie de página */
+.nombre-clinica {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+/* Estilos del pie de página */
+.footer {
+    padding: 12px 25px;
+    background-color: #cef6f3;
+    border-top: 2px solid #d9a9c2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.footer .nombre-clinica {
+    font-size: 14px;
 }
