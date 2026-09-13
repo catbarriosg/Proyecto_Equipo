@@ -6,15 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Clínica Agenda Médica</title>
-    
+
+    <!-- Conecta la página principal con el archivo CSS del proyecto -->
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 
 <body>
+    <!-- Encabezado común del sitio -->
+    <header class="header">
 
-    <header>
-        <nav>
-            <ul>
+        <!-- Menú principal de navegación -->
+        <nav class="navbar">
+            <ul class="menu">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="paginas/quienes-somos.html">Quiénes somos</a></li>
                 <li><a href="paginas/especialidades.html">Especialidades</a></li>
@@ -24,10 +27,34 @@
                 <li><a href="">Iniciar sesión</a></li>
             </ul>
         </nav>
+
+        <!-- Segunda fila del encabezado -->
+        <section class="header-inferior">
+
+            <!-- Espacio reservado para el logo de la clínica -->
+            <a href="index.html" class="logo">
+                Clínica Agenda Médica
+            </a>
+
+            <!-- Acciones disponibles en el encabezado -->
+            <section class="acciones-header">
+
+                <button type="button" aria-label="Buscar">🔍</button>
+
+                <button type="button" aria-label="Perfil">👤</button>
+
+                <button type="button" aria-label="Abrir menú">☰</button>
+
+            </section>
+
+        </section>
+
     </header>
 
+    <!-- Contenido principal de la página de inicio -->
     <main>
 
+        <!-- Sección de bienvenida y acceso a la agenda médica -->
         <section>
             <h1>Clínica Agenda Médica</h1>
 
@@ -42,6 +69,7 @@
 
     </main>
 
+    <!-- Pie de página común del sitio -->
     <footer>
     </footer>
 

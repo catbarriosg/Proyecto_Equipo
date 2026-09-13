@@ -1,30 +1,71 @@
+/* Configuración general para todos los elementos */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-header {
+/* Estilos principales del encabezado */
+.header {
     background-color: #cef6f3;
-    padding: 25px;
-    border-bottom: 2px solid #d9a9c2;
-
+    border-bottom: 2px solid #f698c9;
 }
 
-nav ul {
+/* Barra de navegación superior */
+.navbar {
+    width: 100%;
+}
+
+/* Lista de opciones del menú */
+.menu {
     list-style: none;
     display: flex;
-    justify-content: center;
-    gap: 25px;
+    justify-content: flex-start;
+    gap: 35px;
+    padding: 15px 25px;
 }
 
-nav a {
+/* Segunda fila del encabezado */
+.header-inferior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+    background-color: #f9fcf0;
+
+}
+
+/* Espacio reservado para el logo de la clínica */
+.logo {
     text-decoration: none;
     color: #525151;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Acciones disponibles en el encabezado */
+.acciones-header {
+    display: flex;
+    gap: 15px;
+}
+
+/* Botones de búsqueda, perfil y menú */
+.acciones-header button {
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Estilos de los enlaces del menú */
+.menu a {
+    text-decoration: none;
+    color: #070707;
     font-weight: bold;
     transition: 0.3s;
 }
 
+/* Espaciado general del contenido principal */
 main {
     padding: 40px;
 }
@@ -47,6 +88,7 @@ p {
     line-height: 1.6;
 }
 
+/* Estilo del botón principal */
 .boton {
     display: inline-block;
     padding: 12px 25px;

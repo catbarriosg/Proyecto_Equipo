@@ -7,18 +7,55 @@
 
     <title>Quiénes somos</title>
 
+    <!-- Conecta esta página con el archivo CSS general del proyecto -->
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
 
 <body>
 
-    <header>
-        <nav>
+    <!-- Encabezado común del sitio -->
+    <header class="header">
+
+        <!-- Menú principal de navegación -->
+        <nav class="navbar">
+            <ul class="menu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="quienes-somos.html">Quiénes somos</a></li>
+                <li><a href="especialidades.html">Especialidades</a></li>
+                <li><a href="medicos.html">Médicos</a></li>
+                <li><a href="agendar-hora.html">Agendar hora</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
         </nav>
+
+        <!-- Segunda fila del encabezado -->
+        <section class="header-inferior">
+
+            <!-- Espacio reservado para el logo de la clínica -->
+            <a href="../index.html" class="logo">
+                Clínica Agenda Médica
+            </a>
+
+            <!-- Acciones disponibles en el encabezado -->
+            <section class="acciones-header">
+
+                <button type="button" aria-label="Buscar">🔍</button>
+
+                <button type="button" aria-label="Perfil">👤</button>
+
+                <button type="button" aria-label="Abrir menú">☰</button>
+
+            </section>
+
+        </section>
+
     </header>
 
+    <!-- Contenido principal de la página -->
     <main>
 
+        <!-- Sección con información sobre la clínica -->
         <section>
             <h1>Quiénes somos</h1>
 
@@ -36,7 +73,7 @@
                 orientados a brindar una atención oportuna y personalizada.
             </p>
 
-            <h1>Nuestro compromiso</h1>
+            <h2>Nuestro compromiso</h2>
 
 
             <p>
@@ -48,7 +85,7 @@
         </section>
 
     </main>
-
+    <!-- Pie de página común del sitio -->
     <footer>
     </footer>
 
