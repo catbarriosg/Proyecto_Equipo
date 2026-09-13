@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+header {
+    background-color: #cef6f3;
+    padding: 25px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #525151;
+    font-weight: bold;
+}
+main {
+    padding: 40px;
+}
+
+section {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 30px;
+}
+
+.boton {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #5df874;
+    color: #333;
+    text-decoration: none;
+    border-radius: 8px;
+}
