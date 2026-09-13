@@ -3,9 +3,12 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 header {
     background-color: #cef6f3;
     padding: 25px;
+    border-bottom: 2px solid #d9a9c2;
+
 }
 
 nav ul {
@@ -19,9 +22,15 @@ nav a {
     text-decoration: none;
     color: #525151;
     font-weight: bold;
+    transition: 0.3s;
 }
+
 main {
     padding: 40px;
+}
+
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
 }
 
 section {
@@ -30,10 +39,12 @@ section {
 
 h1 {
     margin-bottom: 20px;
+    font-size: 32px;
 }
 
 p {
     margin-bottom: 30px;
+    line-height: 1.6;
 }
 
 .boton {
