@@ -291,3 +291,78 @@ main h1 {
     font-size: 13px;
     font-style: italic;
 }
+
+
+/* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
+@media (max-width: 1024px) {
+
+    /* Reduce un poco el logo para dar más espacio al menú */
+    .logo img {
+        width: 160px;
+    }
+
+    /* Achica levemente el espacio entre links del menú */
+    .menu {
+        gap: 20px;
+        padding: 15px;
+    }
+}
+
+
+/* RESPONSIVE - CELULAR (pantallas hasta 600px)*/
+@media (max-width: 600px) {
+
+    /* El menú pasa de horizontal a apilado en columna */
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    /* Encabezado inferior también se apila (logo arriba, botones abajo) */
+    .header-inferior {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .logo img {
+        width: 140px;
+    }
+
+    /* Menos padding general en el contenido principal */
+    main {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    /* Imagen circular de Inicio más pequeña en celular */
+    main img {
+        width: 200px;
+        height: 200px;
+    }
+
+    /* El footer pasa de fila a columna y se centra */
+    .footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    /* El formulario de agendamiento usa menos padding en celular */
+    .formulario-agenda {
+        padding: 20px;
+        margin: 20px 15px;
+    }
+
+    /* La ventana emergente (modal) se ajusta al ancho disponible */
+    .contenido-modal {
+        width: 90%;
+        max-width: 400px;
+        padding: 20px;
+    }
+}
