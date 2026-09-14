@@ -1,5 +1,7 @@
 // Espera a que la página termine de cargar
 document.addEventListener("DOMContentLoaded", function () {
+    
+//formulario agendar hora médica
 
     const formulario = document.getElementById("formulario-agenda");
 
