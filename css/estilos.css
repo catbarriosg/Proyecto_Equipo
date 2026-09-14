@@ -12,8 +12,9 @@
 }
 
 /* Barra de navegación superior */
-.navbar {
+.barra-navegacion {
     width: 100%;
+    padding: 0;
 }
 
 /* Lista de opciones del menú */
@@ -23,6 +24,7 @@
     justify-content: flex-start;
     gap: 35px;
     padding: 15px 25px;
+    margin: 0;
 }
 
 /* Segunda fila del encabezado */
@@ -157,4 +159,79 @@ main img {
     margin: 25px auto;
     border-radius: 50%;
     border: 8px solid #7dd3e8;
+}
+
+/* Contenedor del formulario de agendamiento */
+.formulario-agenda {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Cada campo del formulario */
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+/* Texto que identifica cada campo */
+.campo-formulario label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Campos donde el usuario selecciona o escribe información */
+.campo-formulario select,
+.campo-formulario input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b8dfe3;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+/* Efecto visual al seleccionar un campo */
+.campo-formulario select:focus,
+.campo-formulario input:focus {
+    outline: none;
+    border-color: #7dd3e8;
+    box-shadow: 0 0 5px rgba(125, 211, 232, 0.5);
+}
+
+/* Botón principal del formulario */
+.formulario-agenda .boton {
+    border: none;
+    cursor: pointer;
+}
+
+/* Centra el título de la página */
+main h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Estilo del botón para confirmar la hora */
+.formulario-agenda .boton {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    background-color: #1976D2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Cambio visual al pasar el mouse sobre el botón */
+.formulario-agenda .boton:hover {
+    opacity: 0.85;
 }

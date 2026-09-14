@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Agendar hora | Clínica Agenda Médica</title>
+
+    <link rel="stylesheet" href="../css/estilos.css">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <nav class="barra-navegacion">
+            <ul class="menu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="quienes-somos.html">Quiénes somos</a></li>
+                <li><a href="especialidades.html">Especialidades</a></li>
+                <li><a href="medicos.html">Médicos</a></li>
+                <li><a href="agendar-hora.html">Agendar hora</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+        </nav>
+
+        <section class="header-inferior">
+
+            <a href="../index.html" class="logo">
+                <img src="../img/logo.png" alt="Clínica Agenda Médica">
+            </a>
+
+            <section class="acciones-header">
+                <button type="button">🔍</button>
+                <button type="button">🔔</button>
+                <button type="button">👤</button>
+            </section>
+
+        </section>
+
+    </header>
+
+    <main>
+
+        <h1>Agendar hora médica</h1>
+
+        <section class="formulario-agenda">
+
+            <form id="formulario-agenda">
+
+                <section class="campo-formulario">
+                    <!-- Permite seleccionar la especialidad médica -->
+                    <label for="especialidad">Especialidad</label>
+                    <select id="especialidad" name="especialidad">
+                        <option value="">Selecciona una especialidad</option>
+                        <option value="medicina-general">Medicina General</option>
+                        <option value="pediatria">Pediatría</option>
+                        <option value="cardiologia">Cardiología</option>
+                        <option value="dermatologia">Dermatología</option>
+                    </select>
+                </section>
+
+                <section class="campo-formulario">
+                    <!-- Permite seleccionar el médico disponible -->
+                    <label for="medico">Médico</label>
+                    <select id="medico" name="medico">
+                        <option value="">Selecciona un médico</option>
+                        <option value="dr-gonzalez">Dr. González</option>
+                        <option value="dra-martinez">Dra. Martínez</option>
+                        <option value="dr-rojas">Dr. Rojas</option>
+                        <option value="dra-soto">Dra. Soto</option>
+                    </select>
+                </section>
+
+                <section class="campo-formulario">
+                    <!-- Permite seleccionar la fecha de la atención -->
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha">
+                </section>
+
+                <section class="campo-formulario">
+                    <!-- Permite seleccionar la hora de la atención -->
+                    <label for="hora">Hora</label>
+                    <input type="time" id="hora" name="hora">
+                </section>
+
+                <button type="submit" class="boton">Confirmar hora</button>
+
+                <p id="mensaje"></p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+
+    </footer>
+
+    <!-- Conexión con JavaScript -->
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
