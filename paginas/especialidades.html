@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Especialidades</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Conecta esta página con el archivo CSS del proyecto -->
+    <!-- CSS general del proyecto -->
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
 
@@ -55,41 +57,95 @@
     <!-- Contenido principal de la página -->
     <main>
 
-        <!-- Sección donde se presentan las especialidades médicas -->
-        <section>
+        <section class="especialidades-hero container">
+
+            <span class="etiqueta-seccion">ATENCIÓN MÉDICA</span>
+
             <h1>Especialidades médicas</h1>
 
             <p>
-                Conoce las especialidades médicas disponibles
-                en nuestra clínica.
-            </p>
-            <h2>Medicina General</h2>
-            <p>
-                Atención médica integral para la prevención,
-                diagnóstico y tratamiento de distintas condiciones de salud.
+                Encuentra la atención que necesitas y conoce las especialidades
+                disponibles en Clínica Agenda Médica.
             </p>
 
-            <h2>Pediatría</h2>
-            <p>
-                Atención médica especializada para niños y adolescentes.
-            </p>
+        </section>
 
-            <h2>Ginecología</h2>
-            <p>
-                Atención y cuidado de la salud de la mujer.
-            </p>
 
-            <h2>Cardiología</h2>
-            <p>
-                Prevención, diagnóstico y tratamiento de enfermedades
-                relacionadas con el corazón y el sistema cardiovascular.
-            </p>
+        <section class="especialidades-lista container">
 
-            <h2>Traumatología</h2>
-            <p>
-                Atención de lesiones y enfermedades relacionadas
-                con huesos, articulaciones y músculos.
-            </p>
+            <section class="row g-4">
+
+                <article class="col-md-4">
+                    <section class="especialidad-card">
+                        <span class="icono-especialidad">🩺</span>
+                        <h2>Medicina General</h2>
+                        <p>
+                            Atención médica integral para la prevención,
+                            diagnóstico y tratamiento de distintas condiciones de salud.
+                        </p>
+                        <a href="medicos.html" class="boton">Ver profesionales</a>
+                        <a href="agendar-hora.html" class="enlace-agenda">Agendar hora</a>
+                    </section>
+                </article>
+
+
+                <article class="col-md-4">
+                    <section class="especialidad-card">
+                        <span class="icono-especialidad">👶</span>
+                        <h2>Pediatría</h2>
+                        <p>
+                            Atención médica especializada para niños y adolescentes,
+                            acompañando su crecimiento y desarrollo.
+                        </p>
+                        <a href="medicos.html" class="boton">Ver profesionales</a>
+                        <a href="agendar-hora.html" class="enlace-agenda">Agendar hora</a>
+                    </section>
+                </article>
+
+
+                <article class="col-md-4">
+                    <section class="especialidad-card">
+                        <span class="icono-especialidad">🌸</span>
+                        <h2>Ginecología</h2>
+                        <p>
+                            Atención y cuidado integral de la salud de la mujer
+                            en las distintas etapas de su vida.
+                        </p>
+                        <a href="medicos.html" class="boton">Ver profesionales</a>
+                        <a href="agendar-hora.html" class="enlace-agenda">Agendar hora</a>
+                    </section>
+                </article>
+
+
+                <article class="col-md-4">
+                    <section class="especialidad-card">
+                        <span class="icono-especialidad">❤️</span>
+                        <h2>Cardiología</h2>
+                        <p>
+                            Prevención, diagnóstico y tratamiento de enfermedades
+                            relacionadas con el corazón y el sistema cardiovascular.
+                        </p>
+                        <a href="medicos.html" class="boton">Ver profesionales</a>
+                        <a href="agendar-hora.html" class="enlace-agenda">Agendar hora</a>
+                    </section>
+                </article>
+
+
+                <article class="col-md-4">
+                    <section class="especialidad-card">
+                        <span class="icono-especialidad">🦴</span>
+                        <h2>Traumatología</h2>
+                        <p>
+                            Atención de lesiones y enfermedades relacionadas
+                            con huesos, articulaciones y músculos.
+                        </p>
+                        <a href="medicos.html" class="boton">Ver profesionales</a>
+                        <a href="agendar-hora.html" class="enlace-agenda">Agendar hora</a>
+                    </section>
+                </article>
+
+            </section>
+
         </section>
 
     </main>

@@ -7,7 +7,9 @@
 
     <title>Quiénes somos</title>
 
-    <!-- Conecta esta página con el archivo CSS general del proyecto -->
+    <!--  Conexion Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--  CSS general del proyecto -->
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
 
@@ -55,31 +57,165 @@
     <!-- Contenido principal de la página -->
     <main>
 
-        <!-- Sección con información sobre la clínica -->
-        <section>
-            <h1>Quiénes somos</h1>
+        <!-- Presentación principal -->
+        <section class="hero-quienes container">
 
-            <p>
-                Conoce nuestra clínica, nuestro equipo y el compromiso
-                que tenemos con nuestros pacientes.
-            </p>
-            <p>
-                Somos una clínica comprometida con entregar una atención
-                médica cercana, profesional y de calidad a nuestros pacientes.
-            </p>
+            <section class="hero-quienes-texto">
 
-            <p>
-                Contamos con profesionales de distintas especialidades,
-                orientados a brindar una atención oportuna y personalizada.
-            </p>
+                <span class="etiqueta-seccion">CLÍNICA AGENDA MÉDICA</span>
 
-            <h2>Nuestro compromiso</h2>
+                <h1>Quiénes somos</h1>
+
+                <p>
+                    Trabajamos cada día para entregar una atención médica
+                    cercana, profesional y de calidad, poniendo a nuestros
+                    pacientes en el centro de cada experiencia.
+                </p>
+
+                <a href="agendar-hora.html" class="boton">
+                    Agenda tu hora
+                </a>
+
+            </section>
+
+            <section class="hero-quienes-imagen">
+                <img src="../img/equipo_clinica.png" alt="Equipo de profesionales de Clínica Agenda Médica">
+            </section>
+
+        </section>
 
 
-            <p>
-                Nuestro objetivo es facilitar el acceso a la atención médica
-                mediante una gestión de horas sencilla y clara para nuestros pacientes.
-            </p>
+        <!-- Nuestra clínica -->
+        <section class="bloque-informacion container">
+
+            <section class="bloque-texto">
+
+                <span class="etiqueta-seccion">SOBRE NOSOTROS</span>
+
+                <h2>Nuestra clínica</h2>
+
+                <p>
+                    En Clínica Agenda Médica contamos con profesionales de
+                    distintas especialidades, comprometidos con entregar
+                    una atención oportuna y personalizada.
+                </p>
+
+                <p>
+                    Nuestro sistema de agenda médica busca facilitar el acceso
+                    a la atención, permitiendo que nuestros pacientes puedan
+                    encontrar profesionales, revisar sus horas disponibles
+                    y gestionar sus reservas de manera sencilla.
+                </p>
+
+            </section>
+
+            <section class="bloque-imagen">
+                <img src="../img/consulta_clinica.png" alt="Profesional atendiendo a un paciente">
+            </section>
+
+        </section>
+
+
+        <!-- Misión y visión -->
+        <section class="mision-vision">
+
+            <section class="container">
+
+                <span class="etiqueta-seccion">NUESTRO PROPÓSITO</span>
+
+                <h2>Misión y visión</h2>
+
+                <section class="row g-4 mt-3">
+
+                    <article class="col-md-6">
+
+                        <section class="tarjeta-institucional">
+
+                            <span class="icono-institucional">🎯</span>
+
+                            <h3>Nuestra misión</h3>
+
+                            <p>
+                                Entregar atención médica cercana, oportuna
+                                y de calidad, facilitando el acceso de nuestros
+                                pacientes a profesionales de distintas
+                                especialidades.
+                            </p>
+
+                        </section>
+
+                    </article>
+
+                    <article class="col-md-6">
+
+                        <section class="tarjeta-institucional">
+
+                            <span class="icono-institucional">🌟</span>
+
+                            <h3>Nuestra visión</h3>
+
+                            <p>
+                                Ser una clínica reconocida por la calidad de
+                                su atención, el compromiso de sus profesionales
+                                y el uso de herramientas digitales que mejoren
+                                la experiencia de nuestros pacientes.
+                            </p>
+
+                        </section>
+
+                    </article>
+
+                </section>
+
+            </section>
+
+        </section>
+
+
+        <!-- Valores -->
+        <section class="valores-clinica container">
+
+            <span class="etiqueta-seccion">LO QUE NOS REPRESENTA</span>
+
+            <h2>Nuestros valores</h2>
+
+            <section class="row g-4 mt-3">
+
+                <article class="col-md-4">
+                    <section class="valor-card">
+                        <span>❤️</span>
+                        <h3>Compromiso</h3>
+                        <p>
+                            Nos preocupamos por entregar una atención
+                            responsable y centrada en cada paciente.
+                        </p>
+                    </section>
+                </article>
+
+                <article class="col-md-4">
+                    <section class="valor-card">
+                        <span>🤝</span>
+                        <h3>Confianza</h3>
+                        <p>
+                            Construimos relaciones basadas en el respeto,
+                            la comunicación y el trato cercano.
+                        </p>
+                    </section>
+                </article>
+
+                <article class="col-md-4">
+                    <section class="valor-card">
+                        <span>🏥</span>
+                        <h3>Calidad</h3>
+                        <p>
+                            Buscamos entregar una experiencia de atención
+                            profesional, clara y oportuna.
+                        </p>
+                    </section>
+                </article>
+
+            </section>
+
         </section>
 
     </main>

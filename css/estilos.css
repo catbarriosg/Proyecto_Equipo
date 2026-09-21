@@ -150,8 +150,8 @@ p {
     font-size: 14px;
 }
 
-/* Imagen principal de la página de inicio */
-main img {
+/* Imagen principal de la página */
+.imagen-principal {
     display: block;
     width: 300px;
     height: 300px;
@@ -159,6 +159,18 @@ main img {
     margin: 25px auto;
     border-radius: 50%;
     border: 8px solid #7dd3e8;
+}
+
+/* Carrusel de imágenes */
+.galeria-clinica .imagen-carrusel {
+    display: block;
+    width: 100% !important;
+    max-width: 900px;
+    height: 400px !important;
+    object-fit: cover;
+    margin: 0 auto !important;
+    border-radius: 12px !important;
+    border: none !important;
 }
 
 /* Contenedor del formulario de agendamiento */
@@ -265,6 +277,7 @@ main h1 {
     margin-bottom: 20px;
     font-weight: bold;
 }
+
 /* Diseño del comprobante de reserva */
 #datos-reserva {
     margin: 20px 0;
@@ -291,6 +304,252 @@ main h1 {
     font-size: 13px;
     font-style: italic;
 }
+
+/* Página Quiénes somos */
+
+.hero-quienes {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding: 60px 20px;
+}
+
+.hero-quienes-texto {
+    flex: 1;
+    text-align: left;
+}
+
+.etiqueta-seccion {
+    color: #1976D2;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.hero-quienes h1 {
+    font-size: 48px;
+    margin: 15px 0;
+}
+
+.hero-quienes p {
+    font-size: 18px;
+    max-width: 600px;
+}
+
+.hero-quienes-imagen {
+    flex: 1;
+}
+
+.hero-quienes-imagen img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 18px;
+    border: none;
+    margin: 0;
+}
+
+.bloque-informacion {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding: 70px 20px;
+}
+
+.bloque-texto,
+.bloque-imagen {
+    flex: 1;
+}
+
+.bloque-texto {
+    text-align: left;
+}
+
+.bloque-texto h2,
+.mision-vision h2,
+.valores-clinica h2 {
+    font-size: 34px;
+    margin: 12px 0 20px;
+}
+
+.bloque-imagen img {
+    width: 100%;
+    height: 330px;
+    object-fit: cover;
+    border-radius: 18px;
+    border: none;
+    margin: 0;
+}
+
+.mision-vision {
+    background-color: #f9fcf0;
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.tarjeta-institucional {
+    height: 100%;
+    padding: 35px;
+    background-color: white;
+    border-radius: 18px;
+    border-left: 5px solid #7dd3e8;
+    text-align: left;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
+}
+
+.tarjeta-institucional:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.13);
+}
+
+.icono-institucional {
+    font-size: 40px;
+}
+
+.tarjeta-institucional h3 {
+    color: #1976D2;
+    margin: 15px 0;
+}
+
+.valores-clinica {
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.valor-card {
+    height: 100%;
+    padding: 35px 25px;
+    border-radius: 18px;
+    background-color: white;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    transition: 0.3s;
+}
+
+.valor-card:hover {
+    transform: translateY(-8px);
+    border-color: #7dd3e8;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.valor-card span {
+    font-size: 40px;
+}
+
+.valor-card h3 {
+    margin: 15px 0 10px;
+    color: #1976D2;
+}
+
+/* Distribución de las tarjetas de valores */
+.valores-clinica .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.valores-clinica .col-md-4 {
+    width: 33.333333%;
+}
+
+/* Distribución de misión y visión */
+.mision-vision .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mision-vision .col-md-6 {
+    width: 50%;
+}
+
+.galeria-clinica .carousel-control-prev,
+.galeria-clinica .carousel-control-next {
+    display: flex !important;
+    width: 10%;
+}
+
+/* Controles visibles del carrusel */
+.galeria-clinica .carousel-control-prev,
+.galeria-clinica .carousel-control-next {
+    width: 8%;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+
+.galeria-clinica .carousel-control-prev:hover,
+.galeria-clinica .carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+/* Página Especialidades */
+
+.especialidades-hero {
+    text-align: center;
+    padding: 60px 20px 35px;
+}
+
+.especialidades-hero h1 {
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.especialidades-hero p {
+    max-width: 650px;
+    margin: 0 auto;
+    font-size: 18px;
+}
+
+.especialidades-lista {
+    padding: 20px 20px 70px;
+}
+
+.especialidad-card {
+    height: 100%;
+    padding: 35px 25px;
+    background-color: white;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.especialidad-card:hover {
+    transform: translateY(-8px);
+    border-color: #7dd3e8;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.icono-especialidad {
+    display: block;
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.especialidad-card h2 {
+    color: #1976D2;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.especialidad-card p {
+    min-height: 100px;
+    margin-bottom: 20px;
+}
+
+.enlace-agenda {
+    display: block;
+    margin-top: 10px;
+    color: #1976D2;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.enlace-agenda:hover {
+    text-decoration: underline;
+}
+
 
 
 /* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
@@ -365,4 +624,8 @@ main h1 {
         max-width: 400px;
         padding: 20px;
     }
+
+
+
+
 }
