@@ -674,6 +674,69 @@ main h1 {
     z-index: 1;
 }
 
+/* FORMULARIO REGISTRO PACIENTE  */
+
+.formulario-registro {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+}
+
+.formulario-registro h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.formulario-registro>p {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+#formulario-registro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.campo-formulario label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #525151;
+}
+
+.campo-formulario input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+}
+
+.campo-formulario input:focus {
+    border-color: #7dd3e8;
+    box-shadow: 0 0 0 3px rgba(125, 211, 232, 0.2);
+}
+
+#formulario-registro .boton {
+    grid-column: 1 / -1;
+    justify-self: center;
+    border: none;
+    cursor: pointer;
+}
+
 
 /* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
 @media (max-width: 1024px) {
@@ -741,13 +804,26 @@ main h1 {
         margin: 20px 15px;
     }
 
-    /* La ventana emergente (modal) se ajusta al ancho disponible */
+    /* Adaptación responsive del modal y formulario de registro
+   para dispositivos con pantallas pequeñas  */
     .contenido-modal {
         width: 90%;
         max-width: 400px;
         padding: 20px;
     }
 
+    .formulario-registro {
+        padding: 10px 5px 40px;
+    }
+
+    #formulario-registro {
+        grid-template-columns: 1fr;
+        padding: 25px 20px;
+    }
+
+    #formulario-registro .boton {
+        width: 100%;
+    }
 
 
 
