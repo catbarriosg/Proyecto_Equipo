@@ -217,4 +217,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
     }
+    // Formulario de inicio de sesión
+    const formularioLogin = document.getElementById("formulario-login");
+
+    if (formularioLogin) {
+
+        formularioLogin.addEventListener("submit", function (evento) {
+
+            evento.preventDefault();
+
+            const correo = document.getElementById("correo").value.trim();
+            const contrasena = document.getElementById("contrasena").value;
+
+            if (correo === "") {
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu correo electrónico.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            if (contrasena === "") {
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu contraseña.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: "¡Inicio de sesión exitoso!",
+                text: "Bienvenido a Clínica Agenda Médica.",
+                icon: "success",
+                confirmButtonText: "Continuar"
+            });
+
+        });
+    }
 });

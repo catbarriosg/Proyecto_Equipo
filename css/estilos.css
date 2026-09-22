@@ -737,6 +737,143 @@ main h1 {
     cursor: pointer;
 }
 
+/* FORMULARIO INICIO DE SESIÓN */
+
+.formulario-login {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.formulario-login h1 {
+    margin-bottom: 15px;
+}
+
+.formulario-login>p {
+    margin-bottom: 25px;
+}
+
+#formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+#formulario-login .boton {
+    align-self: center;
+    border: none;
+    cursor: pointer;
+}
+
+.formulario-login a {
+    color: #198fa5;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.formulario-login a:hover {
+    text-decoration: underline;
+}
+
+/* PERFIL DEL PACIENTE */
+
+.perfil-paciente {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.perfil-paciente>p {
+    margin-bottom: 30px;
+}
+
+.tarjeta-perfil {
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.datos-paciente h2 {
+    margin-bottom: 20px;
+}
+
+.datos-paciente p {
+    margin-bottom: 12px;
+}
+
+.acciones-perfil {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.acciones-perfil .boton {
+    text-decoration: none;
+}
+
+/* MIS HORAS MÉDICAS */
+
+.mis-horas {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.mis-horas>p {
+    margin-bottom: 30px;
+}
+
+.tarjeta-hora {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.tarjeta-hora h2 {
+    margin-bottom: 20px;
+}
+
+.tarjeta-hora p {
+    margin-bottom: 10px;
+}
+
+.acciones-hora {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.acciones-hora .boton {
+    text-decoration: none;
+}
+
+.boton-cancelar {
+    background-color: #d9534f;
+}
+
+.boton-cancelar:hover {
+    background-color: #c9302c;
+}
+
 
 /* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
 @media (max-width: 1024px) {
