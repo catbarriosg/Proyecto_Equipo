@@ -874,6 +874,36 @@ main h1 {
     background-color: #c9302c;
 }
 
+/* HISTORIAL DE ATENCIONES */
+
+.historial-atenciones {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.historial-atenciones>p {
+    margin-bottom: 30px;
+}
+
+.tarjeta-atencion {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.tarjeta-atencion h2 {
+    margin-bottom: 20px;
+}
+
+.tarjeta-atencion p {
+    margin-bottom: 10px;
+}
 
 /* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
 @media (max-width: 1024px) {
