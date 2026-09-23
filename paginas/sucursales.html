@@ -132,15 +132,17 @@
 
             <h2>Cómo llegar a nuestra casa matriz</h2>
 
-            <!-- Mapa de OpenStreetMap: se puede incrustar sin clave de API -->
+            <!-- Mapa de Google Maps. Se usa la direccion /maps/embed directa
+                 porque la antigua (?output=embed) redirige con la cabecera
+                 X-Frame-Options y el navegador bloquea el iframe. -->
             <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-70.6650%2C-33.4480%2C-70.6350%2C-33.4270&amp;layer=mapnik&amp;marker=-33.4372%2C-70.6506"
+                src="https://www.google.com/maps/embed?origin=mfe&amp;pb=!1m2!2m1!1sSantiago+Centro,+Chile"
                 title="Mapa de la sucursal Santiago Centro"
                 allowfullscreen>
             </iframe>
 
             <p>
-                <a href="https://www.openstreetmap.org/?mlat=-33.4372&amp;mlon=-70.6506#map=15/-33.4372/-70.6506"
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=Santiago+Centro,+Chile"
                     class="enlace-contacto" target="_blank" rel="noopener">Ver mapa más grande</a>
             </p>
 
