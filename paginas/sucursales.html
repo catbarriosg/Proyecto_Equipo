@@ -44,12 +44,105 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="sucursales-hero">
+
+            <span class="etiqueta-seccion">DÓNDE ENCONTRARNOS</span>
 
             <h1>Sucursales</h1>
 
             <p>
-                Conoce las sucursales disponibles de Clínica Agenda Médica.
+                Conoce las sucursales disponibles de Clínica Agenda Médica
+                y elige la más cercana a ti.
+            </p>
+
+        </section>
+
+        <!-- Listado de sucursales -->
+        <section class="sucursales-lista">
+
+            <article class="sucursal-card">
+                <figure>
+                    <img src="../img/fachada_clinica.png" alt="Fachada de la sucursal Santiago Centro">
+                </figure>
+                <section class="sucursal-info">
+                    <h2>Santiago Centro</h2>
+                    <address>📍 Av. Salud 1234, Santiago</address>
+                    <p>📞 <a href="tel:+56223456789">+56 2 2345 6789</a></p>
+                    <p class="sucursal-horario">
+                        🕒 Lunes a viernes: 08:00 a 20:00<br>
+                        Sábados: 09:00 a 14:00
+                    </p>
+                    <a href="agendar-hora.html" class="boton">Agendar hora</a>
+                </section>
+            </article>
+
+            <article class="sucursal-card">
+                <figure>
+                    <img src="../img/recepcion_clinica.png" alt="Recepción de la sucursal Providencia">
+                </figure>
+                <section class="sucursal-info">
+                    <h2>Providencia</h2>
+                    <address>📍 Av. Providencia 2456, Providencia</address>
+                    <p>📞 <a href="tel:+56223456790">+56 2 2345 6790</a></p>
+                    <p class="sucursal-horario">
+                        🕒 Lunes a viernes: 08:00 a 19:00<br>
+                        Sábados: 09:00 a 13:00
+                    </p>
+                    <a href="agendar-hora.html" class="boton">Agendar hora</a>
+                </section>
+            </article>
+
+            <article class="sucursal-card">
+                <figure>
+                    <img src="../img/sala_espera.png" alt="Sala de espera de la sucursal Maipú">
+                </figure>
+                <section class="sucursal-info">
+                    <h2>Maipú</h2>
+                    <address>📍 Av. Pajaritos 3210, Maipú</address>
+                    <p>📞 <a href="tel:+56223456791">+56 2 2345 6791</a></p>
+                    <p class="sucursal-horario">
+                        🕒 Lunes a viernes: 08:30 a 18:30<br>
+                        Sábados: cerrado
+                    </p>
+                    <a href="agendar-hora.html" class="boton">Agendar hora</a>
+                </section>
+            </article>
+
+            <article class="sucursal-card">
+                <figure>
+                    <img src="../img/box_clinica.png" alt="Box de atención de la sucursal La Florida">
+                </figure>
+                <section class="sucursal-info">
+                    <h2>La Florida</h2>
+                    <address>📍 Av. Vicuña Mackenna 7890, La Florida</address>
+                    <p>📞 <a href="tel:+56223456792">+56 2 2345 6792</a></p>
+                    <p class="sucursal-horario">
+                        🕒 Lunes a viernes: 09:00 a 19:00<br>
+                        Sábados: 09:00 a 14:00
+                    </p>
+                    <a href="agendar-hora.html" class="boton">Agendar hora</a>
+                </section>
+            </article>
+
+        </section>
+
+        <!-- Mapa embebido de la casa matriz -->
+        <section class="sucursal-mapa">
+
+            <h2>Cómo llegar a nuestra casa matriz</h2>
+
+            <iframe
+                src="https://www.google.com/maps?q=Santiago+Centro,+Chile&output=embed"
+                title="Mapa de la sucursal Santiago Centro"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+
+            <p>
+                ¿Necesitas más información?
+                <a href="contacto.html" class="enlace-agenda">Contáctanos</a>
             </p>
 
         </section>

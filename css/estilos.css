@@ -921,3 +921,88 @@ main h1 {
     font-size: 28px;
 }
 
+/* ---------- Página Sucursales ---------- */
+
+/* Cuadrícula de tarjetas de sucursales */
+.sucursales-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.sucursal-card {
+    background-color: white;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.sucursal-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.sucursal-card figure {
+    margin: 0;
+}
+
+.sucursal-card img {
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.sucursal-info {
+    padding: 20px;
+}
+
+.sucursal-info h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.sucursal-info address,
+.sucursal-info p {
+    margin-bottom: 8px;
+    font-style: normal;
+    font-size: 15px;
+}
+
+.sucursal-info a:not(.boton) {
+    color: #1976D2;
+    text-decoration: none;
+}
+
+.sucursal-horario {
+    color: #555;
+}
+
+/* Botón de la tarjeta con texto blanco para contraste */
+.sucursal-card .boton {
+    color: white;
+    margin-top: 8px;
+}
+
+/* Mapa embebido */
+.sucursal-mapa {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.sucursal-mapa h2 {
+    margin-bottom: 20px;
+}
+
+.sucursal-mapa iframe {
+    width: 100%;
+    height: 350px;
+    border: 0;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
