@@ -125,14 +125,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 3. SELECCI├ôN DE HORA Y D├ìA (Click en los botones)
+    // 3. SELECCION DE HORA Y DIA (Click en los botones)
     // ==========================================
     const botonesHora = document.querySelectorAll(".btn-hora");
     const inputHoraOculto = document.getElementById("hora");
 
     botonesHora.forEach(boton => {
         boton.addEventListener("click", function () {
-            // Quitar estilo de seleccionado a todos y pon├®rselo al actual
+            // Quitar estilo de seleccionado a todos y ponerselo al actual
             botonesHora.forEach(b => b.classList.remove("seleccionada"));
             this.classList.add("seleccionada");
 
@@ -155,14 +155,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if (tituloFechaSeleccionada) tituloFechaSeleccionada.textContent = this.getAttribute("data-texto");
             if (inputFechaOculto) inputFechaOculto.value = this.getAttribute("data-fecha");
 
-            // Si el paciente cambia de d├¡a, reseteamos la hora elegida
+            // Si el paciente cambia de dia, reseteamos la hora elegida
             botonesHora.forEach(b => b.classList.remove("seleccionada"));
             if (inputHoraOculto) inputHoraOculto.value = "";
         });
     });
 
     // ==========================================
-    // 4. NAVEGADOR DE SEMANAS Y D├ìAS DIN├üMICOS
+    // 4. NAVEGADOR DE SEMANAS Y DiAS DINAMICOS
     // ==========================================
     const btnAnterior = document.getElementById('btn-semana-anterior');
     const btnSiguiente = document.getElementById('btn-semana-siguiente');
@@ -172,8 +172,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Validamos que existan en el HTML actual antes de ejecutar
     if (btnAnterior && btnSiguiente && textoSemana && cuadrosDias.length > 0) {
         const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        const nombresDiasCortos = ["D", "L", "M", "Mi├®", "J", "V", "S"];
-        const nombresDiasLargos = ["Domingo", "Lunes", "Martes", "Mi├®rcoles", "Jueves", "Viernes", "S├íbado"];
+        const nombresDiasCortos = ["D", "L", "M", "Mi", "J", "V", "S"];
+        const nombresDiasLargos = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
         const fechaHoy = new Date();
         fechaHoy.setHours(0, 0, 0, 0);
@@ -458,14 +458,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             const formatoCorreo =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
 
 
             if (!formatoCorreo.test(correo)) {
 
                 Swal.fire({
                     title: "Correo no válido",
-                    text: "Ingresa un correo electrónico válido. Ejemplo: usuario@correo.cl",
+                    text: "Solo se permiten correos @duoc.cl, @profesor.duoc.cl o @gmail.com.",
                     icon: "error",
                     confirmButtonText: "Entendido"
                 });
@@ -603,94 +603,76 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // FORMULARIO DE INICIO DE SESIÓN
-
-    const formularioLogin =
-        document.getElementById("formulario-login");
+    // FORMULARIO DE INICIO DE SESIÓN-LOGIN
+    const formularioLogin = document.getElementById("formulario-login");
 
     if (formularioLogin) {
-
         formularioLogin.addEventListener("submit", function (evento) {
-
             evento.preventDefault();
 
+            const correo = document.getElementById("correo").value.trim();
+            const contrasena = document.getElementById("contrasena").value;
 
-            const correo =
-                document.getElementById("correo").value.trim();
-
-            const contrasena =
-                document.getElementById("contrasena").value;
-
-
+            // Validar correo obligatorio
             if (correo === "") {
-
                 Swal.fire({
-                    title: "Faltan datos",
-                    text: "Por favor, ingresa tu correo electrónico.",
-                    icon: "error",
-                    confirmButtonText: "Entendido"
+                    icon: "warning",
+                    title: "Correo requerido",
+                    text: "Por favor, ingresa tu correo electrónico."
                 });
-
                 return;
             }
 
+            // Validar máximo 100 caracteres
+            if (correo.length > 100) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Correo demasiado largo",
+                    text: "El correo electrónico no puede superar los 100 caracteres."
+                });
+                return;
+            }
 
-            // Valida el formato del correo
-            const formatoCorreo =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
+            // Validar dominios permitidos
+            const formatoCorreo = /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
             if (!formatoCorreo.test(correo)) {
-
                 Swal.fire({
+                    icon: "warning",
                     title: "Correo no válido",
-                    text: "Ingresa un correo electrónico válido. Ejemplo: usuario@correo.cl",
-                    icon: "error",
-                    confirmButtonText: "Entendido"
+                    text: "Solo se permiten correos @duoc.cl, @profesor.duoc.cl o @gmail.com."
                 });
-
                 return;
             }
 
-
+            // Validar contraseña obligatoria
             if (contrasena === "") {
-
                 Swal.fire({
-                    title: "Faltan datos",
-                    text: "Por favor, ingresa tu contraseña.",
-                    icon: "error",
-                    confirmButtonText: "Entendido"
+                    icon: "warning",
+                    title: "Contraseña requerida",
+                    text: "Por favor, ingresa tu contraseña."
                 });
-
                 return;
             }
 
-
-            if (contrasena.length < 8) {
-
+            // Validar contraseña entre 4 y 10 caracteres
+            if (contrasena.length < 4 || contrasena.length > 10) {
                 Swal.fire({
+                    icon: "warning",
                     title: "Contraseña no válida",
-                    text: "La contraseña debe tener al menos 8 caracteres.",
-                    icon: "error",
-                    confirmButtonText: "Entendido"
+                    text: "La contraseña debe tener entre 4 y 10 caracteres."
                 });
-
                 return;
             }
 
-
+            // Inicio de sesión simulado
             Swal.fire({
-                title: "¡Inicio de sesión exitoso!",
-                text: "Bienvenido a Clínica Agenda Médica.",
                 icon: "success",
-                confirmButtonText: "Continuar"
+                title: "Inicio de sesión exitoso",
+                text: "Bienvenido a Clínica Agenda Médica."
             });
-
         });
     }
 });
-
-
 
 /* =========================================================================
    INTEGRANTE 3 — Contacto, Preguntas frecuentes y Panel de administración
@@ -754,14 +736,14 @@ function validarNombre(campo) {
 // Valida un correo electrónico con un formato básico usuario@dominio.ext
 function validarCorreo(campo) {
     const valor = campo.value.trim();
-    const formatoCorreo = /^[\w.+-]+@[\w-]+\.[\w.-]+$/;
+    const formatoCorreo = /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
 
     if (valor === "") {
         mostrarErrorCampo(campo, "El correo es obligatorio.");
         return false;
     }
     if (!formatoCorreo.test(valor)) {
-        mostrarErrorCampo(campo, "Ingresa un correo válido, por ejemplo: nombre@correo.cl");
+        mostrarErrorCampo(campo, "Correo no válido. Usa un correo @duoc.cl, @profesor.duoc.cl o @gmail.com.");
         return false;
     }
     limpiarErrorCampo(campo);
