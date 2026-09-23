@@ -44,15 +44,137 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="faq-hero">
+
+            <span class="etiqueta-seccion">RESOLVEMOS TUS DUDAS</span>
 
             <h1>Preguntas frecuentes</h1>
 
             <p>
-                Encuentra respuestas a las preguntas más frecuentes
-                sobre nuestros servicios y horas médicas.
+                Encuentra respuestas a las consultas más comunes sobre
+                horas médicas, atención y servicios de la clínica.
             </p>
 
+            <!-- Buscador: filtra las preguntas en tiempo real con JavaScript -->
+            <section class="campo-formulario faq-buscador">
+                <label for="buscador-faq">Buscar una pregunta</label>
+                <input type="search" id="buscador-faq" placeholder="Ej: cancelar, pago, exámenes...">
+                <small id="faq-sin-resultados" class="mensaje-error"></small>
+            </section>
+
+        </section>
+
+        <!-- Preguntas sobre horas médicas -->
+        <section class="faq-grupo">
+
+            <h2>Horas médicas</h2>
+
+            <details class="faq-item">
+                <summary>¿Cómo puedo agendar una hora?</summary>
+                <p>
+                    Ingresa a la sección <a href="agendar-hora.html">Agendar hora</a>,
+                    selecciona la especialidad, el médico, la fecha y la hora
+                    que prefieras y confirma tu reserva. Recibirás un comprobante
+                    con el ID de tu reserva.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Puedo modificar o cancelar una hora ya agendada?</summary>
+                <p>
+                    Sí. Desde tu cuenta puedes modificar la fecha u hora de tu reserva
+                    o cancelarla con al menos 24 horas de anticipación, sin costo.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Necesito una cuenta para agendar?</summary>
+                <p>
+                    Sí. Debes registrarte como paciente e iniciar sesión. Así podrás
+                    revisar tus horas agendadas y tu historial de atenciones.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Qué pasa si llego atrasado a mi hora?</summary>
+                <p>
+                    Se aceptan hasta 10 minutos de atraso. Pasado ese tiempo la hora
+                    puede ser reasignada y deberás agendar nuevamente.
+                </p>
+            </details>
+
+        </section>
+
+        <!-- Preguntas sobre atención y pagos -->
+        <section class="faq-grupo">
+
+            <h2>Atención y pagos</h2>
+
+            <details class="faq-item">
+                <summary>¿Qué debo llevar el día de mi atención?</summary>
+                <p>
+                    Tu cédula de identidad, el comprobante de reserva (puede ser
+                    digital) y, si corresponde, exámenes o informes médicos previos.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Trabajan con Fonasa e Isapres?</summary>
+                <p>
+                    Sí. Atendemos pacientes de Fonasa y de las principales Isapres.
+                    Consulta en <a href="contacto.html">Contacto</a> por convenios específicos.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Cuáles son los medios de pago?</summary>
+                <p>
+                    Aceptamos efectivo, tarjetas de débito y crédito, y bonos
+                    electrónicos. El pago se realiza en recepción antes de la atención.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Cómo obtengo los resultados de mis exámenes?</summary>
+                <p>
+                    Los resultados quedan disponibles en tu historial de atenciones
+                    dentro de tu cuenta. También puedes retirarlos en la sucursal
+                    donde te atendiste.
+                </p>
+            </details>
+
+        </section>
+
+        <!-- Preguntas sobre sucursales -->
+        <section class="faq-grupo">
+
+            <h2>Sucursales y horarios</h2>
+
+            <details class="faq-item">
+                <summary>¿Dónde están ubicadas las sucursales?</summary>
+                <p>
+                    Contamos con sucursales en Santiago Centro, Providencia, Maipú y
+                    La Florida. Revisa direcciones y horarios en
+                    <a href="sucursales.html">Sucursales</a>.
+                </p>
+            </details>
+
+            <details class="faq-item">
+                <summary>¿Atienden los fines de semana?</summary>
+                <p>
+                    La mayoría de nuestras sucursales atiende los sábados en la mañana.
+                    Los domingos y festivos no hay atención.
+                </p>
+            </details>
+
+        </section>
+
+        <!-- Invitación a contactar si la duda no está resuelta -->
+        <section class="faq-ayuda">
+            <h2>¿No encontraste lo que buscabas?</h2>
+            <p>Escríbenos y te responderemos a la brevedad.</p>
+            <a href="contacto.html" class="boton">Ir a Contacto</a>
         </section>
 
     </main>
