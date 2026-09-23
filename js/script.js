@@ -195,6 +195,61 @@ function validarMensaje(campo) {
     return true;
 }
 
+// Calcula el dígito verificador de un RUT chileno (módulo 11)
+function calcularDigitoVerificador(numeroRut) {
+    let suma = 0;
+    let multiplicador = 2;
+
+    // Recorre el número de derecha a izquierda multiplicando por 2..7
+    for (let i = numeroRut.length - 1; i >= 0; i--) {
+        suma += parseInt(numeroRut[i], 10) * multiplicador;
+        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+
+    const resto = 11 - (suma % 11);
+    if (resto === 11) return "0";
+    if (resto === 10) return "K";
+    return String(resto);
+}
+
+// Valida un RUT chileno: formato 12.345.678-9 (o sin puntos) y dígito verificador correcto
+function validarRut(campo) {
+    const valor = campo.value.trim().toUpperCase();
+    const formatoRut = /^\d{1,2}\.?\d{3}\.?\d{3}-[\dK]$/;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "El RUT es obligatorio.");
+        return false;
+    }
+    if (!formatoRut.test(valor)) {
+        mostrarErrorCampo(campo, "Formato inválido. Usa el formato 12.345.678-9");
+        return false;
+    }
+
+    // Separa el número del dígito verificador y compara
+    const rutLimpio = valor.replace(/\./g, "");
+    const partes = rutLimpio.split("-");
+    const digitoIngresado = partes[1];
+    const digitoEsperado = calcularDigitoVerificador(partes[0]);
+
+    if (digitoIngresado !== digitoEsperado) {
+        mostrarErrorCampo(campo, "El dígito verificador no corresponde. ¿Quisiste decir " + formatearRut(partes[0] + digitoEsperado) + "?");
+        return false;
+    }
+
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Da formato 12.345.678-9 a un RUT escrito sin puntos
+function formatearRut(valor) {
+    const limpio = valor.replace(/[^\dkK]/g, "").toUpperCase();
+    if (limpio.length < 2) return limpio;
+    const cuerpo = limpio.slice(0, -1);
+    const digito = limpio.slice(-1);
+    return cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + digito;
+}
+
 
 // ---------- VALIDACIÓN CONTACTO ----------
 
@@ -299,8 +354,192 @@ function iniciarBuscadorFaq() {
 }
 
 
+// ---------- PANEL DE ADMINISTRACIÓN ----------
+
+// Actualiza los contadores de resumen según las filas de cada tabla
+function actualizarResumenPanel() {
+    const contadores = {
+        "total-pacientes": "tabla-pacientes",
+        "total-medicos": "tabla-medicos",
+        "total-horas": "tabla-horas"
+    };
+
+    Object.keys(contadores).forEach(function (idContador) {
+        const contador = document.getElementById(idContador);
+        const tabla = document.getElementById(contadores[idContador]);
+        if (contador && tabla) {
+            contador.textContent = tabla.querySelectorAll("tbody tr").length;
+        }
+    });
+}
+
+// Muestra un aviso en la parte superior del panel durante unos segundos
+function mostrarAvisoPanel(texto) {
+    const aviso = document.getElementById("aviso-panel");
+    if (!aviso) return;
+    aviso.textContent = texto;
+    clearTimeout(aviso.temporizador);
+    aviso.temporizador = setTimeout(function () { aviso.textContent = ""; }, 4000);
+}
+
+// Crea una celda con los botones Editar y Eliminar
+function crearCeldaAcciones() {
+    const celda = document.createElement("td");
+    celda.innerHTML =
+        '<button type="button" class="boton-tabla boton-editar">Editar</button> ' +
+        '<button type="button" class="boton-tabla boton-eliminar">Eliminar</button>';
+    return celda;
+}
+
+// Agrega una fila nueva a la tabla indicada con los textos recibidos
+function agregarFilaTabla(idTabla, valores) {
+    const cuerpo = document.querySelector("#" + idTabla + " tbody");
+    const fila = document.createElement("tr");
+
+    valores.forEach(function (valor) {
+        const celda = document.createElement("td");
+        celda.textContent = valor;
+        fila.appendChild(celda);
+    });
+
+    const celdaEstado = document.createElement("td");
+    celdaEstado.innerHTML = '<span class="estado estado-activo">Activo</span>';
+    fila.appendChild(celdaEstado);
+    fila.appendChild(crearCeldaAcciones());
+
+    fila.classList.add("fila-nueva");
+    setTimeout(function () { fila.classList.remove("fila-nueva"); }, 2000);
+
+    cuerpo.appendChild(fila);
+    actualizarResumenPanel();
+}
+
+function iniciarPanelAdministracion() {
+    const panel = document.querySelector(".panel-hero");
+    if (!panel) return; // Solo actúa en panel-administracion.html
+
+    actualizarResumenPanel();
+
+    // Botones "Agregar": muestran u ocultan el formulario correspondiente
+    document.querySelectorAll(".boton-agregar[data-formulario]").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            const formulario = document.getElementById(boton.dataset.formulario);
+            formulario.hidden = !formulario.hidden;
+            if (!formulario.hidden) formulario.querySelector("input, select").focus();
+        });
+    });
+
+    // Botones "Cancelar" del formulario: lo ocultan y lo limpian
+    document.querySelectorAll(".panel-formulario .boton-cancelar").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            const formulario = boton.closest("form");
+            formulario.reset();
+            formulario.querySelectorAll("input, select").forEach(reiniciarCampo);
+            formulario.hidden = true;
+        });
+    });
+
+    // Formulario de paciente: valida RUT y nombre, luego agrega la fila
+    const formularioPaciente = document.getElementById("formulario-paciente");
+    const rut = document.getElementById("paciente-rut");
+    const nombrePaciente = document.getElementById("paciente-nombre");
+
+    // Da formato al RUT automáticamente al salir del campo y lo valida
+    rut.addEventListener("blur", function () {
+        rut.value = formatearRut(rut.value);
+        validarRut(rut);
+    });
+    nombrePaciente.addEventListener("blur", function () { validarNombre(nombrePaciente); });
+
+    formularioPaciente.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        rut.value = formatearRut(rut.value);
+
+        const rutValido = validarRut(rut);
+        const nombreValido = validarNombre(nombrePaciente);
+        if (!rutValido || !nombreValido) return;
+
+        // Evita registrar dos veces el mismo RUT
+        const rutsExistentes = Array.from(
+            document.querySelectorAll("#tabla-pacientes tbody td:first-child")
+        ).map(function (celda) { return celda.textContent.trim(); });
+
+        if (rutsExistentes.includes(rut.value)) {
+            mostrarErrorCampo(rut, "Ese RUT ya está registrado en la tabla.");
+            return;
+        }
+
+        agregarFilaTabla("tabla-pacientes", [rut.value, nombrePaciente.value.trim()]);
+        mostrarAvisoPanel("Paciente " + nombrePaciente.value.trim() + " agregado correctamente.");
+        formularioPaciente.reset();
+        [rut, nombrePaciente].forEach(reiniciarCampo);
+        formularioPaciente.hidden = true;
+    });
+
+    // Formulario de médico: valida nombre y especialidad, luego agrega la fila
+    const formularioMedico = document.getElementById("formulario-medico");
+    const nombreMedico = document.getElementById("medico-nombre");
+    const especialidad = document.getElementById("medico-especialidad");
+
+    nombreMedico.addEventListener("blur", function () { validarNombre(nombreMedico); });
+    especialidad.addEventListener("change", function () {
+        validarSeleccion(especialidad, "Selecciona la especialidad del médico.");
+    });
+
+    formularioMedico.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        const nombreValido = validarNombre(nombreMedico);
+        const especialidadValida = validarSeleccion(especialidad, "Selecciona la especialidad del médico.");
+        if (!nombreValido || !especialidadValida) return;
+
+        agregarFilaTabla("tabla-medicos", [nombreMedico.value.trim(), especialidad.value]);
+        mostrarAvisoPanel("Médico " + nombreMedico.value.trim() + " agregado correctamente.");
+        formularioMedico.reset();
+        [nombreMedico, especialidad].forEach(reiniciarCampo);
+        formularioMedico.hidden = true;
+    });
+
+    // Acciones de las tablas: se escuchan en el contenedor para incluir filas nuevas
+    document.querySelectorAll(".tabla-panel").forEach(function (tabla) {
+        tabla.addEventListener("click", function (evento) {
+            const boton = evento.target.closest(".boton-tabla");
+            if (!boton) return;
+
+            const fila = boton.closest("tr");
+            const nombre = fila.querySelector("td:nth-child(2)").textContent.trim();
+
+            // Editar: alterna el estado entre Activo e Inactivo
+            if (boton.classList.contains("boton-editar")) {
+                const estado = fila.querySelector(".estado");
+                const activo = estado.classList.contains("estado-activo");
+                estado.textContent = activo ? "Inactivo" : "Activo";
+                estado.classList.toggle("estado-activo", !activo);
+                estado.classList.toggle("estado-inactivo", activo);
+                mostrarAvisoPanel(nombre + " ahora está " + estado.textContent.toLowerCase() + ".");
+            }
+
+            // Eliminar / Cancelar: pide confirmación antes de quitar la fila
+            if (boton.classList.contains("boton-eliminar")) {
+                const esHora = tabla.id === "tabla-horas";
+                const pregunta = esHora
+                    ? "¿Cancelar la hora del " + fila.querySelector("td:first-child").textContent.trim() + " con " + nombre + "?"
+                    : "¿Eliminar a " + nombre + " del listado?";
+
+                if (confirm(pregunta)) {
+                    fila.remove();
+                    actualizarResumenPanel();
+                    mostrarAvisoPanel(esHora ? "Hora cancelada." : nombre + " fue eliminado del listado.");
+                }
+            }
+        });
+    });
+}
+
+
 // Inicia las funciones del integrante 3 cuando la página termina de cargar
 document.addEventListener("DOMContentLoaded", function () {
     validarContacto();
     iniciarBuscadorFaq();
+    iniciarPanelAdministracion();
 });
