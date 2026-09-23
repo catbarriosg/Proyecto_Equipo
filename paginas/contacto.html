@@ -44,14 +44,120 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="contacto-hero">
+
+            <span class="etiqueta-seccion">ESTAMOS PARA AYUDARTE</span>
 
             <h1>Contacto</h1>
 
             <p>
                 Si necesitas información o tienes alguna consulta,
-                puedes comunicarte con nosotros.
+                completa el formulario y te responderemos a la brevedad.
             </p>
+
+        </section>
+
+        <!-- Formulario y datos de contacto lado a lado -->
+        <section class="contacto-contenido">
+
+            <!-- Formulario de contacto (validado con JavaScript) -->
+            <section class="formulario-agenda formulario-contacto">
+
+                <h2>Escríbenos</h2>
+
+                <!-- novalidate: desactiva los mensajes por defecto del navegador
+                     para que las validaciones las controle JavaScript -->
+                <form id="formulario-contacto" novalidate>
+
+                    <section class="campo-formulario">
+                        <label for="contacto-nombre">Nombre completo</label>
+                        <input type="text" id="contacto-nombre" name="nombre"
+                            placeholder="Ej: Ana Pérez" autocomplete="name"
+                            minlength="3" maxlength="60" required
+                            aria-describedby="error-contacto-nombre">
+                        <!-- Mensaje de error personalizado, lo llena JavaScript -->
+                        <small id="error-contacto-nombre" class="mensaje-error"></small>
+                    </section>
+
+                    <section class="campo-formulario">
+                        <label for="contacto-correo">Correo electrónico</label>
+                        <input type="email" id="contacto-correo" name="correo"
+                            placeholder="Ej: ana.perez@correo.cl" autocomplete="email" required
+                            aria-describedby="error-contacto-correo">
+                        <small id="error-contacto-correo" class="mensaje-error"></small>
+                    </section>
+
+                    <section class="campo-formulario">
+                        <label for="contacto-asunto">Asunto</label>
+                        <select id="contacto-asunto" name="asunto" required
+                            aria-describedby="error-contacto-asunto">
+                            <option value="">Selecciona un asunto</option>
+                            <option value="horas">Consulta sobre horas médicas</option>
+                            <option value="examenes">Resultados de exámenes</option>
+                            <option value="convenios">Convenios y aranceles</option>
+                            <option value="reclamo">Reclamo o sugerencia</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                        <small id="error-contacto-asunto" class="mensaje-error"></small>
+                    </section>
+
+                    <section class="campo-formulario">
+                        <label for="contacto-mensaje">Mensaje</label>
+                        <textarea id="contacto-mensaje" name="mensaje" rows="5"
+                            placeholder="Cuéntanos en qué podemos ayudarte (mínimo 10 caracteres)"
+                            minlength="10" maxlength="500" required
+                            aria-describedby="error-contacto-mensaje"></textarea>
+                        <!-- Contador de caracteres, se actualiza con JavaScript -->
+                        <small id="contador-mensaje" class="contador-caracteres">0 / 500</small>
+                        <small id="error-contacto-mensaje" class="mensaje-error"></small>
+                    </section>
+
+                    <button type="submit" class="boton">Enviar mensaje</button>
+
+                    <!-- Mensaje de confirmación al enviar correctamente -->
+                    <p id="mensaje-exito-contacto" class="mensaje-exito" role="status"></p>
+
+                </form>
+
+            </section>
+
+            <!-- Datos de contacto directo de la clínica -->
+            <section class="datos-contacto">
+
+                <h2>Otras formas de contacto</h2>
+
+                <article class="tarjeta-contacto">
+                    <span class="icono-contacto">📍</span>
+                    <h3>Dirección</h3>
+                    <address>Av. Salud 1234, Santiago</address>
+                    <a href="sucursales.html" class="enlace-agenda">Ver todas las sucursales</a>
+                </article>
+
+                <article class="tarjeta-contacto">
+                    <span class="icono-contacto">📞</span>
+                    <h3>Teléfono</h3>
+                    <p><a href="tel:+56223456789">+56 2 2345 6789</a></p>
+                </article>
+
+                <article class="tarjeta-contacto">
+                    <span class="icono-contacto">✉️</span>
+                    <h3>Correo</h3>
+                    <p><a href="mailto:contacto@clinicaagendamedica.cl">contacto@clinicaagendamedica.cl</a></p>
+                </article>
+
+                <article class="tarjeta-contacto">
+                    <span class="icono-contacto">🕒</span>
+                    <h3>Horario de atención</h3>
+                    <p>Lunes a viernes: 08:00 a 20:00<br>Sábados: 09:00 a 14:00</p>
+                </article>
+
+                <p>
+                    ¿Tienes una duda rápida? Revisa nuestras
+                    <a href="preguntas-frecuentes.html" class="enlace-contacto">preguntas frecuentes</a>.
+                </p>
+
+            </section>
 
         </section>
 
@@ -67,6 +173,11 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+        <p>
+            <a href="paginas/sucursales.html">Sucursales</a> |
+            <a href="paginas/preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="paginas/panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 

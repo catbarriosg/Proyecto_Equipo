@@ -674,12 +674,274 @@ main h1 {
     z-index: 1;
 }
 
+/* FORMULARIO REGISTRO PACIENTE  */
+
+.formulario-registro {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+}
+
+.formulario-registro h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.formulario-registro>p {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+#formulario-registro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.campo-formulario label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #525151;
+}
+
+.campo-formulario input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+}
+
+.campo-formulario input:focus {
+    border-color: #7dd3e8;
+    box-shadow: 0 0 0 3px rgba(125, 211, 232, 0.2);
+}
+
+#formulario-registro .boton {
+    grid-column: 1 / -1;
+    justify-self: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* FORMULARIO INICIO DE SESIÓN */
+
+.formulario-login {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.formulario-login h1 {
+    margin-bottom: 15px;
+}
+
+.formulario-login>p {
+    margin-bottom: 25px;
+}
+
+#formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+#formulario-login .boton {
+    align-self: center;
+    border: none;
+    cursor: pointer;
+}
+
+.formulario-login a {
+    color: #198fa5;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.formulario-login a:hover {
+    text-decoration: underline;
+}
+
+/* PERFIL DEL PACIENTE */
+
+.perfil-paciente {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.perfil-paciente>p {
+    margin-bottom: 30px;
+}
+
+.tarjeta-perfil {
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.datos-paciente h2 {
+    margin-bottom: 20px;
+}
+
+.datos-paciente p {
+    margin-bottom: 12px;
+}
+
+.acciones-perfil {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.acciones-perfil .boton {
+    text-decoration: none;
+}
+
+/* MIS HORAS MÉDICAS */
+
+.mis-horas {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.mis-horas>p {
+    margin-bottom: 30px;
+}
+
+.tarjeta-hora {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.tarjeta-hora h2 {
+    margin-bottom: 20px;
+}
+
+.tarjeta-hora p {
+    margin-bottom: 10px;
+}
+
+.acciones-hora {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.acciones-hora .boton {
+    text-decoration: none;
+}
+
+.boton-cancelar {
+    background-color: #d9534f;
+}
+
+.boton-cancelar:hover {
+    background-color: #c9302c;
+}
+
+/* HISTORIAL DE ATENCIONES */
+
+.historial-atenciones {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    text-align: center;
+}
+
+.historial-atenciones>p {
+    margin-bottom: 30px;
+}
+
+.tarjeta-atencion {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.tarjeta-atencion h2 {
+    margin-bottom: 20px;
+}
+
+.tarjeta-atencion p {
+    margin-bottom: 10px;
+}
+
+/* Campo de teléfono con prefijo */
+.telefono-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.telefono-input span {
+    padding: 12px 10px;
+    background-color: #f1fafa;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #525151;
+    white-space: nowrap;
+}
+
+.telefono-input input {
+    flex: 1;
+}
+
+/* =========================================================
+   INTEGRANTE 2 — Agendar, modificar y cancelar horas
+   ========================================================= */
 /* =========================================
    DISEÑO DEL CALENDARIO TIPO INTEGRAMÉDICA
    ========================================= */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .calendario-header {
@@ -851,7 +1113,8 @@ main h1 {
     transition: 0.2s;
 }
 
-.btn-hora:hover, .btn-hora.seleccionada {
+.btn-hora:hover,
+.btn-hora.seleccionada {
     background-color: #007dc6;
     color: white;
 }
@@ -922,14 +1185,618 @@ main h1 {
         margin: 20px 15px;
     }
 
-    /* La ventana emergente (modal) se ajusta al ancho disponible */
+    /* Adaptación responsive del modal y formulario de registro
+   para dispositivos con pantallas pequeñas  */
     .contenido-modal {
         width: 90%;
         max-width: 400px;
         padding: 20px;
     }
 
+    .formulario-registro {
+        padding: 10px 5px 40px;
+    }
+
+    #formulario-registro {
+        grid-template-columns: 1fr;
+        padding: 25px 20px;
+    }
+
+    #formulario-registro .boton {
+        width: 100%;
+    }
 
 
 
+}
+
+/* =========================================================================
+   INTEGRANTE 3 — Contacto, Sucursales, Preguntas frecuentes y Panel admin
+   Todas las clases de este bloque son nuevas y específicas de esas páginas.
+   ========================================================================= */
+
+/* ---------- Elementos compartidos por las páginas del integrante 3 ---------- */
+
+/* Encabezado de cada página (mismo estilo que especialidades-hero) */
+.contacto-hero,
+.sucursales-hero,
+.faq-hero,
+.panel-hero {
+    text-align: center;
+    padding: 40px 20px 20px;
+}
+
+.contacto-hero h1,
+.sucursales-hero h1,
+.faq-hero h1,
+.panel-hero h1 {
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.contacto-hero p,
+.sucursales-hero p,
+.faq-hero p,
+.panel-hero p {
+    max-width: 650px;
+    margin: 0 auto 20px;
+    color: #555;
+}
+
+/* Área de texto con el mismo estilo que los inputs del formulario */
+.campo-formulario textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b8dfe3;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.campo-formulario textarea:focus {
+    outline: none;
+    border-color: #7dd3e8;
+    box-shadow: 0 0 5px rgba(125, 211, 232, 0.5);
+}
+
+/* Mensaje de error bajo cada campo (vacío hasta que JS lo llena) */
+.mensaje-error {
+    display: block;
+    min-height: 18px;
+    margin-top: 6px;
+    color: #c62828;
+    font-size: 14px;
+}
+
+/* Contador de caracteres del mensaje */
+.contador-caracteres {
+    margin-top: 6px;
+    text-align: right;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Mensaje de éxito al enviar un formulario (oculto si está vacío) */
+.mensaje-exito {
+    margin: 15px auto;
+    padding: 12px 18px;
+    max-width: 700px;
+    background-color: #e3f7ec;
+    border: 1px solid #7fd8a4;
+    border-radius: 8px;
+    color: #1b5e20;
+    font-weight: bold;
+}
+
+.mensaje-exito:empty {
+    display: none;
+}
+
+/* Bordes de campo según validación (JS agrega estas clases) */
+.campo-formulario .campo-invalido {
+    border-color: #c62828;
+    box-shadow: 0 0 5px rgba(198, 40, 40, 0.3);
+}
+
+.campo-formulario .campo-valido {
+    border-color: #43a047;
+}
+
+/* ---------- Página Contacto ---------- */
+
+/* Formulario y datos de contacto lado a lado */
+.contacto-contenido {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.formulario-contacto {
+    flex: 1 1 480px;
+    margin: 0;
+    text-align: left;
+}
+
+.formulario-contacto h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Columna con dirección, teléfono, correo y horario */
+.datos-contacto {
+    flex: 1 1 300px;
+    max-width: 380px;
+}
+
+.datos-contacto h2 {
+    margin-bottom: 20px;
+}
+
+.tarjeta-contacto {
+    padding: 18px 20px;
+    margin-bottom: 15px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.tarjeta-contacto p,
+.tarjeta-contacto address {
+    margin-bottom: 8px;
+    font-style: normal;
+}
+
+.tarjeta-contacto h3 {
+    font-size: 18px;
+    margin: 6px 0 8px;
+}
+
+.tarjeta-contacto a {
+    color: #1976D2;
+    text-decoration: none;
+}
+
+/* Enlace en línea dentro de un párrafo */
+.enlace-contacto {
+    color: #1976D2;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.enlace-contacto:hover {
+    text-decoration: underline;
+}
+
+.icono-contacto {
+    font-size: 28px;
+}
+
+/* ---------- Página Sucursales ---------- */
+
+/* Cuadrícula de tarjetas de sucursales */
+.sucursales-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.sucursal-card {
+    background-color: white;
+    border-radius: 18px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.sucursal-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.sucursal-card figure {
+    margin: 0;
+}
+
+.sucursal-card img {
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.sucursal-info {
+    padding: 20px;
+}
+
+.sucursal-info h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.sucursal-info address,
+.sucursal-info p {
+    margin-bottom: 8px;
+    font-style: normal;
+    font-size: 15px;
+}
+
+.sucursal-info a:not(.boton) {
+    color: #1976D2;
+    text-decoration: none;
+}
+
+.sucursal-horario {
+    color: #555;
+}
+
+/* Botón de la tarjeta con texto blanco para contraste */
+.sucursal-card .boton {
+    color: white;
+    margin-top: 8px;
+}
+
+/* Mapa embebido */
+.sucursal-mapa {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.sucursal-mapa h2 {
+    margin-bottom: 20px;
+}
+
+.sucursal-mapa iframe {
+    width: 100%;
+    height: 350px;
+    border: 0;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+/* ---------- Página Preguntas frecuentes ---------- */
+
+.faq-buscador {
+    max-width: 500px;
+    margin: 10px auto 0;
+}
+
+.faq-grupo {
+    max-width: 800px;
+    margin: 0 auto 35px;
+    text-align: left;
+}
+
+.faq-grupo h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #cef6f3;
+}
+
+/* Cada pregunta desplegable */
+.faq-item {
+    background-color: white;
+    border: 1px solid #cef6f3;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.faq-item summary {
+    padding: 16px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    padding-right: 45px;
+}
+
+/* Oculta la flecha por defecto del navegador y usa un "+" */
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: "+";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: #1976D2;
+}
+
+.faq-item[open] summary::after {
+    content: "\2212";
+}
+
+.faq-item[open] {
+    border-color: #7dd3e8;
+}
+
+.faq-item p {
+    padding: 0 20px 16px;
+    margin: 0;
+    color: #444;
+}
+
+.faq-item a {
+    color: #1976D2;
+}
+
+.faq-ayuda {
+    padding: 30px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9fcf0;
+    border-radius: 18px;
+}
+
+.faq-ayuda p {
+    margin-bottom: 15px;
+}
+
+.faq-ayuda .boton {
+    color: white;
+}
+
+/* ---------- Página Panel de administración ---------- */
+
+/* Indicadores de resumen */
+.panel-resumen {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.panel-indicador {
+    min-width: 160px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.panel-indicador span {
+    display: block;
+    font-size: 36px;
+    font-weight: bold;
+    color: #1976D2;
+}
+
+.panel-indicador p {
+    margin: 0;
+    color: #555;
+}
+
+/* Cada bloque (pacientes, médicos, horas) */
+.panel-seccion {
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    text-align: left;
+}
+
+.panel-titulo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.panel-titulo h2 {
+    font-size: 24px;
+}
+
+/* Botones "Agregar" con texto blanco */
+.boton-agregar,
+.panel-formulario .boton {
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.boton-secundario {
+    background-color: #9e9e9e;
+}
+
+/* Formulario para agregar registros (oculto por defecto) */
+.panel-formulario {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9fcf0;
+    border: 1px solid #cef6f3;
+    border-radius: 15px;
+}
+
+.panel-formulario[hidden] {
+    display: none;
+}
+
+.panel-formulario-acciones {
+    text-align: left;
+}
+
+/* Permite desplazar la tabla horizontalmente en pantallas pequeñas */
+.tabla-responsive {
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.tabla-panel {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tabla-panel caption {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #777;
+    text-align: left;
+}
+
+.tabla-panel th,
+.tabla-panel td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e6f4f3;
+    vertical-align: middle;
+}
+
+.tabla-panel th {
+    background-color: #cef6f3;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.tabla-panel tbody tr:hover {
+    background-color: #f9fcf0;
+}
+
+/* Etiquetas de estado */
+.estado {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.estado-activo,
+.estado-confirmada {
+    background-color: #e3f7ec;
+    color: #1b5e20;
+}
+
+.estado-inactivo {
+    background-color: #eeeeee;
+    color: #616161;
+}
+
+.estado-pendiente {
+    background-color: #fff4d6;
+    color: #8a6d00;
+}
+
+/* Botones pequeños dentro de la tabla */
+.boton-tabla {
+    padding: 6px 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.boton-tabla:hover {
+    opacity: 0.8;
+}
+
+.boton-editar {
+    background-color: #1976D2;
+    color: white;
+}
+
+.boton-eliminar {
+    background-color: #ef5350;
+    color: white;
+}
+
+/* Fila resaltada al agregarla (JS agrega la clase) */
+.fila-nueva {
+    background-color: #e3f7ec;
+}
+
+/* ---------- Responsive para las páginas del integrante 3 ---------- */
+
+@media (max-width: 600px) {
+
+    .contacto-hero h1,
+    .sucursales-hero h1,
+    .faq-hero h1,
+    .panel-hero h1 {
+        font-size: 28px;
+    }
+
+    /* Las imágenes de sucursales no usan la regla "main img" de celular */
+    .sucursal-card img {
+        width: 100%;
+        height: 160px;
+    }
+
+    .sucursal-mapa iframe {
+        height: 250px;
+    }
+
+    .formulario-contacto {
+        padding: 20px;
+    }
+
+    .panel-titulo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tabla-panel th,
+    .tabla-panel td {
+        white-space: nowrap;
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* ---------- Video institucional (pagina Quienes somos) ---------- */
+
+.video-institucional {
+    max-width: 900px;
+    margin: 0 auto 40px;
+}
+
+.video-institucional h2 {
+    margin: 15px 0;
+}
+
+.contenedor-video {
+    margin: 20px auto 0;
+}
+
+/* El iframe mantiene la proporcion 16:9 en cualquier pantalla */
+.contenedor-video iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 15px;
+}
+
+.contenedor-video figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+.contenedor-video figcaption a {
+    color: #1976D2;
 }

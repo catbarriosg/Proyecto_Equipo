@@ -44,14 +44,258 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="panel-hero">
+
+            <span class="etiqueta-seccion">ADMINISTRACIÓN</span>
 
             <h1>Panel de administración</h1>
 
             <p>
-                Gestiona la información y las funciones administrativas
-                de Clínica Agenda Médica.
+                Gestiona pacientes, médicos y horas médicas de la clínica.
+                Los datos son de ejemplo para esta versión del proyecto.
             </p>
+
+        </section>
+
+        <!-- Indicadores rápidos: se calculan con JavaScript según las tablas -->
+        <section class="panel-resumen">
+            <article class="panel-indicador">
+                <span id="total-pacientes">0</span>
+                <p>Pacientes</p>
+            </article>
+            <article class="panel-indicador">
+                <span id="total-medicos">0</span>
+                <p>Médicos</p>
+            </article>
+            <article class="panel-indicador">
+                <span id="total-horas">0</span>
+                <p>Horas agendadas</p>
+            </article>
+        </section>
+
+        <!-- Aviso general para las acciones del panel (lo llena JavaScript) -->
+        <p id="aviso-panel" class="mensaje-exito" role="status"></p>
+
+        <!-- Tabla de pacientes -->
+        <section class="panel-seccion">
+
+            <section class="panel-titulo">
+                <h2>Pacientes</h2>
+                <button type="button" class="boton boton-agregar" data-formulario="formulario-paciente">
+                    ➕ Agregar paciente
+                </button>
+            </section>
+
+            <!-- Formulario para agregar un paciente (oculto hasta presionar Agregar) -->
+            <form id="formulario-paciente" class="panel-formulario" novalidate hidden>
+
+                <section class="campo-formulario">
+                    <label for="paciente-rut">RUT</label>
+                    <input type="text" id="paciente-rut" name="rut" placeholder="Ej: 12.345.678-9"
+                        maxlength="12" required aria-describedby="error-paciente-rut">
+                    <small id="error-paciente-rut" class="mensaje-error"></small>
+                </section>
+
+                <section class="campo-formulario">
+                    <label for="paciente-nombre">Nombre completo</label>
+                    <input type="text" id="paciente-nombre" name="nombre" placeholder="Ej: Ana Pérez"
+                        autocomplete="off" minlength="3" maxlength="60" required
+                        aria-describedby="error-paciente-nombre">
+                    <small id="error-paciente-nombre" class="mensaje-error"></small>
+                </section>
+
+                <section class="panel-formulario-acciones">
+                    <button type="submit" class="boton">Guardar</button>
+                    <button type="button" class="boton boton-secundario boton-cancelar">Cancelar</button>
+                </section>
+
+            </form>
+
+            <section class="tabla-responsive">
+                <table class="tabla-panel" id="tabla-pacientes">
+                    <caption>Listado de pacientes registrados</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">RUT</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12.345.678-9</td>
+                            <td>Ana Pérez</td>
+                            <td><span class="estado estado-activo">Activo</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-editar">Editar</button>
+                                <button type="button" class="boton-tabla boton-eliminar">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>9.876.543-2</td>
+                            <td>Luis Soto</td>
+                            <td><span class="estado estado-activo">Activo</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-editar">Editar</button>
+                                <button type="button" class="boton-tabla boton-eliminar">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>15.222.333-K</td>
+                            <td>Carla Díaz</td>
+                            <td><span class="estado estado-inactivo">Inactivo</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-editar">Editar</button>
+                                <button type="button" class="boton-tabla boton-eliminar">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </section>
+
+        <!-- Tabla de médicos -->
+        <section class="panel-seccion">
+
+            <section class="panel-titulo">
+                <h2>Médicos</h2>
+                <button type="button" class="boton boton-agregar" data-formulario="formulario-medico">
+                    ➕ Agregar médico
+                </button>
+            </section>
+
+            <!-- Formulario para agregar un médico (oculto hasta presionar Agregar) -->
+            <form id="formulario-medico" class="panel-formulario" novalidate hidden>
+
+                <section class="campo-formulario">
+                    <label for="medico-nombre">Nombre del médico</label>
+                    <input type="text" id="medico-nombre" name="nombre" placeholder="Ej: Juan Pérez"
+                        autocomplete="off" minlength="3" maxlength="60" required
+                        aria-describedby="error-medico-nombre">
+                    <small id="error-medico-nombre" class="mensaje-error"></small>
+                </section>
+
+                <section class="campo-formulario">
+                    <label for="medico-especialidad">Especialidad</label>
+                    <select id="medico-especialidad" name="especialidad" required
+                        aria-describedby="error-medico-especialidad">
+                        <option value="">Selecciona una especialidad</option>
+                        <option>Medicina General</option>
+                        <option>Pediatría</option>
+                        <option>Cardiología</option>
+                        <option>Ginecología</option>
+                        <option>Dermatología</option>
+                        <option>Traumatología</option>
+                    </select>
+                    <small id="error-medico-especialidad" class="mensaje-error"></small>
+                </section>
+
+                <section class="panel-formulario-acciones">
+                    <button type="submit" class="boton">Guardar</button>
+                    <button type="button" class="boton boton-secundario boton-cancelar">Cancelar</button>
+                </section>
+
+            </form>
+
+            <section class="tabla-responsive">
+                <table class="tabla-panel" id="tabla-medicos">
+                    <caption>Listado de médicos de la clínica</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Médico</th>
+                            <th scope="col">Especialidad</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan Pérez</td>
+                            <td>Medicina General</td>
+                            <td><span class="estado estado-activo">Activo</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-editar">Editar</button>
+                                <button type="button" class="boton-tabla boton-eliminar">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>María González</td>
+                            <td>Pediatría</td>
+                            <td><span class="estado estado-activo">Activo</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-editar">Editar</button>
+                                <button type="button" class="boton-tabla boton-eliminar">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Rodríguez</td>
+                            <td>Cardiología</td>
+                            <td><span class="estado estado-inactivo">Inactivo</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-editar">Editar</button>
+                                <button type="button" class="boton-tabla boton-eliminar">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </section>
+
+        <!-- Tabla de horas médicas -->
+        <section class="panel-seccion">
+
+            <section class="panel-titulo">
+                <h2>Horas médicas</h2>
+                <a href="agendar-hora.html" class="boton boton-agregar">➕ Agendar hora</a>
+            </section>
+
+            <section class="tabla-responsive">
+                <table class="tabla-panel" id="tabla-horas">
+                    <caption>Horas médicas agendadas</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Médico</th>
+                            <th scope="col">Paciente</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><time datetime="2026-09-25">25/09/2026</time></td>
+                            <td>Juan Pérez</td>
+                            <td>Ana Pérez</td>
+                            <td><span class="estado estado-confirmada">Confirmada</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-eliminar">Cancelar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><time datetime="2026-09-26">26/09/2026</time></td>
+                            <td>María González</td>
+                            <td>Luis Soto</td>
+                            <td><span class="estado estado-pendiente">Pendiente</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-eliminar">Cancelar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><time datetime="2026-09-28">28/09/2026</time></td>
+                            <td>Carlos Rodríguez</td>
+                            <td>Carla Díaz</td>
+                            <td><span class="estado estado-confirmada">Confirmada</span></td>
+                            <td>
+                                <button type="button" class="boton-tabla boton-eliminar">Cancelar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
         </section>
 
@@ -67,6 +311,11 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+        <p>
+            <a href="paginas/sucursales.html">Sucursales</a> |
+            <a href="paginas/preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="paginas/panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 

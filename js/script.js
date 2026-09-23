@@ -1,13 +1,15 @@
-// Espera a que la página termine de cargar una sola vez
+// Espera a que la página termine de cargar
 document.addEventListener("DOMContentLoaded", function () {
-    
-    // ==========================================
-    // 1. LÓGICA DEL FORMULARIO Y VALIDACIONES
-    // ==========================================
+
+    // FORMULARIO AGENDAR HORA MÉDICA
+
+
     const formulario = document.getElementById("formulario-agenda");
 
     if (formulario) {
+
         formulario.addEventListener("submit", function (evento) {
+
             evento.preventDefault();
 
             const especialidad = document.getElementById("especialidad").value;
@@ -15,89 +17,99 @@ document.addEventListener("DOMContentLoaded", function () {
             const fecha = document.getElementById("fecha").value;
             const hora = document.getElementById("hora").value;
 
-            // Validaciones
+
             if (especialidad === "") {
-                mostrarModalError("Debes seleccionar una especialidad médica.");
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Debes seleccionar una especialidad médica.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
                 return;
             }
+
+
             if (medico === "") {
-                mostrarModalError("Debes seleccionar un médico.");
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Debes seleccionar un médico.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
                 return;
             }
+
+
             if (fecha === "") {
-                mostrarModalError("Debes seleccionar una fecha haciendo clic en un día del calendario.");
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Debes seleccionar una fecha.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
                 return;
             }
+
+
             if (hora === "") {
-                mostrarModalError("Debes seleccionar una hora disponible.");
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Debes seleccionar una hora.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
                 return;
             }
 
-            // Mensaje de éxito si pasa todas las validaciones
+
+            // Obtiene el nombre visible de la especialidad
+            const especialidadTexto =
+                document.getElementById("especialidad").options[
+                    document.getElementById("especialidad").selectedIndex
+                ].text;
+
+
+            // Obtiene el nombre visible del médico
+            const medicoTexto =
+                document.getElementById("medico").options[
+                    document.getElementById("medico").selectedIndex
+                ].text;
+
+
+            // Genera un ID para la reserva
             const idReserva = "AM-" + Date.now();
-            const selectEspecialidad = document.getElementById("especialidad");
-            const selectMedico = document.getElementById("medico");
-            
-            const especialidadTexto = selectEspecialidad.options[selectEspecialidad.selectedIndex].text;
-            const medicoTexto = selectMedico.options[selectMedico.selectedIndex].text;
 
-            document.getElementById("texto-modal").textContent = "¡Hora médica agendada correctamente!";
-            
-            const datosReserva = document.getElementById("datos-reserva");
-            if (datosReserva) {
-                datosReserva.innerHTML = `
-                    <p><strong>ID de reserva:</strong> ${idReserva}</p>
-                    <p><strong>Especialidad:</strong> ${especialidadTexto}</p>
-                    <p><strong>Médico:</strong> ${medicoTexto}</p>
-                    <p><strong>Fecha:</strong> ${fecha}</p>
-                    <p><strong>Hora:</strong> ${hora}</p>
-                    <p>Guarda este comprobante para tu atención.</p>
-                `;
-            }
-            
-            document.getElementById("modal-mensaje").style.display = "flex";
+            // Muestra la confirmación
+            Swal.fire({
+                title: "¡Hora agendada!",
+                icon: "success",
+                html: `
+                    <strong>ID Reserva:</strong> ${idReserva}<br><br>
+                    <strong>Especialidad:</strong> ${especialidadTexto}<br>
+                    <strong>Médico:</strong> ${medicoTexto}<br>
+                    <strong>Fecha:</strong> ${fecha}<br>
+                    <strong>Hora:</strong> ${hora}
+                `,
+                confirmButtonText: "Aceptar"
+            });
 
-            // Mostrar el botón de descarga solo cuando hay éxito
-            const btnDescargar = document.getElementById("btn-descargar");
-            if (btnDescargar) btnDescargar.style.display = "inline-block";
+
+            formulario.reset();
         });
     }
-
-    function mostrarModalError(mensaje) {
-        const textoModal = document.getElementById("texto-modal");
-        const modalMensaje = document.getElementById("modal-mensaje");
-        const datosReserva = document.getElementById("datos-reserva");
-        const btnDescargar = document.getElementById("btn-descargar");
-        
-        if (textoModal && modalMensaje) {
-            textoModal.textContent = mensaje;
-            if (datosReserva) datosReserva.innerHTML = ""; // Limpia datos de reserva si es un error
-            if (btnDescargar) btnDescargar.style.display = "none"; // Oculta el botón de descarga en errores
-            modalMensaje.style.display = "flex";
-        }
-    }
-
-    const btnCerrarModal = document.getElementById("cerrar-modal");
-    if (btnCerrarModal) {
-        btnCerrarModal.addEventListener("click", function () {
-            const modalMensaje = document.getElementById("modal-mensaje");
-            if(modalMensaje) modalMensaje.style.display = "none";
-        });
-    }
-
     // ==========================================
     // 2. DESPLIEGUE VISUAL (Mostrar calendario)
     // ==========================================
     const selectEspecialidad = document.getElementById("especialidad");
     const selectMedico = document.getElementById("medico");
     const contenedorFechaHora = document.getElementById("contenedor-fecha-hora");
-    
+
     function verificarDespliegue() {
         if (selectEspecialidad && selectMedico && contenedorFechaHora) {
             if (selectEspecialidad.value !== "" && selectMedico.value !== "") {
                 // Mostrar contenedor
                 contenedorFechaHora.style.display = "block";
-                
+
                 // Actualizar textos de la tarjeta azul
                 document.getElementById("tarjeta-nombre-medico").textContent = selectMedico.options[selectMedico.selectedIndex].text;
                 document.getElementById("tarjeta-especialidad").textContent = selectEspecialidad.options[selectEspecialidad.selectedIndex].text;
@@ -113,19 +125,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ==========================================
-    // 3. SELECCIÓN DE HORA Y DÍA (Click en los botones)
+    // 3. SELECCI├ôN DE HORA Y D├ìA (Click en los botones)
     // ==========================================
     const botonesHora = document.querySelectorAll(".btn-hora");
     const inputHoraOculto = document.getElementById("hora");
 
     botonesHora.forEach(boton => {
-        boton.addEventListener("click", function() {
-            // Quitar estilo de seleccionado a todos y ponérselo al actual
+        boton.addEventListener("click", function () {
+            // Quitar estilo de seleccionado a todos y pon├®rselo al actual
             botonesHora.forEach(b => b.classList.remove("seleccionada"));
             this.classList.add("seleccionada");
-            
+
             // Guardar en el input invisible
-            if(inputHoraOculto) inputHoraOculto.value = this.getAttribute("data-hora");
+            if (inputHoraOculto) inputHoraOculto.value = this.getAttribute("data-hora");
         });
     });
 
@@ -134,23 +146,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputFechaOculto = document.getElementById("fecha");
 
     diasSemana.forEach(dia => {
-        dia.addEventListener("click", function() {
-            // Cambiar el día activo visualmente
+        dia.addEventListener("click", function () {
+            // Cambiar el d├¡a activo visualmente
             diasSemana.forEach(d => d.classList.remove("activo"));
             this.classList.add("activo");
-            
-            // Actualizar el título de la tarjeta y el input oculto
-            if(tituloFechaSeleccionada) tituloFechaSeleccionada.textContent = this.getAttribute("data-texto");
-            if(inputFechaOculto) inputFechaOculto.value = this.getAttribute("data-fecha");
-            
-            // Si el paciente cambia de día, reseteamos la hora elegida
+
+            // Actualizar el t├¡tulo de la tarjeta y el input oculto
+            if (tituloFechaSeleccionada) tituloFechaSeleccionada.textContent = this.getAttribute("data-texto");
+            if (inputFechaOculto) inputFechaOculto.value = this.getAttribute("data-fecha");
+
+            // Si el paciente cambia de d├¡a, reseteamos la hora elegida
             botonesHora.forEach(b => b.classList.remove("seleccionada"));
-            if(inputHoraOculto) inputHoraOculto.value = "";
+            if (inputHoraOculto) inputHoraOculto.value = "";
         });
     });
 
     // ==========================================
-    // 4. NAVEGADOR DE SEMANAS Y DÍAS DINÁMICOS
+    // 4. NAVEGADOR DE SEMANAS Y D├ìAS DIN├üMICOS
     // ==========================================
     const btnAnterior = document.getElementById('btn-semana-anterior');
     const btnSiguiente = document.getElementById('btn-semana-siguiente');
@@ -160,8 +172,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Validamos que existan en el HTML actual antes de ejecutar
     if (btnAnterior && btnSiguiente && textoSemana && cuadrosDias.length > 0) {
         const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-        const nombresDiasCortos = ["D", "L", "M", "Mié", "J", "V", "S"];
-        const nombresDiasLargos = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+        const nombresDiasCortos = ["D", "L", "M", "Mi├®", "J", "V", "S"];
+        const nombresDiasLargos = ["Domingo", "Lunes", "Martes", "Mi├®rcoles", "Jueves", "Viernes", "S├íbado"];
 
         const fechaHoy = new Date();
         fechaHoy.setHours(0, 0, 0, 0);
@@ -190,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function actualizarCuadrosDias() {
-            // Cambia los números y letras de los cuadritos dinámicamente
+            // Cambia los n├║meros y letras de los cuadritos din├ímicamente
             cuadrosDias.forEach((cuadro, index) => {
                 let fechaCuadro = new Date(fechaInicio);
                 fechaCuadro.setDate(fechaInicio.getDate() + index);
@@ -200,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let nombreCorto = nombresDiasCortos[indexDiaSemana];
                 let nombreLargo = nombresDiasLargos[indexDiaSemana];
                 let nombreMes = meses[fechaCuadro.getMonth()];
-                
+
                 let anioAttr = fechaCuadro.getFullYear();
                 let mesAttr = String(fechaCuadro.getMonth() + 1).padStart(2, '0');
                 let diaAttr = String(fechaCuadro.getDate()).padStart(2, '0');
@@ -210,14 +222,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const elementoNombre = cuadro.querySelector('.dia-nombre');
                 const elementoNumero = cuadro.querySelector('.dia-numero');
-                
+
                 if (elementoNombre) elementoNombre.textContent = nombreCorto;
                 if (elementoNumero) elementoNumero.textContent = numeroDia;
-                
+
                 cuadro.setAttribute('data-fecha', fechaFormateada);
                 cuadro.setAttribute('data-texto', textoLargo);
 
-                // Si este cuadro es el activo, actualizamos el título de abajo y el input
+                // Si este cuadro es el activo, actualizamos el t├¡tulo de abajo y el input
                 if (cuadro.classList.contains('activo')) {
                     if (tituloFechaSeleccionada) tituloFechaSeleccionada.textContent = textoLargo;
                     if (inputFechaOculto) inputFechaOculto.value = fechaFormateada;
@@ -238,153 +250,900 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        btnSiguiente.addEventListener('click', function() {
+        btnSiguiente.addEventListener('click', function () {
             fechaInicio.setDate(fechaInicio.getDate() + 7);
             actualizarTexto();
         });
 
-        btnAnterior.addEventListener('click', function() {
+        btnAnterior.addEventListener('click', function () {
             if (!btnAnterior.disabled) {
                 fechaInicio.setDate(fechaInicio.getDate() - 7);
                 actualizarTexto();
             }
         });
 
-        // Ejecutar inmediatamente al abrir la página
+        // Ejecutar inmediatamente al abrir la p├ígina
         actualizarTexto();
     }
 
-    // ==========================================
-    // 5. LÓGICA DE CANCELAR HORA
-    // ==========================================
-    const formBuscarReserva = document.getElementById("formulario-buscar-reserva");
-    const contenedorResultado = document.getElementById("resultado-reserva");
-    const modalConfirmacion = document.getElementById("modal-confirmacion-cancelar");
-    const modalExitoCancelacion = document.getElementById("modal-exito-cancelacion");
+    // FORMULARIO REGISTRO DE PACIENTE
 
-    if (formBuscarReserva) {
-        // 1. Simular la búsqueda de la reserva
-        formBuscarReserva.addEventListener("submit", function(evento) {
+    const formularioRegistro =
+        document.getElementById("formulario-registro");
+
+    if (formularioRegistro) {
+
+        formularioRegistro.addEventListener("submit", function (evento) {
+
             evento.preventDefault();
-            const codigoInput = document.getElementById("codigo-reserva").value;
-            
-            // Inyectamos el código que el usuario escribió en la tarjeta y la mostramos
-            const codigoDisplay = document.getElementById("reserva-codigo-display");
-            if (codigoDisplay) codigoDisplay.textContent = codigoInput;
-            
-            if (contenedorResultado) contenedorResultado.style.display = "block";
+
+
+            // Obtener datos del formulario
+            const nombre =
+                document.getElementById("nombre").value.trim();
+
+            const apellido =
+                document.getElementById("apellido").value.trim();
+
+            const rut =
+                document.getElementById("rut").value.trim();
+
+            const fechaNacimiento =
+                document.getElementById("fecha-nacimiento").value;
+
+            const correo =
+                document.getElementById("correo").value.trim();
+
+            const tipoTelefono =
+                document.getElementById("tipo-telefono").value;
+
+            const telefono =
+                document.getElementById("telefono").value.trim();
+
+            const direccion =
+                document.getElementById("direccion").value.trim();
+
+            const contrasena =
+                document.getElementById("contrasena").value;
+
+            const confirmarContrasena =
+                document.getElementById("confirmar-contrasena").value;
+
+
+            // VALIDAR NOMBRE
+
+            if (nombre === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu nombre.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            // Solo permite letras, espacios y tildes
+            const formatoNombre =
+                /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+
+
+            if (!formatoNombre.test(nombre)) {
+
+                Swal.fire({
+                    title: "Nombre no válido",
+                    text: "El nombre solo puede contener letras y espacios.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (nombre.length < 3) {
+
+                Swal.fire({
+                    title: "Nombre no válido",
+                    text: "El nombre debe tener al menos 3 caracteres.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            // VALIDAR APELLIDO
+
+
+            if (apellido === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu apellido.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (!formatoNombre.test(apellido)) {
+
+                Swal.fire({
+                    title: "Apellido no válido",
+                    text: "El apellido solo puede contener letras y espacios.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (apellido.length < 3) {
+
+                Swal.fire({
+                    title: "Apellido no válido",
+                    text: "El apellido debe tener al menos 3 caracteres.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            // VALIDAR RUT
+
+            if (rut === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu RUT.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            // Solo valida el formato.
+            const formatoRut =
+                /^\d{1,2}\.\d{3}\.\d{3}-[\dkK]$/;
+
+
+            if (!formatoRut.test(rut)) {
+
+                Swal.fire({
+                    title: "RUT no válido",
+                    text: "Ingresa tu RUT con el formato 12.345.678-9.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+
+            // VALIDAR FECHA DE NACIMIENTO
+
+            if (fechaNacimiento === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu fecha de nacimiento.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            // VALIDAR CORREO
+            if (correo === "") {
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu correo electrónico.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            const formatoCorreo =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if (!formatoCorreo.test(correo)) {
+
+                Swal.fire({
+                    title: "Correo no válido",
+                    text: "Ingresa un correo electrónico válido. Ejemplo: usuario@correo.cl",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            // VALIDAR TELÉFONO
+
+            if (telefono === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu número de teléfono.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            const formatoNumeroTelefono = /^\d{8}$/;
+
+            if (!formatoNumeroTelefono.test(telefono)) {
+
+                Swal.fire({
+                    title: "Teléfono no válido",
+                    text: "Ingresa exactamente 8 números después del prefijo +56.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            // VALIDAR DIRECCIÓN
+
+            if (direccion === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu dirección.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            // VALIDAR CONTRASEÑA
+
+
+            if (contrasena === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, crea una contraseña.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (contrasena.length < 8) {
+
+                Swal.fire({
+                    title: "Contraseña no válida",
+                    text: "La contraseña debe tener al menos 8 caracteres.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            // CONFIRMAR CONTRASEÑA
+
+            if (confirmarContrasena === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, confirma tu contraseña.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (contrasena !== confirmarContrasena) {
+
+                Swal.fire({
+                    title: "Contraseñas diferentes",
+                    text: "Las contraseñas no coinciden.",
+                    icon: "warning",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+            // REGISTRO EXITOSO
+
+            Swal.fire({
+                title: "¡Registro exitoso!",
+                text: "Tu cuenta ha sido creada correctamente.",
+                icon: "success",
+                confirmButtonText: "Continuar"
+            });
+
+
+            formularioRegistro.reset();
+
         });
+    }
+    // Cambiar prefijo según el tipo de teléfono
+    const tipoTelefono = document.getElementById("tipo-telefono");
+    const prefijoTelefono = document.getElementById("prefijo-telefono");
 
-        // 2. Desplegar ventana de confirmación (¿Estás seguro?)
-        const btnIniciarCancelacion = document.getElementById("btn-iniciar-cancelacion");
-        if (btnIniciarCancelacion) {
-            btnIniciarCancelacion.addEventListener("click", function() {
-                if (modalConfirmacion) modalConfirmacion.style.display = "flex";
-            });
-        }
+    if (tipoTelefono && prefijoTelefono) {
 
-        // 3. Acción: "No, mantener hora" (Se arrepiente y cierra la alerta)
-        const btnNoVolver = document.getElementById("btn-no-volver");
-        if (btnNoVolver) {
-            btnNoVolver.addEventListener("click", function() {
-                if (modalConfirmacion) modalConfirmacion.style.display = "none";
-            });
-        }
+        tipoTelefono.addEventListener("change", function () {
 
-        // 4. Acción: "Sí, cancelar hora" (Confirma la eliminación)
-        const btnSiCancelar = document.getElementById("btn-si-cancelar");
-        if (btnSiCancelar) {
-            btnSiCancelar.addEventListener("click", function() {
-                // Ocultamos la alerta de seguridad
-                if (modalConfirmacion) modalConfirmacion.style.display = "none";
-                
-                // Ocultamos la tarjeta porque la cita ya no existe
-                if (contenedorResultado) contenedorResultado.style.display = "none";
-                
-                // Limpiamos el input del buscador
-                formBuscarReserva.reset();
+            if (tipoTelefono.value === "celular") {
+                prefijoTelefono.textContent = "+56 9";
+            } else {
+                prefijoTelefono.textContent = "+56 2";
+            }
 
-                // Mostramos el éxito de la operación
-                if (modalExitoCancelacion) modalExitoCancelacion.style.display = "flex";
-            });
-        }
-
-        // 5. Cerrar el mensaje de éxito para volver a dejar la pantalla limpia
-        const btnCerrarExitoCancelacion = document.getElementById("btn-cerrar-exito-cancelacion");
-        if (btnCerrarExitoCancelacion) {
-            btnCerrarExitoCancelacion.addEventListener("click", function() {
-                if (modalExitoCancelacion) modalExitoCancelacion.style.display = "none";
-            });
-        }
+        });
     }
 
-    // ==========================================
-    // 6. LÓGICA DE BUSCAR HORA (Filtros)
-    // ==========================================
-    const formBuscarFiltro = document.getElementById("formulario-filtros-buscar");
-    const resultadosBusqueda = document.getElementById("resultados-busqueda");
-    const modalRedireccion = document.getElementById("modal-redireccion-agendar");
-    const botonesSeleccionarHora = document.querySelectorAll(".btn-seleccionar-hora");
+    // FORMULARIO DE INICIO DE SESIÓN
 
-    if (formBuscarFiltro) {
-        formBuscarFiltro.addEventListener("submit", function(evento) {
+    const formularioLogin =
+        document.getElementById("formulario-login");
+
+    if (formularioLogin) {
+
+        formularioLogin.addEventListener("submit", function (evento) {
+
             evento.preventDefault();
-            // Simula la carga de resultados mostrando las tarjetas ocultas
-            if (resultadosBusqueda) resultadosBusqueda.style.display = "block";
-        });
 
-        // Al hacer clic en seleccionar, muestra el aviso de redirección
-        botonesSeleccionarHora.forEach(boton => {
-            boton.addEventListener("click", function() {
-                if (modalRedireccion) modalRedireccion.style.display = "flex";
+
+            const correo =
+                document.getElementById("correo").value.trim();
+
+            const contrasena =
+                document.getElementById("contrasena").value;
+
+
+            if (correo === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu correo electrónico.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            // Valida el formato del correo
+            const formatoCorreo =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if (!formatoCorreo.test(correo)) {
+
+                Swal.fire({
+                    title: "Correo no válido",
+                    text: "Ingresa un correo electrónico válido. Ejemplo: usuario@correo.cl",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (contrasena === "") {
+
+                Swal.fire({
+                    title: "Faltan datos",
+                    text: "Por favor, ingresa tu contraseña.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            if (contrasena.length < 8) {
+
+                Swal.fire({
+                    title: "Contraseña no válida",
+                    text: "La contraseña debe tener al menos 8 caracteres.",
+                    icon: "error",
+                    confirmButtonText: "Entendido"
+                });
+
+                return;
+            }
+
+
+            Swal.fire({
+                title: "¡Inicio de sesión exitoso!",
+                text: "Bienvenido a Clínica Agenda Médica.",
+                icon: "success",
+                confirmButtonText: "Continuar"
             });
+
         });
-    }
-
-    // ==========================================
-    // 7. LÓGICA DE MODIFICAR HORA
-    // ==========================================
-    const formBuscarModificar = document.getElementById("formulario-buscar-modificar");
-    const contenedorModificacion = document.getElementById("contenedor-modificacion");
-    const formNuevaFecha = document.getElementById("formulario-nueva-fecha");
-    const modalExitoModificar = document.getElementById("modal-exito-modificar");
-    const btnCerrarModificar = document.getElementById("btn-cerrar-modificar");
-    const inputNuevaFecha = document.getElementById("nueva-fecha");
-
-    if (formBuscarModificar) {
-        // Bloquear fechas pasadas en el input de nueva fecha
-        if (inputNuevaFecha) {
-            const hoy = new Date();
-            const anio = hoy.getFullYear();
-            const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoy.getDate()).padStart(2, '0');
-            inputNuevaFecha.min = `${anio}-${mes}-${dia}`;
-        }
-
-        // 1. Mostrar la reserva actual al buscar
-        formBuscarModificar.addEventListener("submit", function(evento) {
-            evento.preventDefault();
-            if (contenedorModificacion) contenedorModificacion.style.display = "block";
-        });
-
-        // 2. Confirmar la modificación
-        if (formNuevaFecha) {
-            formNuevaFecha.addEventListener("submit", function(evento) {
-                evento.preventDefault();
-                // Ocultar panel y limpiar inputs
-                contenedorModificacion.style.display = "none";
-                formBuscarModificar.reset();
-                formNuevaFecha.reset();
-                // Mostrar éxito
-                if (modalExitoModificar) modalExitoModificar.style.display = "flex";
-            });
-        }
-
-        // 3. Cerrar modal
-        if (btnCerrarModificar) {
-            btnCerrarModificar.addEventListener("click", function() {
-                if (modalExitoModificar) modalExitoModificar.style.display = "none";
-            });
-        }
     }
 });
+
+
+
+/* =========================================================================
+   INTEGRANTE 3 — Contacto, Preguntas frecuentes y Panel de administración
+   Este bloque es independiente: cada función revisa que sus elementos
+   existan en la página antes de actuar, así no genera errores en las
+   páginas donde no corresponde.
+   ========================================================================= */
+
+// ---------- Funciones de apoyo para validar formularios ----------
+
+// Muestra un mensaje de error bajo el campo y lo marca en rojo
+function mostrarErrorCampo(campo, mensaje) {
+    const contenedorError = document.getElementById("error-" + campo.id);
+    if (contenedorError) {
+        contenedorError.textContent = mensaje;
+    }
+    campo.classList.add("campo-invalido");
+    campo.classList.remove("campo-valido");
+}
+
+// Limpia el mensaje de error y marca el campo como correcto
+function limpiarErrorCampo(campo) {
+    const contenedorError = document.getElementById("error-" + campo.id);
+    if (contenedorError) {
+        contenedorError.textContent = "";
+    }
+    campo.classList.remove("campo-invalido");
+    campo.classList.add("campo-valido");
+}
+
+// Deja el campo sin marcas de validación (estado inicial)
+function reiniciarCampo(campo) {
+    const contenedorError = document.getElementById("error-" + campo.id);
+    if (contenedorError) {
+        contenedorError.textContent = "";
+    }
+    campo.classList.remove("campo-invalido", "campo-valido");
+}
+
+// Valida un nombre: obligatorio, mínimo 3 letras, solo letras y espacios
+function validarNombre(campo) {
+    const valor = campo.value.trim();
+    const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "El nombre es obligatorio.");
+        return false;
+    }
+    if (valor.length < 3) {
+        mostrarErrorCampo(campo, "El nombre debe tener al menos 3 caracteres.");
+        return false;
+    }
+    if (!soloLetras.test(valor)) {
+        mostrarErrorCampo(campo, "El nombre solo puede contener letras y espacios.");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Valida un correo electrónico con un formato básico usuario@dominio.ext
+function validarCorreo(campo) {
+    const valor = campo.value.trim();
+    const formatoCorreo = /^[\w.+-]+@[\w-]+\.[\w.-]+$/;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "El correo es obligatorio.");
+        return false;
+    }
+    if (!formatoCorreo.test(valor)) {
+        mostrarErrorCampo(campo, "Ingresa un correo válido, por ejemplo: nombre@correo.cl");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Valida que se haya elegido una opción de una lista desplegable
+function validarSeleccion(campo, mensaje) {
+    if (campo.value === "") {
+        mostrarErrorCampo(campo, mensaje);
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Valida el mensaje de contacto: obligatorio, entre 10 y 500 caracteres
+function validarMensaje(campo) {
+    const valor = campo.value.trim();
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "Escribe tu mensaje antes de enviar.");
+        return false;
+    }
+    if (valor.length < 10) {
+        mostrarErrorCampo(campo, "El mensaje es muy corto: faltan " + (10 - valor.length) + " caracteres.");
+        return false;
+    }
+    if (valor.length > 500) {
+        mostrarErrorCampo(campo, "El mensaje no puede superar los 500 caracteres.");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Calcula el dígito verificador de un RUT chileno (módulo 11)
+function calcularDigitoVerificador(numeroRut) {
+    let suma = 0;
+    let multiplicador = 2;
+
+    // Recorre el número de derecha a izquierda multiplicando por 2..7
+    for (let i = numeroRut.length - 1; i >= 0; i--) {
+        suma += parseInt(numeroRut[i], 10) * multiplicador;
+        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+
+    const resto = 11 - (suma % 11);
+    if (resto === 11) return "0";
+    if (resto === 10) return "K";
+    return String(resto);
+}
+
+// Valida un RUT chileno: formato 12.345.678-9 (o sin puntos) y dígito verificador correcto
+function validarRut(campo) {
+    const valor = campo.value.trim().toUpperCase();
+    const formatoRut = /^\d{1,2}\.?\d{3}\.?\d{3}-[\dK]$/;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "El RUT es obligatorio.");
+        return false;
+    }
+    if (!formatoRut.test(valor)) {
+        mostrarErrorCampo(campo, "Formato inválido. Usa el formato 12.345.678-9");
+        return false;
+    }
+
+    // Separa el número del dígito verificador y compara
+    const rutLimpio = valor.replace(/\./g, "");
+    const partes = rutLimpio.split("-");
+    const digitoIngresado = partes[1];
+    const digitoEsperado = calcularDigitoVerificador(partes[0]);
+
+    if (digitoIngresado !== digitoEsperado) {
+        mostrarErrorCampo(campo, "El dígito verificador no corresponde. ¿Quisiste decir " + formatearRut(partes[0] + digitoEsperado) + "?");
+        return false;
+    }
+
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Da formato 12.345.678-9 a un RUT escrito sin puntos
+function formatearRut(valor) {
+    const limpio = valor.replace(/[^\dkK]/g, "").toUpperCase();
+    if (limpio.length < 2) return limpio;
+    const cuerpo = limpio.slice(0, -1);
+    const digito = limpio.slice(-1);
+    return cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + digito;
+}
+
+
+// ---------- VALIDACIÓN CONTACTO ----------
+
+function validarContacto() {
+    const formulario = document.getElementById("formulario-contacto");
+    if (!formulario) return; // Solo actúa en contacto.html
+
+    const nombre = document.getElementById("contacto-nombre");
+    const correo = document.getElementById("contacto-correo");
+    const asunto = document.getElementById("contacto-asunto");
+    const mensaje = document.getElementById("contacto-mensaje");
+    const contador = document.getElementById("contador-mensaje");
+    const mensajeExito = document.getElementById("mensaje-exito-contacto");
+
+    // Validación en tiempo real: al salir del campo y mientras se escribe
+    nombre.addEventListener("blur", function () { validarNombre(nombre); });
+    nombre.addEventListener("input", function () {
+        if (nombre.classList.contains("campo-invalido")) validarNombre(nombre);
+    });
+
+    correo.addEventListener("blur", function () { validarCorreo(correo); });
+    correo.addEventListener("input", function () {
+        if (correo.classList.contains("campo-invalido")) validarCorreo(correo);
+    });
+
+    asunto.addEventListener("change", function () {
+        validarSeleccion(asunto, "Selecciona el asunto de tu mensaje.");
+    });
+
+    // El contador se actualiza con cada tecla
+    mensaje.addEventListener("input", function () {
+        contador.textContent = mensaje.value.length + " / 500";
+        if (mensaje.classList.contains("campo-invalido")) validarMensaje(mensaje);
+    });
+    mensaje.addEventListener("blur", function () { validarMensaje(mensaje); });
+
+    // Al enviar se validan todos los campos y se bloquea el envío si alguno falla
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        mensajeExito.textContent = "";
+
+        // Se ejecutan todas para que cada campo muestre su propio error
+        const nombreValido = validarNombre(nombre);
+        const correoValido = validarCorreo(correo);
+        const asuntoValido = validarSeleccion(asunto, "Selecciona el asunto de tu mensaje.");
+        const mensajeValido = validarMensaje(mensaje);
+
+        if (!nombreValido || !correoValido || !asuntoValido || !mensajeValido) {
+            // Lleva el foco al primer campo con error
+            const primerError = formulario.querySelector(".campo-invalido");
+            if (primerError) primerError.focus();
+            return;
+        }
+
+        // Todo correcto: se muestra la confirmación y se limpia el formulario
+        mensajeExito.textContent =
+            "¡Gracias, " + nombre.value.trim() + "! Recibimos tu mensaje sobre \"" +
+            asunto.options[asunto.selectedIndex].text + "\". Te responderemos a " + correo.value.trim() + ".";
+
+        formulario.reset();
+        contador.textContent = "0 / 500";
+        [nombre, correo, asunto, mensaje].forEach(reiniciarCampo);
+    });
+}
+
+
+// ---------- BUSCADOR DE PREGUNTAS FRECUENTES ----------
+
+function iniciarBuscadorFaq() {
+    const buscador = document.getElementById("buscador-faq");
+    if (!buscador) return; // Solo actúa en preguntas-frecuentes.html
+
+    const preguntas = document.querySelectorAll(".faq-item");
+    const grupos = document.querySelectorAll(".faq-grupo");
+    const sinResultados = document.getElementById("faq-sin-resultados");
+
+    buscador.addEventListener("input", function () {
+        const texto = buscador.value.trim().toLowerCase();
+        let coincidencias = 0;
+
+        // Muestra solo las preguntas cuyo texto contiene lo buscado
+        preguntas.forEach(function (pregunta) {
+            const coincide = pregunta.textContent.toLowerCase().includes(texto);
+            pregunta.hidden = !coincide;
+            if (coincide) {
+                coincidencias++;
+                // Abre la respuesta automáticamente cuando hay búsqueda activa
+                pregunta.open = texto !== "";
+            }
+        });
+
+        // Oculta los títulos de grupo que quedaron sin preguntas visibles
+        grupos.forEach(function (grupo) {
+            const visibles = grupo.querySelectorAll(".faq-item:not([hidden])").length;
+            grupo.hidden = visibles === 0;
+        });
+
+        sinResultados.textContent = coincidencias === 0
+            ? "No encontramos preguntas con \"" + buscador.value.trim() + "\". Prueba con otra palabra."
+            : "";
+    });
+}
+
+
+// ---------- PANEL DE ADMINISTRACIÓN ----------
+
+// Actualiza los contadores de resumen según las filas de cada tabla
+function actualizarResumenPanel() {
+    const contadores = {
+        "total-pacientes": "tabla-pacientes",
+        "total-medicos": "tabla-medicos",
+        "total-horas": "tabla-horas"
+    };
+
+    Object.keys(contadores).forEach(function (idContador) {
+        const contador = document.getElementById(idContador);
+        const tabla = document.getElementById(contadores[idContador]);
+        if (contador && tabla) {
+            contador.textContent = tabla.querySelectorAll("tbody tr").length;
+        }
+    });
+}
+
+// Muestra un aviso en la parte superior del panel durante unos segundos
+function mostrarAvisoPanel(texto) {
+    const aviso = document.getElementById("aviso-panel");
+    if (!aviso) return;
+    aviso.textContent = texto;
+    clearTimeout(aviso.temporizador);
+    aviso.temporizador = setTimeout(function () { aviso.textContent = ""; }, 4000);
+}
+
+// Crea una celda con los botones Editar y Eliminar
+function crearCeldaAcciones() {
+    const celda = document.createElement("td");
+    celda.innerHTML =
+        '<button type="button" class="boton-tabla boton-editar">Editar</button> ' +
+        '<button type="button" class="boton-tabla boton-eliminar">Eliminar</button>';
+    return celda;
+}
+
+// Agrega una fila nueva a la tabla indicada con los textos recibidos
+function agregarFilaTabla(idTabla, valores) {
+    const cuerpo = document.querySelector("#" + idTabla + " tbody");
+    const fila = document.createElement("tr");
+
+    valores.forEach(function (valor) {
+        const celda = document.createElement("td");
+        celda.textContent = valor;
+        fila.appendChild(celda);
+    });
+
+    const celdaEstado = document.createElement("td");
+    celdaEstado.innerHTML = '<span class="estado estado-activo">Activo</span>';
+    fila.appendChild(celdaEstado);
+    fila.appendChild(crearCeldaAcciones());
+
+    fila.classList.add("fila-nueva");
+    setTimeout(function () { fila.classList.remove("fila-nueva"); }, 2000);
+
+    cuerpo.appendChild(fila);
+    actualizarResumenPanel();
+}
+
+function iniciarPanelAdministracion() {
+    const panel = document.querySelector(".panel-hero");
+    if (!panel) return; // Solo actúa en panel-administracion.html
+
+    actualizarResumenPanel();
+
+    // Botones "Agregar": muestran u ocultan el formulario correspondiente
+    document.querySelectorAll(".boton-agregar[data-formulario]").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            const formulario = document.getElementById(boton.dataset.formulario);
+            formulario.hidden = !formulario.hidden;
+            if (!formulario.hidden) formulario.querySelector("input, select").focus();
+        });
+    });
+
+    // Botones "Cancelar" del formulario: lo ocultan y lo limpian
+    document.querySelectorAll(".panel-formulario .boton-cancelar").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            const formulario = boton.closest("form");
+            formulario.reset();
+            formulario.querySelectorAll("input, select").forEach(reiniciarCampo);
+            formulario.hidden = true;
+        });
+    });
+
+    // Formulario de paciente: valida RUT y nombre, luego agrega la fila
+    const formularioPaciente = document.getElementById("formulario-paciente");
+    const rut = document.getElementById("paciente-rut");
+    const nombrePaciente = document.getElementById("paciente-nombre");
+
+    // Da formato al RUT automáticamente al salir del campo y lo valida
+    rut.addEventListener("blur", function () {
+        rut.value = formatearRut(rut.value);
+        validarRut(rut);
+    });
+    nombrePaciente.addEventListener("blur", function () { validarNombre(nombrePaciente); });
+
+    formularioPaciente.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        rut.value = formatearRut(rut.value);
+
+        const rutValido = validarRut(rut);
+        const nombreValido = validarNombre(nombrePaciente);
+        if (!rutValido || !nombreValido) return;
+
+        // Evita registrar dos veces el mismo RUT
+        const rutsExistentes = Array.from(
+            document.querySelectorAll("#tabla-pacientes tbody td:first-child")
+        ).map(function (celda) { return celda.textContent.trim(); });
+
+        if (rutsExistentes.includes(rut.value)) {
+            mostrarErrorCampo(rut, "Ese RUT ya está registrado en la tabla.");
+            return;
+        }
+
+        agregarFilaTabla("tabla-pacientes", [rut.value, nombrePaciente.value.trim()]);
+        mostrarAvisoPanel("Paciente " + nombrePaciente.value.trim() + " agregado correctamente.");
+        formularioPaciente.reset();
+        [rut, nombrePaciente].forEach(reiniciarCampo);
+        formularioPaciente.hidden = true;
+    });
+
+    // Formulario de médico: valida nombre y especialidad, luego agrega la fila
+    const formularioMedico = document.getElementById("formulario-medico");
+    const nombreMedico = document.getElementById("medico-nombre");
+    const especialidad = document.getElementById("medico-especialidad");
+
+    nombreMedico.addEventListener("blur", function () { validarNombre(nombreMedico); });
+    especialidad.addEventListener("change", function () {
+        validarSeleccion(especialidad, "Selecciona la especialidad del médico.");
+    });
+
+    formularioMedico.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        const nombreValido = validarNombre(nombreMedico);
+        const especialidadValida = validarSeleccion(especialidad, "Selecciona la especialidad del médico.");
+        if (!nombreValido || !especialidadValida) return;
+
+        agregarFilaTabla("tabla-medicos", [nombreMedico.value.trim(), especialidad.value]);
+        mostrarAvisoPanel("Médico " + nombreMedico.value.trim() + " agregado correctamente.");
+        formularioMedico.reset();
+        [nombreMedico, especialidad].forEach(reiniciarCampo);
+        formularioMedico.hidden = true;
+    });
+
+    // Acciones de las tablas: se escuchan en el contenedor para incluir filas nuevas
+    document.querySelectorAll(".tabla-panel").forEach(function (tabla) {
+        tabla.addEventListener("click", function (evento) {
+            const boton = evento.target.closest(".boton-tabla");
+            if (!boton) return;
+
+            const fila = boton.closest("tr");
+            const nombre = fila.querySelector("td:nth-child(2)").textContent.trim();
+
+            // Editar: alterna el estado entre Activo e Inactivo
+            if (boton.classList.contains("boton-editar")) {
+                const estado = fila.querySelector(".estado");
+                const activo = estado.classList.contains("estado-activo");
+                estado.textContent = activo ? "Inactivo" : "Activo";
+                estado.classList.toggle("estado-activo", !activo);
+                estado.classList.toggle("estado-inactivo", activo);
+                mostrarAvisoPanel(nombre + " ahora está " + estado.textContent.toLowerCase() + ".");
+            }
+
+            // Eliminar / Cancelar: pide confirmación antes de quitar la fila
+            if (boton.classList.contains("boton-eliminar")) {
+                const esHora = tabla.id === "tabla-horas";
+                const pregunta = esHora
+                    ? "¿Cancelar la hora del " + fila.querySelector("td:first-child").textContent.trim() + " con " + nombre + "?"
+                    : "¿Eliminar a " + nombre + " del listado?";
+
+                if (confirm(pregunta)) {
+                    fila.remove();
+                    actualizarResumenPanel();
+                    mostrarAvisoPanel(esHora ? "Hora cancelada." : nombre + " fue eliminado del listado.");
+                }
+            }
+        });
+    });
+}
+
+
+// Inicia las funciones del integrante 3 cuando la página termina de cargar
+document.addEventListener("DOMContentLoaded", function () {
+    validarContacto();
+    iniciarBuscadorFaq();
+    iniciarPanelAdministracion();
+});
+
