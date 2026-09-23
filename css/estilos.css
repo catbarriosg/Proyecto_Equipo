@@ -1006,3 +1006,91 @@ main h1 {
     margin-bottom: 20px;
 }
 
+/* ---------- Página Preguntas frecuentes ---------- */
+
+.faq-buscador {
+    max-width: 500px;
+    margin: 10px auto 0;
+}
+
+.faq-grupo {
+    max-width: 800px;
+    margin: 0 auto 35px;
+    text-align: left;
+}
+
+.faq-grupo h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #cef6f3;
+}
+
+/* Cada pregunta desplegable */
+.faq-item {
+    background-color: white;
+    border: 1px solid #cef6f3;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.faq-item summary {
+    padding: 16px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    padding-right: 45px;
+}
+
+/* Oculta la flecha por defecto del navegador y usa un "+" */
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: "+";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: #1976D2;
+}
+
+.faq-item[open] summary::after {
+    content: "\2212";
+}
+
+.faq-item[open] {
+    border-color: #7dd3e8;
+}
+
+.faq-item p {
+    padding: 0 20px 16px;
+    margin: 0;
+    color: #444;
+}
+
+.faq-item a {
+    color: #1976D2;
+}
+
+.faq-ayuda {
+    padding: 30px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9fcf0;
+    border-radius: 18px;
+}
+
+.faq-ayuda p {
+    margin-bottom: 15px;
+}
+
+.faq-ayuda .boton {
+    color: white;
+}
+

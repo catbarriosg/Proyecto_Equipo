@@ -261,7 +261,46 @@ function validarContacto() {
 }
 
 
+// ---------- BUSCADOR DE PREGUNTAS FRECUENTES ----------
+
+function iniciarBuscadorFaq() {
+    const buscador = document.getElementById("buscador-faq");
+    if (!buscador) return; // Solo actúa en preguntas-frecuentes.html
+
+    const preguntas = document.querySelectorAll(".faq-item");
+    const grupos = document.querySelectorAll(".faq-grupo");
+    const sinResultados = document.getElementById("faq-sin-resultados");
+
+    buscador.addEventListener("input", function () {
+        const texto = buscador.value.trim().toLowerCase();
+        let coincidencias = 0;
+
+        // Muestra solo las preguntas cuyo texto contiene lo buscado
+        preguntas.forEach(function (pregunta) {
+            const coincide = pregunta.textContent.toLowerCase().includes(texto);
+            pregunta.hidden = !coincide;
+            if (coincide) {
+                coincidencias++;
+                // Abre la respuesta automáticamente cuando hay búsqueda activa
+                pregunta.open = texto !== "";
+            }
+        });
+
+        // Oculta los títulos de grupo que quedaron sin preguntas visibles
+        grupos.forEach(function (grupo) {
+            const visibles = grupo.querySelectorAll(".faq-item:not([hidden])").length;
+            grupo.hidden = visibles === 0;
+        });
+
+        sinResultados.textContent = coincidencias === 0
+            ? "No encontramos preguntas con \"" + buscador.value.trim() + "\". Prueba con otra palabra."
+            : "";
+    });
+}
+
+
 // Inicia las funciones del integrante 3 cuando la página termina de cargar
 document.addEventListener("DOMContentLoaded", function () {
     validarContacto();
+    iniciarBuscadorFaq();
 });
