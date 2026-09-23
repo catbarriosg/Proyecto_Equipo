@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //formulario agendar hora médica
 
     const formulario = document.getElementById("formulario-agenda");
+    if (!formulario) return; // Evita errores en las páginas que no tienen este formulario
 
     formulario.addEventListener("submit", function (evento) {
 
