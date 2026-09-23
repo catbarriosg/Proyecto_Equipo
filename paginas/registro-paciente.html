@@ -5,44 +5,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Registro de paciente | Clínica Agenda Médica</title>
+    <title>Registro de paciente - Clínica Agenda Médica</title>
 
+    <!-- Hoja de estilos principal -->
     <link rel="stylesheet" href="../css/estilos.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
 
+    <!-- Encabezado y menú de navegación -->
     <header class="header">
 
+        <!-- Menú principal de navegación -->
         <nav class="barra-navegacion">
+
             <ul class="menu">
+
                 <li><a href="../index.html">Inicio</a></li>
+
                 <li><a href="quienes-somos.html">Quiénes somos</a></li>
+
                 <li><a href="especialidades.html">Especialidades</a></li>
+
                 <li><a href="medicos.html">Médicos</a></li>
+
                 <li><a href="agendar-hora.html">Agendar hora</a></li>
+
                 <li><a href="contacto.html">Contacto</a></li>
+
                 <li><a href="login.html">Iniciar sesión</a></li>
+
             </ul>
+
         </nav>
 
+
+        <!-- Segunda fila del encabezado -->
         <section class="header-inferior">
 
+            <!-- Logo de la clínica -->
             <a href="../index.html" class="logo">
+
                 <img src="../img/logo.png" alt="Clínica Agenda Médica">
+
             </a>
 
+
+            <!-- Acciones disponibles en el encabezado -->
             <section class="acciones-header">
-                <button type="button">🔍</button>
-                <button type="button">🔔</button>
-                <button type="button">👤</button>
+
+                <button type="button" aria-label="Buscar">
+                    🔍
+                </button>
+
+                <button type="button" aria-label="Perfil">
+                    👤
+                </button>
+
+                <button type="button" aria-label="Abrir menú">
+                    ☰
+                </button>
+
             </section>
 
         </section>
 
     </header>
 
-
+    <!-- Contenido principal -->
     <main>
 
         <section class="formulario-registro">
@@ -50,58 +83,123 @@
             <h1>Registro de paciente</h1>
 
             <p>
-                Crea tu cuenta en Clínica Agenda Médica para gestionar tus horas médicas.
+                Completa tus datos para crear una cuenta en Clínica Agenda Médica.
             </p>
+
 
             <form id="formulario-registro" novalidate>
 
                 <section class="campo-formulario">
+
                     <label for="nombre">Nombre</label>
+
                     <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
+
                 </section>
 
+
                 <section class="campo-formulario">
+
                     <label for="apellido">Apellido</label>
+
                     <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido">
+
                 </section>
 
+
                 <section class="campo-formulario">
+
                     <label for="rut">RUT</label>
-                    <input type="text" id="rut" name="rut" placeholder="Ej: 12.345.678-9">
+
+                    <input type="text" id="rut" name="rut" placeholder="Ej: 18.456.789-0">
+
                 </section>
 
+
                 <section class="campo-formulario">
+
                     <label for="fecha-nacimiento">Fecha de nacimiento</label>
+
                     <input type="date" id="fecha-nacimiento" name="fecha-nacimiento">
+
                 </section>
 
+
                 <section class="campo-formulario">
+
                     <label for="correo">Correo electrónico</label>
+
                     <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.cl">
+
                 </section>
 
+
                 <section class="campo-formulario">
+
+                    <label for="tipo-telefono">Tipo de teléfono</label>
+
+                    <select id="tipo-telefono" name="tipo-telefono">
+                        <option value="fijo">Teléfono fijo</option>
+                        <option value="celular">Celular</option>
+                    </select>
+
                     <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="+56 9 1234 5678">
+
+                    <div class="telefono-input">
+
+                        <span id="prefijo-telefono">+56 2</span>
+
+                        <input type="tel" id="telefono" name="telefono" placeholder="23456789" maxlength="8">
+
+                    </div>
+
                 </section>
 
+
                 <section class="campo-formulario">
+
                     <label for="direccion">Dirección</label>
+
                     <input type="text" id="direccion" name="direccion" placeholder="Ingresa tu dirección">
+
                 </section>
 
+
                 <section class="campo-formulario">
+
+                    <label for="departamento">
+                        Departamento (opcional)
+                    </label>
+
+                    <input type="text" id="departamento" name="departamento" placeholder="Ej: Depto. 405">
+
+                </section>
+
+
+                <section class="campo-formulario">
+
                     <label for="contrasena">Contraseña</label>
+
                     <input type="password" id="contrasena" name="contrasena" placeholder="Crea una contraseña">
+
                 </section>
 
+
                 <section class="campo-formulario">
-                    <label for="confirmar-contrasena">Confirmar contraseña</label>
+
+                    <label for="confirmar-contrasena">
+                        Confirmar contraseña
+                    </label>
+
                     <input type="password" id="confirmar-contrasena" name="confirmar-contrasena"
                         placeholder="Repite tu contraseña">
+
                 </section>
 
-                <button type="submit" class="boton">Crear cuenta</button>
+
+                <button type="submit" class="boton">
+                    Crear cuenta
+                </button>
 
             </form>
 
@@ -110,24 +208,32 @@
     </main>
 
 
-    <!-- Pie de página común del sitio -->
+    <!-- Pie de página -->
     <footer class="footer">
 
-        <p class="nombre-clinica">Clínica Agenda Médica</p>
+        <p class="nombre-clinica">
+            Clínica Agenda Médica
+        </p>
 
-        <p>📍 Av. Salud 1234, Santiago</p>
+        <p>
+            📍 Av. Salud 1234, Santiago
+        </p>
 
-        <p>📞 +56 2 2345 6789</p>
+        <p>
+            📞 +56 2 2345 6789
+        </p>
 
-        <p>✉️ contacto@clinicaagendamedica.cl</p>
+        <p>
+            ✉️ contacto@clinicaagendamedica.cl
+        </p>
 
-        <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
+        <p>
+            © 2026 Clínica Agenda Médica. Todos los derechos reservados.
+        </p>
 
     </footer>
 
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <!-- JavaScript del proyecto -->
     <script src="../js/script.js"></script>
 

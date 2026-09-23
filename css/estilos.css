@@ -905,6 +905,27 @@ main h1 {
     margin-bottom: 10px;
 }
 
+/* Campo de teléfono con prefijo */
+.telefono-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.telefono-input span {
+    padding: 12px 10px;
+    background-color: #f1fafa;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #525151;
+    white-space: nowrap;
+}
+
+.telefono-input input {
+    flex: 1;
+}
+
 /* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
 @media (max-width: 1024px) {
 
