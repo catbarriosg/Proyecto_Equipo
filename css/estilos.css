@@ -108,7 +108,7 @@ p {
     padding: 12px 22px;
     margin: 5px;
     background-color: #1976D2;
-    color: #333;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 8px;
     font-weight: bold;
@@ -924,6 +924,199 @@ main h1 {
 
 .telefono-input input {
     flex: 1;
+}
+
+/* =========================================================
+   INTEGRANTE 2 — Agendar, modificar y cancelar horas
+   ========================================================= */
+/* =========================================
+   DISEÑO DEL CALENDARIO TIPO INTEGRAMÉDICA
+   ========================================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.texto-semana {
+    text-align: center;
+    color: #007dc6;
+}
+
+.texto-semana span {
+    display: block;
+    font-size: 14px;
+}
+
+.texto-semana strong {
+    font-size: 18px;
+}
+
+.btn-flecha {
+    background: none;
+    border: none;
+    color: #007dc6;
+    font-size: 24px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dias-semana {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dia-box {
+    text-align: center;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #007dc6;
+}
+
+.dia-box.activo {
+    border: 2px solid #c1006a;
+    color: #c1006a;
+}
+
+.dia-box .dia-nombre {
+    display: block;
+    font-size: 14px;
+}
+
+.dia-box .dia-numero {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.titulo-fecha-seleccionada {
+    color: #c1006a;
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.tarjeta-horarios {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.header-centro-medico {
+    background-color: #007dc6;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-centro-medico h4 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.header-centro-medico p {
+    margin: 0;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.icono-edificio {
+    font-size: 30px;
+}
+
+.cuerpo-horarios {
+    padding: 20px;
+    text-align: left;
+}
+
+.info-medico-tarjeta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.info-medico-tarjeta h5 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.info-medico-tarjeta p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.icono-doctor {
+    font-size: 35px;
+}
+
+.etiqueta-modalidad {
+    display: inline-block;
+    background-color: #007dc6;
+    color: white;
+    padding: 8px 30px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.texto-sobrecupo {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.etiqueta-sobrecupo {
+    display: inline-block;
+    background-color: #009ced;
+    color: white;
+    padding: 8px 30px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.botones-hora {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-hora {
+    background: white;
+    border: 1px solid #007dc6;
+    color: #333;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.btn-hora:hover,
+.btn-hora.seleccionada {
+    background-color: #007dc6;
+    color: white;
 }
 
 /* RESPONSIVE - TABLET (pantallas hasta 1024px)   */

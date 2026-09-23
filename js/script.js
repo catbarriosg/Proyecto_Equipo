@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const formulario = document.getElementById("formulario-agenda");
-    if (!formulario) return; // Evita errores en las páginas que no tienen este formulario
 
     if (formulario) {
 
@@ -97,6 +96,174 @@ document.addEventListener("DOMContentLoaded", function () {
 
             formulario.reset();
         });
+    }
+    // ==========================================
+    // 2. DESPLIEGUE VISUAL (Mostrar calendario)
+    // ==========================================
+    const selectEspecialidad = document.getElementById("especialidad");
+    const selectMedico = document.getElementById("medico");
+    const contenedorFechaHora = document.getElementById("contenedor-fecha-hora");
+
+    function verificarDespliegue() {
+        if (selectEspecialidad && selectMedico && contenedorFechaHora) {
+            if (selectEspecialidad.value !== "" && selectMedico.value !== "") {
+                // Mostrar contenedor
+                contenedorFechaHora.style.display = "block";
+
+                // Actualizar textos de la tarjeta azul
+                document.getElementById("tarjeta-nombre-medico").textContent = selectMedico.options[selectMedico.selectedIndex].text;
+                document.getElementById("tarjeta-especialidad").textContent = selectEspecialidad.options[selectEspecialidad.selectedIndex].text;
+            } else {
+                contenedorFechaHora.style.display = "none";
+            }
+        }
+    }
+
+    if (selectEspecialidad && selectMedico) {
+        selectEspecialidad.addEventListener("change", verificarDespliegue);
+        selectMedico.addEventListener("change", verificarDespliegue);
+    }
+
+    // ==========================================
+    // 3. SELECCI├ôN DE HORA Y D├ìA (Click en los botones)
+    // ==========================================
+    const botonesHora = document.querySelectorAll(".btn-hora");
+    const inputHoraOculto = document.getElementById("hora");
+
+    botonesHora.forEach(boton => {
+        boton.addEventListener("click", function () {
+            // Quitar estilo de seleccionado a todos y pon├®rselo al actual
+            botonesHora.forEach(b => b.classList.remove("seleccionada"));
+            this.classList.add("seleccionada");
+
+            // Guardar en el input invisible
+            if (inputHoraOculto) inputHoraOculto.value = this.getAttribute("data-hora");
+        });
+    });
+
+    const diasSemana = document.querySelectorAll(".dia-box");
+    const tituloFechaSeleccionada = document.querySelector(".titulo-fecha-seleccionada");
+    const inputFechaOculto = document.getElementById("fecha");
+
+    diasSemana.forEach(dia => {
+        dia.addEventListener("click", function () {
+            // Cambiar el d├¡a activo visualmente
+            diasSemana.forEach(d => d.classList.remove("activo"));
+            this.classList.add("activo");
+
+            // Actualizar el t├¡tulo de la tarjeta y el input oculto
+            if (tituloFechaSeleccionada) tituloFechaSeleccionada.textContent = this.getAttribute("data-texto");
+            if (inputFechaOculto) inputFechaOculto.value = this.getAttribute("data-fecha");
+
+            // Si el paciente cambia de d├¡a, reseteamos la hora elegida
+            botonesHora.forEach(b => b.classList.remove("seleccionada"));
+            if (inputHoraOculto) inputHoraOculto.value = "";
+        });
+    });
+
+    // ==========================================
+    // 4. NAVEGADOR DE SEMANAS Y D├ìAS DIN├üMICOS
+    // ==========================================
+    const btnAnterior = document.getElementById('btn-semana-anterior');
+    const btnSiguiente = document.getElementById('btn-semana-siguiente');
+    const textoSemana = document.getElementById('texto-rango-semana');
+    const cuadrosDias = document.querySelectorAll(".dia-box");
+
+    // Validamos que existan en el HTML actual antes de ejecutar
+    if (btnAnterior && btnSiguiente && textoSemana && cuadrosDias.length > 0) {
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const nombresDiasCortos = ["D", "L", "M", "Mi├®", "J", "V", "S"];
+        const nombresDiasLargos = ["Domingo", "Lunes", "Martes", "Mi├®rcoles", "Jueves", "Viernes", "S├íbado"];
+
+        const fechaHoy = new Date();
+        fechaHoy.setHours(0, 0, 0, 0);
+
+        let fechaInicio = new Date();
+        fechaInicio.setHours(0, 0, 0, 0);
+
+        function actualizarTexto() {
+            let fechaFin = new Date(fechaInicio);
+            fechaFin.setDate(fechaInicio.getDate() + 6);
+
+            let diaInicio = fechaInicio.getDate();
+            let mesInicio = meses[fechaInicio.getMonth()];
+            let diaFin = fechaFin.getDate();
+            let mesFin = meses[fechaFin.getMonth()];
+
+            // Cambia el rango de fechas arriba de las flechas
+            if (mesInicio !== mesFin) {
+                textoSemana.textContent = `${diaInicio} de ${mesInicio} al ${diaFin} de ${mesFin}`;
+            } else {
+                textoSemana.textContent = `${diaInicio} al ${diaFin} de ${mesInicio}`;
+            }
+
+            actualizarCuadrosDias();
+            comprobarBotonAnterior();
+        }
+
+        function actualizarCuadrosDias() {
+            // Cambia los n├║meros y letras de los cuadritos din├ímicamente
+            cuadrosDias.forEach((cuadro, index) => {
+                let fechaCuadro = new Date(fechaInicio);
+                fechaCuadro.setDate(fechaInicio.getDate() + index);
+
+                let numeroDia = fechaCuadro.getDate();
+                let indexDiaSemana = fechaCuadro.getDay();
+                let nombreCorto = nombresDiasCortos[indexDiaSemana];
+                let nombreLargo = nombresDiasLargos[indexDiaSemana];
+                let nombreMes = meses[fechaCuadro.getMonth()];
+
+                let anioAttr = fechaCuadro.getFullYear();
+                let mesAttr = String(fechaCuadro.getMonth() + 1).padStart(2, '0');
+                let diaAttr = String(fechaCuadro.getDate()).padStart(2, '0');
+                let fechaFormateada = `${anioAttr}-${mesAttr}-${diaAttr}`;
+
+                let textoLargo = `${nombreLargo} ${numeroDia} de ${nombreMes}`;
+
+                const elementoNombre = cuadro.querySelector('.dia-nombre');
+                const elementoNumero = cuadro.querySelector('.dia-numero');
+
+                if (elementoNombre) elementoNombre.textContent = nombreCorto;
+                if (elementoNumero) elementoNumero.textContent = numeroDia;
+
+                cuadro.setAttribute('data-fecha', fechaFormateada);
+                cuadro.setAttribute('data-texto', textoLargo);
+
+                // Si este cuadro es el activo, actualizamos el t├¡tulo de abajo y el input
+                if (cuadro.classList.contains('activo')) {
+                    if (tituloFechaSeleccionada) tituloFechaSeleccionada.textContent = textoLargo;
+                    if (inputFechaOculto) inputFechaOculto.value = fechaFormateada;
+                }
+            });
+        }
+
+        function comprobarBotonAnterior() {
+            // Bloquea la flecha izquierda si estamos en la semana actual
+            if (fechaInicio <= fechaHoy) {
+                btnAnterior.disabled = true;
+                btnAnterior.style.opacity = '0.5';
+                btnAnterior.style.cursor = 'not-allowed';
+            } else {
+                btnAnterior.disabled = false;
+                btnAnterior.style.opacity = '1';
+                btnAnterior.style.cursor = 'pointer';
+            }
+        }
+
+        btnSiguiente.addEventListener('click', function () {
+            fechaInicio.setDate(fechaInicio.getDate() + 7);
+            actualizarTexto();
+        });
+
+        btnAnterior.addEventListener('click', function () {
+            if (!btnAnterior.disabled) {
+                fechaInicio.setDate(fechaInicio.getDate() - 7);
+                actualizarTexto();
+            }
+        });
+
+        // Ejecutar inmediatamente al abrir la p├ígina
+        actualizarTexto();
     }
 
     // FORMULARIO REGISTRO DE PACIENTE
