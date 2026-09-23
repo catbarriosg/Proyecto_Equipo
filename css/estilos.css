@@ -1309,3 +1309,37 @@ main h1 {
         font-size: 14px;
     }
 }
+
+/* ---------- Video institucional (pagina Quienes somos) ---------- */
+
+.video-institucional {
+    max-width: 900px;
+    margin: 0 auto 40px;
+}
+
+.video-institucional h2 {
+    margin: 15px 0;
+}
+
+.contenedor-video {
+    margin: 20px auto 0;
+}
+
+/* El iframe mantiene la proporcion 16:9 en cualquier pantalla */
+.contenedor-video iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 15px;
+}
+
+.contenedor-video figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+.contenedor-video figcaption a {
+    color: #1976D2;
+}
