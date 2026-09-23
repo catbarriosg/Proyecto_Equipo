@@ -44,7 +44,8 @@
             <form id="formulario-buscar-reserva">
                 <section class="campo-formulario">
                     <label for="codigo-reserva">Código de Reserva:</label>
-                    <input type="text" id="codigo-reserva" name="codigo-reserva" placeholder="Ej: AM-1695420000" required>
+                    <input type="text" id="codigo-reserva" name="codigo-reserva" placeholder="Ej: AM-1695420000"
+                        required>
                 </section>
                 <button type="submit" class="boton">Buscar Reserva</button>
             </form>
@@ -52,16 +53,19 @@
             <!-- 2. Tarjeta con los datos de la reserva (Oculta por defecto) -->
             <section id="resultado-reserva" style="display: none; margin-top: 30px; animation: fadeIn 0.5s;">
                 <h3 style="margin-bottom: 15px;">Detalles de la cita encontrada:</h3>
-                
+
                 <div class="tarjeta-horarios shadow-sm">
                     <div class="cuerpo-horarios">
                         <p><strong>Código:</strong> <span id="reserva-codigo-display"></span></p>
-                        <p><strong>Especialidad:</strong> <span id="reserva-especialidad-display">Medicina General</span></p>
+                        <p><strong>Especialidad:</strong> <span id="reserva-especialidad-display">Medicina
+                                General</span></p>
                         <p><strong>Médico:</strong> <span id="reserva-medico-display">Dr. González</span></p>
                         <p><strong>Fecha:</strong> <span id="reserva-fecha-display">25 de Septiembre 2026</span></p>
                         <p><strong>Hora:</strong> <span id="reserva-hora-display">12:30</span></p>
-                        
-                        <button type="button" id="btn-iniciar-cancelacion" class="boton" style="background-color: #d9a9c2; color: #333; margin-top: 20px; width: 100%;">Cancelar esta hora</button>
+
+                        <button type="button" id="btn-iniciar-cancelacion" class="boton"
+                            style="background-color: #d9a9c2; color: #333; margin-top: 20px; width: 100%;">Cancelar esta
+                            hora</button>
                     </div>
                 </div>
             </section>
@@ -73,9 +77,10 @@
                     <h3 style="color: #d9534f; margin-bottom: 15px;">⚠️ Confirmación requerida</h3>
                     <p>Estás a punto de cancelar la reserva médica.</p>
                     <p>Esta acción es irreversible y liberarás el cupo. ¿Deseas continuar?</p>
-                    
+
                     <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                        <button type="button" id="btn-si-cancelar" class="boton" style="background-color: #d9a9c2; color: #333;">Sí, cancelar hora</button>
+                        <button type="button" id="btn-si-cancelar" class="boton"
+                            style="background-color: #d9a9c2; color: #333;">Sí, cancelar hora</button>
                         <button type="button" id="btn-no-volver" class="boton">No, mantener hora</button>
                     </div>
                 </section>
@@ -86,7 +91,8 @@
                 <section class="contenido-modal">
                     <h3 style="margin-bottom: 15px;">✔️ Hora Cancelada</h3>
                     <p>La hora médica ha sido anulada exitosamente del sistema.</p>
-                    <button type="button" id="btn-cerrar-exito-cancelacion" class="boton" style="margin-top: 20px;">Entendido</button>
+                    <button type="button" id="btn-cerrar-exito-cancelacion" class="boton"
+                        style="margin-top: 20px;">Entendido</button>
                 </section>
             </section>
 
@@ -98,9 +104,16 @@
         <p>📍 Av. Salud 1234, Santiago</p>
         <p>📞 +56 2 2345 6789</p>
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
     </footer>
 
     <script src="../js/script.js"></script>
 </body>
+
 </html>

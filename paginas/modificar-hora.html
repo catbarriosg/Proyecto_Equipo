@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modificar hora | Clínica Agenda Médica</title>
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
+
 <body>
     <header class="header">
         <nav class="barra-navegacion">
@@ -54,7 +56,7 @@
 
                 <form id="formulario-nueva-fecha">
                     <h3 style="margin-bottom: 15px;">Selecciona los nuevos datos:</h3>
-                    
+
                     <!-- Inputs ocultos que conectan con el JS que ya tenemos -->
                     <input type="hidden" id="fecha" name="fecha" value="">
                     <input type="hidden" id="hora" name="hora" value="">
@@ -89,7 +91,7 @@
                     </div>
 
                     <h3 class="titulo-fecha-seleccionada">Miércoles 23 de Septiembre</h3>
-                    
+
                     <p style="color: #666; margin-top: 15px; margin-bottom: 15px;">Selecciona un horario disponible:</p>
                     <div class="botones-hora" style="margin-bottom: 25px;">
                         <button type="button" class="btn-hora" data-hora="12:00">12:00</button>
@@ -97,7 +99,8 @@
                         <button type="button" class="btn-hora" data-hora="13:00">13:00</button>
                     </div>
 
-                    <button type="submit" class="boton" style="background-color: #7dd3e8; color: #333;">Confirmar Modificación</button>
+                    <button type="submit" class="boton" style="background-color: #7dd3e8; color: #333;">Confirmar
+                        Modificación</button>
                 </form>
             </section>
 
@@ -114,7 +117,8 @@
                 <section class="contenido-modal">
                     <h3 style="margin-bottom: 15px;">✔️ Hora Reagendada</h3>
                     <p>Tu hora médica ha sido modificada exitosamente.</p>
-                    <button type="button" id="btn-cerrar-modificar" class="boton" style="margin-top: 20px;">Entendido</button>
+                    <button type="button" id="btn-cerrar-modificar" class="boton"
+                        style="margin-top: 20px;">Entendido</button>
                 </section>
             </section>
         </section>
@@ -125,9 +129,16 @@
         <p>📍 Av. Salud 1234, Santiago</p>
         <p>📞 +56 2 2345 6789</p>
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
     </footer>
 
     <script src="../js/script.js"></script>
 </body>
+
 </html>
