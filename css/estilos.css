@@ -752,3 +752,172 @@ main h1 {
 
 
 }
+
+/* =========================================================================
+   INTEGRANTE 3 — Contacto, Sucursales, Preguntas frecuentes y Panel admin
+   Todas las clases de este bloque son nuevas y específicas de esas páginas.
+   ========================================================================= */
+
+/* ---------- Elementos compartidos por las páginas del integrante 3 ---------- */
+
+/* Encabezado de cada página (mismo estilo que especialidades-hero) */
+.contacto-hero,
+.sucursales-hero,
+.faq-hero,
+.panel-hero {
+    text-align: center;
+    padding: 40px 20px 20px;
+}
+
+.contacto-hero h1,
+.sucursales-hero h1,
+.faq-hero h1,
+.panel-hero h1 {
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.contacto-hero p,
+.sucursales-hero p,
+.faq-hero p,
+.panel-hero p {
+    max-width: 650px;
+    margin: 0 auto 20px;
+    color: #555;
+}
+
+/* Área de texto con el mismo estilo que los inputs del formulario */
+.campo-formulario textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b8dfe3;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.campo-formulario textarea:focus {
+    outline: none;
+    border-color: #7dd3e8;
+    box-shadow: 0 0 5px rgba(125, 211, 232, 0.5);
+}
+
+/* Mensaje de error bajo cada campo (vacío hasta que JS lo llena) */
+.mensaje-error {
+    display: block;
+    min-height: 18px;
+    margin-top: 6px;
+    color: #c62828;
+    font-size: 14px;
+}
+
+/* Contador de caracteres del mensaje */
+.contador-caracteres {
+    margin-top: 6px;
+    text-align: right;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Mensaje de éxito al enviar un formulario (oculto si está vacío) */
+.mensaje-exito {
+    margin: 15px auto;
+    padding: 12px 18px;
+    max-width: 700px;
+    background-color: #e3f7ec;
+    border: 1px solid #7fd8a4;
+    border-radius: 8px;
+    color: #1b5e20;
+    font-weight: bold;
+}
+
+.mensaje-exito:empty {
+    display: none;
+}
+
+/* Bordes de campo según validación (JS agrega estas clases) */
+.campo-formulario .campo-invalido {
+    border-color: #c62828;
+    box-shadow: 0 0 5px rgba(198, 40, 40, 0.3);
+}
+
+.campo-formulario .campo-valido {
+    border-color: #43a047;
+}
+
+/* ---------- Página Contacto ---------- */
+
+/* Formulario y datos de contacto lado a lado */
+.contacto-contenido {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.formulario-contacto {
+    flex: 1 1 480px;
+    margin: 0;
+    text-align: left;
+}
+
+.formulario-contacto h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Columna con dirección, teléfono, correo y horario */
+.datos-contacto {
+    flex: 1 1 300px;
+    max-width: 380px;
+}
+
+.datos-contacto h2 {
+    margin-bottom: 20px;
+}
+
+.tarjeta-contacto {
+    padding: 18px 20px;
+    margin-bottom: 15px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid #cef6f3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.tarjeta-contacto p,
+.tarjeta-contacto address {
+    margin-bottom: 8px;
+    font-style: normal;
+}
+
+.tarjeta-contacto h3 {
+    font-size: 18px;
+    margin: 6px 0 8px;
+}
+
+.tarjeta-contacto a {
+    color: #1976D2;
+    text-decoration: none;
+}
+
+/* Enlace en línea dentro de un párrafo */
+.enlace-contacto {
+    color: #1976D2;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.enlace-contacto:hover {
+    text-decoration: underline;
+}
+
+.icono-contacto {
+    font-size: 28px;
+}
+
