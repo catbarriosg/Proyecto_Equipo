@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar hora | Clínica Agenda Médica</title>
+    <link rel="stylesheet" href="../css/estilos.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <nav class="barra-navegacion">
+            <ul class="menu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="quienes-somos.html">Quiénes somos</a></li>
+                <li><a href="especialidades.html">Especialidades</a></li>
+                <li><a href="medicos.html">Médicos</a></li>
+                <li><a href="agendar-hora.html">Agendar hora</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+        </nav>
+
+        <section class="header-inferior">
+            <a href="../index.html" class="logo">
+                <img src="../img/logo.png" alt="Clínica Agenda Médica">
+            </a>
+            <section class="acciones-header">
+                <button type="button">🔍</button>
+                <button type="button">🔔</button>
+                <button type="button">👤</button>
+            </section>
+        </section>
+    </header>
+
+    <main>
+        <h1>Agendar hora médica</h1>
+
+        <section class="formulario-agenda">
+            <form id="formulario-agenda">
+
+                <section class="campo-formulario">
+                    <label for="especialidad">Especialidad</label>
+                    <select id="especialidad" name="especialidad">
+                        <option value="">Selecciona una especialidad</option>
+                        <option value="medicina-general">Medicina General</option>
+                        <option value="pediatria">Pediatría</option>
+                        <option value="cardiologia">Cardiología</option>
+                        <option value="dermatologia">Dermatología</option>
+                    </select>
+                </section>
+
+                <section class="campo-formulario">
+                    <label for="medico">Médico</label>
+                    <select id="medico" name="medico">
+                        <option value="">Selecciona un médico</option>
+                        <option value="dr-gonzalez">Dr. González</option>
+                        <option value="dra-martinez">Dra. Martínez</option>
+                        <option value="dr-rojas">Dr. Rojas</option>
+                        <option value="dra-soto">Dra. Soto</option>
+                    </select>
+                </section>
+
+                <!-- Inputs ocultos que guardarán la información para el JavaScript -->
+                <input type="hidden" id="fecha" name="fecha" value="2026-09-23">
+                <input type="hidden" id="hora" name="hora" value="">
+
+                <section id="contenedor-fecha-hora" style="display: none; margin-top: 30px; animation: fadeIn 0.5s;">
+                    
+                    <!-- Navegador Semanal -->
+                    <div class="calendario-header">
+                        <button type="button" id="btn-semana-anterior" class="btn-flecha">❮</button>
+                        <div class="texto-semana">
+                            <span>Semana desde el</span>
+                            <strong id="texto-rango-semana">23 al 29 de Septiembre</strong>
+                        </div>
+                        <button type="button" id="btn-semana-siguiente" class="btn-flecha">❯</button>
+                    </div>
+
+                    <!-- Días de la semana interactivos -->
+                    <div class="dias-semana">
+                        <div class="dia-box activo" data-fecha="2026-09-23" data-texto="Miércoles 23 de Septiembre">
+                            <span class="dia-nombre">Mié</span>
+                            <span class="dia-numero">23</span>
+                        </div>
+                        <div class="dia-box" data-fecha="2026-09-24" data-texto="Jueves 24 de Septiembre">
+                            <span class="dia-nombre">J</span>
+                            <span class="dia-numero">24</span>
+                        </div>
+                        <div class="dia-box" data-fecha="2026-09-25" data-texto="Viernes 25 de Septiembre">
+                            <span class="dia-nombre">V</span>
+                            <span class="dia-numero">25</span>
+                        </div>
+                        <div class="dia-box" data-fecha="2026-09-26" data-texto="Sábado 26 de Septiembre">
+                            <span class="dia-nombre">S</span>
+                            <span class="dia-numero">26</span>
+                        </div>
+                    </div>
+
+                    <h3 class="titulo-fecha-seleccionada">Miércoles 23 de Septiembre</h3>
+                    
+                    <!-- Tarjeta de Horarios -->
+                    <div class="tarjeta-horarios shadow-sm">
+                        <div class="header-centro-medico">
+                            <div class="icono-edificio">🏥</div>
+                            <div>
+                                <h4>Clínica Agenda Médica</h4>
+                                <p>Sede Principal - Región Metropolitana</p>
+                            </div>
+                        </div>
+                        
+                        <div class="cuerpo-horarios">
+                            <div class="info-medico-tarjeta">
+                                <div class="icono-doctor">👨‍⚕️</div>
+                                <div>
+                                    <h5 id="tarjeta-nombre-medico">Seleccione un médico</h5>
+                                    <p id="tarjeta-especialidad">Especialidad</p>
+                                </div>
+                            </div>
+                            
+                            <div class="etiqueta-modalidad">Presencial</div>
+                            
+                            <p style="color: #666; margin-top: 15px; margin-bottom: 15px;">Selecciona un horario disponible:</p>
+                            
+                            <div class="botones-hora">
+                                <button type="button" class="btn-hora" data-hora="12:00">12:00</button>
+                                <button type="button" class="btn-hora" data-hora="12:30">12:30</button>
+                                <button type="button" class="btn-hora" data-hora="13:00">13:00</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <button type="submit" class="boton">Confirmar hora</button>
+
+                <!-- Nuevos botones para navegación rápida -->
+                <a href="modificar-hora.html" class="boton" style="text-align: center; background-color: #7dd3e8; color: #333; margin-top: 15px;">Modificar horas registradas</a>
+                <a href="cancelar-hora.html" class="boton" style="text-align: center; background-color: #d9a9c2; color: #333;">Buscar y cancelar hora</a>
+
+                <!-- Ventana emergente limpia y sin duplicados -->
+                <section id="modal-mensaje" class="modal-mensaje" style="display: none;">
+                    <section class="contenido-modal">
+                        <p id="texto-modal"></p>
+
+                        <!-- Información de la hora médica agendada -->
+                        <section id="datos-reserva"></section>
+
+                        <!-- Botones del modal -->
+                        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                           <button type="button" id="btn-descargar" class="boton" style="background-color: #7dd3e8; color: #333; display: none;">Descargar comprobante</button>
+                            <button type="button" id="cerrar-modal" class="boton">Cerrar</button>
+                        </div>
+                    </section>
+                </section>
+
+            </form>
+        </section>
+    </main>
+
+    <!-- Pie de página común del sitio -->
+    <footer class="footer">
+        <p class="nombre-clinica">Clínica Agenda Médica</p>
+        <p>📍 Av. Salud 1234, Santiago</p>
+        <p>📞 +56 2 2345 6789</p>
+        <p>✉️ contacto@clinicaagendamedica.cl</p>
+        <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Conexión con JavaScript -->
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
