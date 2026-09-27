@@ -901,7 +901,8 @@ main h1 {
 }
 
 /* Bordes de campo según validación (JS agrega estas clases) */
-.campo-formulario .campo-invalido {
+.campo-formulario .campo-invalido,
+.campo-formulario .campo-invalido:focus {
     border-color: #c62828;
     box-shadow: 0 0 5px rgba(198, 40, 40, 0.3);
 }
@@ -1406,4 +1407,213 @@ main h1 {
 
 .contenedor-video figcaption a {
     color: #1976D2;
+}
+
+
+/* =========================================================================
+   CUENTAS — Crear cuenta e Iniciar sesión
+   Reutilizan .formulario-agenda, .campo-formulario, .mensaje-error y
+   .campo-invalido / .campo-valido del resto del sitio.
+   ========================================================================= */
+
+/* Encabezado de las páginas de cuenta (mismo estilo que contacto-hero) */
+.cuenta-hero {
+    text-align: center;
+    padding: 40px 20px 10px;
+}
+
+.cuenta-hero h1 {
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.cuenta-hero p {
+    max-width: 650px;
+    margin: 0 auto 10px;
+    color: #555;
+}
+
+/* Tarjeta del formulario: más angosta en inicio de sesión */
+.formulario-cuenta {
+    max-width: 460px;
+    text-align: left;
+}
+
+.formulario-registro {
+    max-width: 640px;
+}
+
+/* Nota de campos obligatorios */
+.nota-formulario {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #777;
+}
+
+.obligatorio {
+    color: #c62828;
+}
+
+.opcional {
+    font-weight: normal;
+    color: #777;
+    font-size: 14px;
+}
+
+/* Dos campos lado a lado (se apilan en celular) */
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+}
+
+/* Los campos de cuenta dejan el margen inferior al mensaje de error */
+.formulario-cuenta .campo-formulario {
+    margin-bottom: 8px;
+}
+
+/* Campo de contraseña con el botón "Mostrar" dentro */
+.campo-contrasena {
+    position: relative;
+}
+
+.campo-formulario .campo-contrasena input {
+    padding-right: 90px;
+}
+
+.boton-ver-contrasena {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    padding: 4px 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #cef6f3;
+    color: #1976D2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton-ver-contrasena:hover {
+    background-color: #b8ece8;
+}
+
+.boton-ver-contrasena:focus-visible {
+    outline: 2px solid #1976D2;
+    outline-offset: 2px;
+}
+
+/* Medidor de seguridad de la contraseña */
+.medidor-contrasena {
+    height: 6px;
+    margin-top: 8px;
+    border-radius: 3px;
+    background-color: #e8eef0;
+    overflow: hidden;
+}
+
+.medidor-barra {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.medidor-barra.nivel-1 { width: 25%; background-color: #c62828; }
+.medidor-barra.nivel-2 { width: 50%; background-color: #f9a825; }
+.medidor-barra.nivel-3 { width: 75%; background-color: #7cb342; }
+.medidor-barra.nivel-4 { width: 100%; background-color: #2e7d32; }
+
+.texto-seguridad {
+    margin-top: 4px;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Casilla "Mantener la sesión iniciada" */
+.opcion-recordar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 12px;
+    cursor: pointer;
+}
+
+.opcion-recordar input {
+    width: 18px;
+    height: 18px;
+    accent-color: #1976D2;
+}
+
+/* Error general del formulario (credenciales incorrectas, bloqueo) */
+.aviso-error {
+    margin: 0 0 10px;
+    padding: 10px 14px;
+    background-color: #fdecea;
+    border: 1px solid #ef9a9a;
+    border-radius: 8px;
+    color: #c62828;
+    font-size: 15px;
+}
+
+.aviso-error:empty {
+    display: none;
+}
+
+/* Aviso informativo (por ejemplo, sesión ya iniciada) */
+.aviso-cuenta {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    background-color: #e8f4fd;
+    border: 1px solid #90caf9;
+    border-radius: 8px;
+    color: #0d47a1;
+}
+
+.aviso-cuenta button {
+    margin-left: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #1976D2;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Botón deshabilitado mientras se procesa el formulario */
+.formulario-agenda .boton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Enlace para cambiar entre iniciar sesión y crear cuenta */
+.enlace-alternativo {
+    margin: 15px 0 0;
+    text-align: center;
+    font-size: 15px;
+}
+
+.enlace-alternativo a {
+    color: #1976D2;
+    font-weight: bold;
+}
+
+/* Botón "Cerrar sesión" dentro del menú de perfil */
+.menu-perfil .boton-cerrar-sesion {
+    color: #c62828;
+}
+
+@media (max-width: 600px) {
+
+    .cuenta-hero h1 {
+        font-size: 28px;
+    }
+
+    .fila-campos {
+        grid-template-columns: 1fr;
+    }
 }

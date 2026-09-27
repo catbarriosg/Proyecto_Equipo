@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Registro de paciente | Clínica Agenda Médica</title>
+    <title>Crear cuenta | Clínica Agenda Médica</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -85,13 +85,126 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="cuenta-hero">
 
-            <h1>Registro de paciente</h1>
+            <span class="etiqueta-seccion">NUEVO PACIENTE</span>
+
+            <h1>Crear cuenta</h1>
 
             <p>
-                Regístrate en Clínica Agenda Médica para gestionar tus horas médicas.
+                Regístrate en Clínica Agenda Médica para agendar y gestionar tus horas médicas.
             </p>
+
+        </section>
+
+        <!-- Formulario de registro (validado con JavaScript) -->
+        <section class="formulario-agenda formulario-cuenta formulario-registro">
+
+            <!-- novalidate: las validaciones las controla JavaScript -->
+            <form id="formulario-registro" novalidate>
+
+                <p class="nota-formulario">Los campos marcados con <span class="obligatorio">*</span> son obligatorios.</p>
+
+                <!-- Nombre y apellido lado a lado en pantallas grandes -->
+                <div class="fila-campos">
+
+                    <section class="campo-formulario">
+                        <label for="registro-nombre">Nombre <span class="obligatorio">*</span></label>
+                        <input type="text" id="registro-nombre" name="nombre"
+                            placeholder="Ej: Ana" autocomplete="given-name"
+                            maxlength="30" required aria-describedby="error-registro-nombre">
+                        <!-- Mensaje de error personalizado, lo llena JavaScript -->
+                        <small id="error-registro-nombre" class="mensaje-error"></small>
+                    </section>
+
+                    <section class="campo-formulario">
+                        <label for="registro-apellido">Apellido <span class="obligatorio">*</span></label>
+                        <input type="text" id="registro-apellido" name="apellido"
+                            placeholder="Ej: Pérez" autocomplete="family-name"
+                            maxlength="30" required aria-describedby="error-registro-apellido">
+                        <small id="error-registro-apellido" class="mensaje-error"></small>
+                    </section>
+
+                </div>
+
+                <section class="campo-formulario">
+                    <label for="registro-correo">Correo electrónico <span class="obligatorio">*</span></label>
+                    <input type="email" id="registro-correo" name="correo"
+                        placeholder="Ej: ana.perez@correo.cl" autocomplete="email"
+                        maxlength="80" required aria-describedby="error-registro-correo">
+                    <small id="error-registro-correo" class="mensaje-error"></small>
+                </section>
+
+                <div class="fila-campos">
+
+                    <section class="campo-formulario">
+                        <label for="registro-fecha-nacimiento">Fecha de nacimiento <span class="obligatorio">*</span></label>
+                        <!-- El máximo (hoy) y el mínimo (120 años atrás) los fija JavaScript -->
+                        <input type="date" id="registro-fecha-nacimiento" name="fechaNacimiento"
+                            autocomplete="bday" required aria-describedby="error-registro-fecha-nacimiento">
+                        <small id="error-registro-fecha-nacimiento" class="mensaje-error"></small>
+                    </section>
+
+                    <section class="campo-formulario">
+                        <label for="registro-prevision">Previsión médica <span class="opcional">(opcional)</span></label>
+                        <select id="registro-prevision" name="prevision">
+                            <option value="">Prefiero no indicarla</option>
+                            <option value="Fonasa">Fonasa</option>
+                            <option value="Isapre Banmédica">Isapre Banmédica</option>
+                            <option value="Isapre Colmena">Isapre Colmena</option>
+                            <option value="Isapre Consalud">Isapre Consalud</option>
+                            <option value="Isapre Cruz Blanca">Isapre Cruz Blanca</option>
+                            <option value="Isapre Nueva Masvida">Isapre Nueva Masvida</option>
+                            <option value="Isapre Vida Tres">Isapre Vida Tres</option>
+                            <option value="Particular">Particular (sin previsión)</option>
+                        </select>
+                        <small class="mensaje-error"></small>
+                    </section>
+
+                </div>
+
+                <section class="campo-formulario">
+                    <label for="registro-contrasena">Contraseña <span class="obligatorio">*</span></label>
+                    <!-- Contenedor para ubicar el botón "Mostrar" dentro del campo -->
+                    <div class="campo-contrasena">
+                        <input type="password" id="registro-contrasena" name="contrasena"
+                            placeholder="Mínimo 8 caracteres" autocomplete="new-password"
+                            minlength="8" maxlength="64" required
+                            aria-describedby="error-registro-contrasena seguridad-contrasena">
+                        <button type="button" class="boton-ver-contrasena" aria-controls="registro-contrasena"
+                            aria-label="Mostrar contraseña">Mostrar</button>
+                    </div>
+                    <!-- Indicador de seguridad de la contraseña (informativo) -->
+                    <div class="medidor-contrasena" aria-hidden="true">
+                        <span class="medidor-barra" id="medidor-barra"></span>
+                    </div>
+                    <small id="seguridad-contrasena" class="texto-seguridad" aria-live="polite"></small>
+                    <small id="error-registro-contrasena" class="mensaje-error"></small>
+                </section>
+
+                <section class="campo-formulario">
+                    <label for="registro-repetir-contrasena">Repetir contraseña <span class="obligatorio">*</span></label>
+                    <div class="campo-contrasena">
+                        <input type="password" id="registro-repetir-contrasena" name="repetirContrasena"
+                            placeholder="Escribe la misma contraseña" autocomplete="new-password"
+                            maxlength="64" required aria-describedby="error-registro-repetir-contrasena">
+                        <button type="button" class="boton-ver-contrasena" aria-controls="registro-repetir-contrasena"
+                            aria-label="Mostrar contraseña">Mostrar</button>
+                    </div>
+                    <small id="error-registro-repetir-contrasena" class="mensaje-error"></small>
+                </section>
+
+                <button type="submit" class="boton" id="boton-registro">Crear cuenta</button>
+
+                <!-- Mensaje de confirmación al registrarse correctamente -->
+                <p id="mensaje-exito-registro" class="mensaje-exito" role="status"></p>
+
+                <p class="enlace-alternativo">
+                    ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a>
+                </p>
+
+            </form>
 
         </section>
 

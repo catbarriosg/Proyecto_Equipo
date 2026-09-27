@@ -85,13 +85,63 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="cuenta-hero">
+
+            <span class="etiqueta-seccion">BIENVENIDO DE NUEVO</span>
 
             <h1>Iniciar sesión</h1>
 
             <p>
                 Ingresa a tu cuenta para gestionar tus horas médicas.
             </p>
+
+        </section>
+
+        <!-- Formulario de inicio de sesión (validado con JavaScript) -->
+        <section class="formulario-agenda formulario-cuenta">
+
+            <!-- Aviso cuando ya hay una sesión iniciada (lo llena JavaScript) -->
+            <p id="aviso-sesion-activa" class="aviso-cuenta" role="status" hidden></p>
+
+            <form id="formulario-login" novalidate>
+
+                <section class="campo-formulario">
+                    <label for="login-correo">Correo electrónico</label>
+                    <input type="email" id="login-correo" name="correo"
+                        placeholder="Ej: ana.perez@correo.cl" autocomplete="email"
+                        maxlength="80" required aria-describedby="error-login-correo">
+                    <small id="error-login-correo" class="mensaje-error"></small>
+                </section>
+
+                <section class="campo-formulario">
+                    <label for="login-contrasena">Contraseña</label>
+                    <div class="campo-contrasena">
+                        <input type="password" id="login-contrasena" name="contrasena"
+                            placeholder="Tu contraseña" autocomplete="current-password"
+                            maxlength="64" required aria-describedby="error-login-contrasena">
+                        <button type="button" class="boton-ver-contrasena" aria-controls="login-contrasena"
+                            aria-label="Mostrar contraseña">Mostrar</button>
+                    </div>
+                    <small id="error-login-contrasena" class="mensaje-error"></small>
+                </section>
+
+                <!-- Recordarme: guarda la sesión aunque se cierre el navegador -->
+                <label class="opcion-recordar" for="login-recordar">
+                    <input type="checkbox" id="login-recordar" name="recordar">
+                    Mantener la sesión iniciada
+                </label>
+
+                <!-- Error general del inicio de sesión (credenciales o bloqueo) -->
+                <p id="error-login-general" class="aviso-error" role="alert"></p>
+
+                <button type="submit" class="boton" id="boton-login">Iniciar sesión</button>
+
+                <p class="enlace-alternativo">
+                    ¿No tienes una cuenta? <a href="registro-paciente.html">Crea una aquí</a>
+                </p>
+
+            </form>
 
         </section>
 

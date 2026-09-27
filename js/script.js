@@ -704,3 +704,516 @@ function iniciarEncabezado() {
 }
 
 document.addEventListener("DOMContentLoaded", iniciarEncabezado);
+
+
+/* =========================================================================
+   CUENTAS — Crear cuenta e Iniciar sesión
+   Los datos se guardan en localStorage solo para esta versión del proyecto
+   (sin servidor). En un sistema real el registro y la contraseña se validan
+   en el backend; aquí la contraseña se guarda cifrada con SHA-256, nunca en
+   texto plano.
+   ========================================================================= */
+
+const CLAVE_USUARIOS = "clinica.usuarios";
+const CLAVE_SESION = "clinica.sesion";
+const CLAVE_INTENTOS = "clinica.intentosLogin";
+const MAX_INTENTOS_LOGIN = 5;
+const SEGUNDOS_BLOQUEO = 30;
+
+// ---------- Acceso al almacenamiento (patrón repositorio) ----------
+// Todo el acceso a localStorage pasa por estas funciones, así el resto del
+// código no depende de cómo se guardan los datos. Usan try/catch porque el
+// navegador puede bloquear el almacenamiento (modo privado, permisos).
+
+function leerAlmacen(almacen, clave, valorPorDefecto) {
+    try {
+        const texto = almacen.getItem(clave);
+        return texto ? JSON.parse(texto) : valorPorDefecto;
+    } catch (error) {
+        return valorPorDefecto;
+    }
+}
+
+function guardarAlmacen(almacen, clave, valor) {
+    try {
+        almacen.setItem(clave, JSON.stringify(valor));
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+function obtenerUsuarios() {
+    return leerAlmacen(localStorage, CLAVE_USUARIOS, []);
+}
+
+// El correo se compara sin mayúsculas ni espacios: Ana@Correo.cl = ana@correo.cl
+function normalizarCorreo(correo) {
+    return correo.trim().toLowerCase();
+}
+
+function buscarUsuarioPorCorreo(correo) {
+    const buscado = normalizarCorreo(correo);
+    return obtenerUsuarios().find(function (usuario) {
+        return usuario.correo === buscado;
+    });
+}
+
+function guardarUsuario(usuario) {
+    const usuarios = obtenerUsuarios();
+    usuarios.push(usuario);
+    return guardarAlmacen(localStorage, CLAVE_USUARIOS, usuarios);
+}
+
+// La sesión va en localStorage si el usuario marca "Mantener la sesión iniciada";
+// si no, en sessionStorage, que se borra al cerrar el navegador.
+function obtenerSesion() {
+    return leerAlmacen(sessionStorage, CLAVE_SESION, null) || leerAlmacen(localStorage, CLAVE_SESION, null);
+}
+
+function iniciarSesion(usuario, recordar) {
+    const sesion = { correo: usuario.correo, nombre: usuario.nombre, apellido: usuario.apellido };
+    guardarAlmacen(recordar ? localStorage : sessionStorage, CLAVE_SESION, sesion);
+}
+
+function cerrarSesion() {
+    try {
+        localStorage.removeItem(CLAVE_SESION);
+        sessionStorage.removeItem(CLAVE_SESION);
+    } catch (error) {
+        // Si el almacenamiento no está disponible no hay sesión que cerrar
+    }
+}
+
+// Cifra la contraseña con SHA-256 usando el correo como "sal", para que dos
+// usuarios con la misma contraseña no queden con el mismo valor guardado.
+async function cifrarContrasena(contrasena, correo) {
+    const texto = normalizarCorreo(correo) + ":" + contrasena;
+
+    if (window.crypto && window.crypto.subtle) {
+        const bytes = new TextEncoder().encode(texto);
+        const resumen = await window.crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(resumen)).map(function (byte) {
+            return byte.toString(16).padStart(2, "0");
+        }).join("");
+    }
+
+    // Respaldo si el navegador no permite crypto.subtle (sitio sin HTTPS)
+    let hash = 5381;
+    for (let i = 0; i < texto.length; i++) {
+        hash = ((hash << 5) + hash + texto.charCodeAt(i)) | 0;
+    }
+    return "b" + (hash >>> 0).toString(16);
+}
+
+
+// ---------- Validaciones de los formularios de cuenta ----------
+
+// Nombre o apellido: obligatorio, solo letras (con tildes y ñ), sin espacios,
+// números ni caracteres especiales
+function validarNombrePersona(campo, etiqueta) {
+    const valor = campo.value.trim();
+    const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+$/;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "El " + etiqueta + " es obligatorio.");
+        return false;
+    }
+    if (/\s/.test(valor)) {
+        mostrarErrorCampo(campo, "El " + etiqueta + " no puede contener espacios.");
+        return false;
+    }
+    if (/\d/.test(valor)) {
+        mostrarErrorCampo(campo, "El " + etiqueta + " no puede contener números.");
+        return false;
+    }
+    if (!soloLetras.test(valor)) {
+        mostrarErrorCampo(campo, "El " + etiqueta + " no puede contener caracteres especiales.");
+        return false;
+    }
+    if (valor.length < 2) {
+        mostrarErrorCampo(campo, "El " + etiqueta + " debe tener al menos 2 letras.");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Correo del registro: formato válido y que no esté registrado
+function validarCorreoNuevo(campo) {
+    if (!validarCorreo(campo)) return false;
+
+    if (buscarUsuarioPorCorreo(campo.value)) {
+        mostrarErrorCampo(campo, "Este correo ya está registrado. Inicia sesión o usa otro correo.");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Fecha en formato AAAA-MM-DD según la zona horaria local
+function fechaLocalISO(fecha) {
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    return fecha.getFullYear() + "-" + mes + "-" + dia;
+}
+
+// Fecha de nacimiento: obligatoria, no futura y de hace menos de 120 años
+function validarFechaNacimiento(campo) {
+    const valor = campo.value;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "La fecha de nacimiento es obligatoria.");
+        return false;
+    }
+    if (valor > campo.max) {
+        mostrarErrorCampo(campo, "La fecha de nacimiento no puede ser posterior a hoy.");
+        return false;
+    }
+    if (valor < campo.min) {
+        mostrarErrorCampo(campo, "Revisa el año: la fecha no puede ser de hace más de 120 años.");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Contraseña: obligatoria y con al menos 8 caracteres
+function validarContrasena(campo) {
+    const valor = campo.value;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "La contraseña es obligatoria.");
+        return false;
+    }
+    if (valor.length < 8) {
+        mostrarErrorCampo(campo, "La contraseña debe tener al menos 8 caracteres (faltan " + (8 - valor.length) + ").");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Repetir contraseña: obligatoria y debe coincidir con la primera
+function validarRepetirContrasena(campo, campoOriginal) {
+    if (campo.value === "") {
+        mostrarErrorCampo(campo, "Repite la contraseña.");
+        return false;
+    }
+    if (campo.value !== campoOriginal.value) {
+        mostrarErrorCampo(campo, "Las contraseñas no coinciden.");
+        return false;
+    }
+    limpiarErrorCampo(campo);
+    return true;
+}
+
+// Calcula la seguridad de la contraseña (0 a 4) según largo y tipos de caracteres
+function calcularSeguridadContrasena(contrasena) {
+    if (contrasena.length === 0) return 0;
+    let puntos = 0;
+    if (contrasena.length >= 8) puntos++;
+    if (/[a-zñ]/.test(contrasena) && /[A-ZÑ]/.test(contrasena)) puntos++;
+    if (/\d/.test(contrasena)) puntos++;
+    if (/[^A-Za-zÑñ0-9]/.test(contrasena)) puntos++;
+    return Math.max(puntos, 1);
+}
+
+// Asigna la validación en tiempo real a un campo: al salir del campo, y mientras
+// se escribe solo si ya mostraba un error (así no se marca rojo antes de tiempo)
+function validarEnTiempoReal(campo, validar) {
+    campo.addEventListener("blur", function () {
+        if (campo.value !== "" || campo.classList.contains("campo-invalido")) validar();
+    });
+    campo.addEventListener(campo.tagName === "SELECT" || campo.type === "date" ? "change" : "input", function () {
+        if (campo.classList.contains("campo-invalido")) validar();
+    });
+}
+
+// Botones "Mostrar" / "Ocultar" de los campos de contraseña
+function iniciarVerContrasena() {
+    document.querySelectorAll(".boton-ver-contrasena").forEach(function (boton) {
+        const campo = document.getElementById(boton.getAttribute("aria-controls"));
+        boton.addEventListener("click", function () {
+            const oculta = campo.type === "password";
+            campo.type = oculta ? "text" : "password";
+            boton.textContent = oculta ? "Ocultar" : "Mostrar";
+            boton.setAttribute("aria-label", oculta ? "Ocultar contraseña" : "Mostrar contraseña");
+            campo.focus();
+        });
+    });
+}
+
+// Lleva el foco al primer campo con error del formulario
+function enfocarPrimerError(formulario) {
+    const primerError = formulario.querySelector(".campo-invalido");
+    if (primerError) primerError.focus();
+}
+
+
+// ---------- CREAR CUENTA ----------
+
+function iniciarRegistro() {
+    const formulario = document.getElementById("formulario-registro");
+    if (!formulario) return; // Solo actúa en registro-paciente.html
+
+    const nombre = document.getElementById("registro-nombre");
+    const apellido = document.getElementById("registro-apellido");
+    const correo = document.getElementById("registro-correo");
+    const fechaNacimiento = document.getElementById("registro-fecha-nacimiento");
+    const prevision = document.getElementById("registro-prevision");
+    const contrasena = document.getElementById("registro-contrasena");
+    const repetirContrasena = document.getElementById("registro-repetir-contrasena");
+    const boton = document.getElementById("boton-registro");
+    const mensajeExito = document.getElementById("mensaje-exito-registro");
+    const medidor = document.getElementById("medidor-barra");
+    const textoSeguridad = document.getElementById("seguridad-contrasena");
+
+    // El calendario solo permite fechas entre hace 120 años y hoy
+    const hoy = new Date();
+    const hace120Anios = new Date(hoy.getFullYear() - 120, hoy.getMonth(), hoy.getDate());
+    fechaNacimiento.max = fechaLocalISO(hoy);
+    fechaNacimiento.min = fechaLocalISO(hace120Anios);
+
+    const validaciones = [
+        [nombre, function () { return validarNombrePersona(nombre, "nombre"); }],
+        [apellido, function () { return validarNombrePersona(apellido, "apellido"); }],
+        [correo, function () { return validarCorreoNuevo(correo); }],
+        [fechaNacimiento, function () { return validarFechaNacimiento(fechaNacimiento); }],
+        [contrasena, function () { return validarContrasena(contrasena); }],
+        [repetirContrasena, function () { return validarRepetirContrasena(repetirContrasena, contrasena); }]
+    ];
+
+    validaciones.forEach(function (par) {
+        validarEnTiempoReal(par[0], par[1]);
+    });
+
+    // Medidor de seguridad y revalidación de "Repetir contraseña" al cambiar la primera
+    const nivelesSeguridad = ["", "Seguridad: débil", "Seguridad: media", "Seguridad: buena", "Seguridad: fuerte"];
+    contrasena.addEventListener("input", function () {
+        const nivel = calcularSeguridadContrasena(contrasena.value);
+        medidor.className = "medidor-barra" + (nivel > 0 ? " nivel-" + nivel : "");
+        textoSeguridad.textContent = nivelesSeguridad[nivel];
+
+        if (repetirContrasena.value !== "") validarRepetirContrasena(repetirContrasena, contrasena);
+    });
+
+    iniciarVerContrasena();
+
+    formulario.addEventListener("submit", async function (evento) {
+        evento.preventDefault();
+        mensajeExito.textContent = "";
+
+        // Se ejecutan todas para que cada campo muestre su propio error
+        const resultados = validaciones.map(function (par) { return par[1](); });
+        if (resultados.includes(false)) {
+            enfocarPrimerError(formulario);
+            return;
+        }
+
+        // Evita envíos dobles mientras se procesa
+        boton.disabled = true;
+        boton.textContent = "Creando cuenta...";
+
+        const usuario = {
+            nombre: nombre.value.trim(),
+            apellido: apellido.value.trim(),
+            correo: normalizarCorreo(correo.value),
+            fechaNacimiento: fechaNacimiento.value,
+            prevision: prevision.value,
+            contrasena: await cifrarContrasena(contrasena.value, correo.value),
+            fechaRegistro: new Date().toISOString()
+        };
+
+        // Se revisa otra vez por si el correo se registró en otra pestaña
+        if (buscarUsuarioPorCorreo(usuario.correo) || !guardarUsuario(usuario)) {
+            if (buscarUsuarioPorCorreo(usuario.correo)) {
+                mostrarErrorCampo(correo, "Este correo ya está registrado. Inicia sesión o usa otro correo.");
+                correo.focus();
+            } else {
+                mostrarErrorCampo(correo, "No pudimos guardar tu cuenta. Revisa que el navegador permita guardar datos.");
+            }
+            boton.disabled = false;
+            boton.textContent = "Crear cuenta";
+            return;
+        }
+
+        mensajeExito.textContent = "¡Cuenta creada, " + usuario.nombre + "! Te llevamos a iniciar sesión...";
+        formulario.querySelectorAll("input, select").forEach(function (campo) { campo.disabled = true; });
+
+        // Redirige al inicio de sesión con el correo ya escrito
+        setTimeout(function () {
+            window.location.href = "login.html?correo=" + encodeURIComponent(usuario.correo);
+        }, 2000);
+    });
+}
+
+
+// ---------- INICIAR SESIÓN ----------
+
+// Control de intentos fallidos: tras 5 errores se bloquea el botón 30 segundos
+function obtenerIntentosLogin() {
+    return leerAlmacen(sessionStorage, CLAVE_INTENTOS, { fallidos: 0, bloqueadoHasta: 0 });
+}
+
+function iniciarLogin() {
+    const formulario = document.getElementById("formulario-login");
+    if (!formulario) return; // Solo actúa en login.html
+
+    const correo = document.getElementById("login-correo");
+    const contrasena = document.getElementById("login-contrasena");
+    const recordar = document.getElementById("login-recordar");
+    const boton = document.getElementById("boton-login");
+    const errorGeneral = document.getElementById("error-login-general");
+    const avisoSesion = document.getElementById("aviso-sesion-activa");
+
+    // Si ya hay una sesión iniciada se avisa y se ofrece cerrarla
+    const sesion = obtenerSesion();
+    if (sesion) {
+        avisoSesion.hidden = false;
+        avisoSesion.textContent = "Ya iniciaste sesión como " + sesion.nombre + " " + sesion.apellido + ".";
+        const botonCerrar = document.createElement("button");
+        botonCerrar.type = "button";
+        botonCerrar.textContent = "Cerrar sesión";
+        botonCerrar.addEventListener("click", function () {
+            cerrarSesion();
+            window.location.reload();
+        });
+        avisoSesion.appendChild(botonCerrar);
+    }
+
+    // Correo recibido desde el registro (login.html?correo=...)
+    const correoRecibido = new URLSearchParams(window.location.search).get("correo");
+    if (correoRecibido) {
+        correo.value = correoRecibido;
+        contrasena.focus();
+    }
+
+    const validarCorreoLogin = function () { return validarCorreo(correo); };
+    const validarContrasenaLogin = function () {
+        if (contrasena.value === "") {
+            mostrarErrorCampo(contrasena, "Ingresa tu contraseña.");
+            return false;
+        }
+        reiniciarCampo(contrasena);
+        return true;
+    };
+
+    validarEnTiempoReal(correo, validarCorreoLogin);
+    validarEnTiempoReal(contrasena, validarContrasenaLogin);
+    iniciarVerContrasena();
+
+    // Si hay un bloqueo activo, cuenta los segundos restantes
+    let temporizadorBloqueo = null;
+    function revisarBloqueo() {
+        const intentos = obtenerIntentosLogin();
+        const restantes = Math.ceil((intentos.bloqueadoHasta - Date.now()) / 1000);
+
+        if (restantes > 0) {
+            boton.disabled = true;
+            errorGeneral.textContent = "Demasiados intentos fallidos. Intenta de nuevo en " + restantes + " segundos.";
+            clearTimeout(temporizadorBloqueo);
+            temporizadorBloqueo = setTimeout(revisarBloqueo, 1000);
+            return true;
+        }
+
+        if (intentos.bloqueadoHasta) {
+            guardarAlmacen(sessionStorage, CLAVE_INTENTOS, { fallidos: 0, bloqueadoHasta: 0 });
+            errorGeneral.textContent = "";
+        }
+        boton.disabled = false;
+        return false;
+    }
+    revisarBloqueo();
+
+    formulario.addEventListener("submit", async function (evento) {
+        evento.preventDefault();
+        if (revisarBloqueo()) return;
+        errorGeneral.textContent = "";
+
+        const correoValido = validarCorreoLogin();
+        const contrasenaValida = validarContrasenaLogin();
+        if (!correoValido || !contrasenaValida) {
+            enfocarPrimerError(formulario);
+            return;
+        }
+
+        boton.disabled = true;
+        boton.textContent = "Ingresando...";
+
+        const usuario = buscarUsuarioPorCorreo(correo.value);
+        const contrasenaCifrada = await cifrarContrasena(contrasena.value, correo.value);
+
+        // Mensaje genérico: no se revela si el correo existe o no (buena práctica de seguridad)
+        if (!usuario || usuario.contrasena !== contrasenaCifrada) {
+            const intentos = obtenerIntentosLogin();
+            intentos.fallidos++;
+            if (intentos.fallidos >= MAX_INTENTOS_LOGIN) {
+                intentos.bloqueadoHasta = Date.now() + SEGUNDOS_BLOQUEO * 1000;
+            }
+            guardarAlmacen(sessionStorage, CLAVE_INTENTOS, intentos);
+
+            boton.textContent = "Iniciar sesión";
+            boton.disabled = false;
+            if (revisarBloqueo()) return;
+
+            const quedan = MAX_INTENTOS_LOGIN - intentos.fallidos;
+            errorGeneral.textContent = "Correo o contraseña incorrectos." +
+                (quedan <= 2 ? " Te quedan " + quedan + " intento" + (quedan === 1 ? "" : "s") + "." : "");
+            [correo, contrasena].forEach(function (campo) {
+                campo.classList.remove("campo-valido");
+                campo.classList.add("campo-invalido");
+            });
+            contrasena.value = "";
+            contrasena.focus();
+            return;
+        }
+
+        guardarAlmacen(sessionStorage, CLAVE_INTENTOS, { fallidos: 0, bloqueadoHasta: 0 });
+        iniciarSesion(usuario, recordar.checked);
+        boton.textContent = "¡Bienvenido, " + usuario.nombre + "!";
+        window.location.href = "../index.html";
+    });
+}
+
+
+// ---------- MENÚ DE PERFIL SEGÚN LA SESIÓN ----------
+
+// Con sesión iniciada, el menú 👤 saluda al usuario y cambia
+// "Iniciar sesión" y "Crear cuenta" por "Cerrar sesión"
+function actualizarMenuPerfil() {
+    const menuPerfil = document.querySelector(".menu-perfil");
+    const sesion = obtenerSesion();
+    if (!menuPerfil || !sesion) return;
+
+    const titulo = menuPerfil.querySelector(".dropdown-header");
+    if (titulo) titulo.textContent = "Hola, " + sesion.nombre;
+
+    menuPerfil.querySelectorAll('a[href$="login.html"], a[href$="registro-paciente.html"]').forEach(function (enlace) {
+        enlace.closest("li").remove();
+    });
+
+    const itemCerrar = document.createElement("li");
+    itemCerrar.innerHTML = '<hr class="dropdown-divider">';
+    const itemBoton = document.createElement("li");
+    const botonCerrar = document.createElement("button");
+    botonCerrar.type = "button";
+    botonCerrar.className = "dropdown-item boton-cerrar-sesion";
+    botonCerrar.textContent = "Cerrar sesión";
+    botonCerrar.addEventListener("click", function () {
+        cerrarSesion();
+        window.location.reload();
+    });
+    itemBoton.appendChild(botonCerrar);
+    menuPerfil.append(itemCerrar, itemBoton);
+
+    // Quita el separador que queda al inicio al sacar los dos enlaces
+    const primerItem = menuPerfil.querySelector("li:nth-child(2) .dropdown-divider");
+    if (primerItem) primerItem.closest("li").remove();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    actualizarMenuPerfil();
+    iniciarRegistro();
+    iniciarLogin();
+});
