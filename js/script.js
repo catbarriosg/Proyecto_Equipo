@@ -1217,3 +1217,318 @@ document.addEventListener("DOMContentLoaded", function () {
     iniciarRegistro();
     iniciarLogin();
 });
+
+
+/* =========================================================================
+   ACCESIBILIDAD — Botón flotante y panel con ayudas de accesibilidad
+   Se crea desde aquí para que esté en todas las páginas sin repetir HTML.
+   Las preferencias se guardan en localStorage y se aplican al cargar cada
+   página. Cada modo agrega una clase "a11y-..." en <html> (ver estilos.css).
+   ========================================================================= */
+
+const CLAVE_ACCESIBILIDAD = "clinica.accesibilidad";
+const NIVELES_TEXTO = [100, 115, 130, 150];
+
+// Opciones que se activan y desactivan, con el nombre que se anuncia
+const OPCIONES_ACCESIBILIDAD = {
+    contraste: "Alto contraste",
+    grises: "Escala de grises",
+    enlaces: "Resaltar enlaces",
+    fuente: "Fuente legible",
+    espaciado: "Espaciado de texto",
+    cursor: "Cursor grande",
+    guia: "Guía de lectura",
+    animaciones: "Pausar animaciones"
+};
+
+// Textos que se pueden leer en voz alta
+const SELECTOR_TEXTO_LEIBLE = "h1, h2, h3, h4, h5, h6, p, li, td, th, label, summary, figcaption, blockquote, .etiqueta-seccion";
+
+function leerPreferenciasAccesibilidad() {
+    const preferencias = leerAlmacen(localStorage, CLAVE_ACCESIBILIDAD, {});
+    preferencias.texto = Math.min(Math.max(parseInt(preferencias.texto, 10) || 0, 0), NIVELES_TEXTO.length - 1);
+    return preferencias;
+}
+
+function aplicarPreferenciasAccesibilidad(preferencias) {
+    const raiz = document.documentElement;
+    Object.keys(OPCIONES_ACCESIBILIDAD).forEach(function (opcion) {
+        raiz.classList.toggle("a11y-" + opcion, Boolean(preferencias[opcion]));
+    });
+    raiz.dataset.a11yTexto = preferencias.texto;
+}
+
+// Se aplica de inmediato (antes de DOMContentLoaded) para evitar un parpadeo
+aplicarPreferenciasAccesibilidad(leerPreferenciasAccesibilidad());
+
+// Ícono universal de accesibilidad
+const ICONO_ACCESIBILIDAD =
+    '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' +
+    '<circle cx="12" cy="3.6" r="2.2"/>' +
+    '<path d="M3.5 7.3l.5-1.9c2.6.7 5.3 1.1 8 1.1s5.4-.4 8-1.1l.5 1.9c-2 .6-4.1 1-6.2 1.2v4.6l2.3 8.2-1.9.5-2.2-7.5h-1l-2.2 7.5-1.9-.5 2.3-8.2V8.5c-2.1-.2-4.2-.6-6.2-1.2z"/>' +
+    '</svg>';
+
+function crearMarcadoAccesibilidad() {
+    const botonesOpcion = function (lista) {
+        return lista.map(function (item) {
+            return '<button type="button" class="a11y-opcion" data-a11y="' + item[0] + '" aria-pressed="false">' +
+                '<span class="a11y-icono" aria-hidden="true">' + item[1] + '</span>' +
+                '<span>' + OPCIONES_ACCESIBILIDAD[item[0]] + '</span></button>';
+        }).join("");
+    };
+
+    return '' +
+        '<div class="offcanvas offcanvas-end panel-accesibilidad" tabindex="-1" id="panel-accesibilidad" aria-labelledby="titulo-accesibilidad">' +
+        '  <div class="offcanvas-header">' +
+        '    <h2 class="offcanvas-title" id="titulo-accesibilidad">Accesibilidad</h2>' +
+        '    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar panel de accesibilidad"></button>' +
+        '  </div>' +
+        '  <div class="offcanvas-body">' +
+        '    <p class="a11y-descripcion">Ajusta la página a tus necesidades. Tus preferencias se guardan en este navegador y se aplican en todas las páginas.</p>' +
+
+        '    <section class="a11y-grupo" aria-labelledby="a11y-titulo-texto">' +
+        '      <h3 id="a11y-titulo-texto">Tamaño del texto</h3>' +
+        '      <div class="a11y-tamano">' +
+        '        <button type="button" data-a11y-tamano="-1" aria-label="Disminuir tamaño del texto">A−</button>' +
+        '        <output id="a11y-tamano-valor" aria-live="polite">100%</output>' +
+        '        <button type="button" data-a11y-tamano="1" aria-label="Aumentar tamaño del texto">A+</button>' +
+        '      </div>' +
+        '    </section>' +
+
+        '    <section class="a11y-grupo" aria-labelledby="a11y-titulo-visual">' +
+        '      <h3 id="a11y-titulo-visual">Visualización</h3>' +
+        '      <div class="a11y-opciones">' +
+        botonesOpcion([["contraste", "◐"], ["grises", "▦"], ["enlaces", "🔗"], ["cursor", "➚"]]) +
+        '      </div>' +
+        '    </section>' +
+
+        '    <section class="a11y-grupo" aria-labelledby="a11y-titulo-lectura">' +
+        '      <h3 id="a11y-titulo-lectura">Lectura</h3>' +
+        '      <div class="a11y-opciones">' +
+        botonesOpcion([["fuente", "Aa"], ["espaciado", "↔"], ["guia", "▭"], ["animaciones", "⏸"]]) +
+        '      </div>' +
+        '    </section>' +
+
+        '    <section class="a11y-grupo a11y-grupo-voz" aria-labelledby="a11y-titulo-voz">' +
+        '      <h3 id="a11y-titulo-voz">Lectura en voz alta</h3>' +
+        '      <div class="a11y-opciones">' +
+        '        <button type="button" class="a11y-accion" id="a11y-leer-pagina"><span class="a11y-icono" aria-hidden="true">🔊</span><span>Leer la página</span></button>' +
+        '        <button type="button" class="a11y-opcion" id="a11y-leer-clic" aria-pressed="false"><span class="a11y-icono" aria-hidden="true">👆</span><span>Leer al hacer clic</span></button>' +
+        '        <button type="button" class="a11y-accion" id="a11y-detener-voz"><span class="a11y-icono" aria-hidden="true">⏹</span><span>Detener lectura</span></button>' +
+        '      </div>' +
+        '    </section>' +
+
+        '    <button type="button" class="a11y-restablecer" id="a11y-restablecer">Restablecer ajustes</button>' +
+        '    <p class="a11y-nota">Consejo: usa la tecla Tab para moverte por la página y Esc para cerrar este panel.</p>' +
+        '  </div>' +
+        '</div>';
+}
+
+function iniciarAccesibilidad() {
+    const cuerpo = document.body;
+    let preferencias = leerPreferenciasAccesibilidad();
+
+    // 1. Enlace para saltar al contenido principal (primer elemento al usar Tab)
+    const principal = document.querySelector("main");
+    if (principal) {
+        if (!principal.id) principal.id = "contenido-principal";
+        principal.tabIndex = -1;
+        const saltar = document.createElement("a");
+        saltar.className = "saltar-contenido";
+        saltar.href = "#" + principal.id;
+        saltar.textContent = "Saltar al contenido principal";
+        cuerpo.prepend(saltar);
+    }
+
+    // Región invisible que anuncia los cambios a los lectores de pantalla
+    const anuncio = document.createElement("div");
+    anuncio.className = "visually-hidden";
+    anuncio.setAttribute("aria-live", "polite");
+    cuerpo.appendChild(anuncio);
+    function anunciar(texto) {
+        anuncio.textContent = "";
+        setTimeout(function () { anuncio.textContent = texto; }, 50);
+    }
+
+    // Guía de lectura
+    const guia = document.createElement("div");
+    guia.className = "guia-lectura";
+    guia.setAttribute("aria-hidden", "true");
+    cuerpo.appendChild(guia);
+    document.addEventListener("mousemove", function (evento) {
+        if (document.documentElement.classList.contains("a11y-guia")) {
+            guia.style.top = (evento.clientY - 9) + "px";
+        }
+    });
+
+    // El panel usa el componente Offcanvas de Bootstrap
+    if (typeof bootstrap === "undefined") return;
+
+    // 2. Botón flotante (segundo elemento al usar Tab, después de "Saltar")
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "boton-accesibilidad";
+    boton.setAttribute("aria-label", "Abrir opciones de accesibilidad");
+    boton.setAttribute("aria-controls", "panel-accesibilidad");
+    boton.setAttribute("aria-expanded", "false");
+    boton.innerHTML = ICONO_ACCESIBILIDAD + '<span class="texto-boton-accesibilidad" aria-hidden="true">Accesibilidad</span>';
+    const saltar = cuerpo.querySelector(".saltar-contenido");
+    if (saltar) saltar.after(boton); else cuerpo.prepend(boton);
+
+    // 3. Panel lateral: sin fondo oscuro para ver los cambios en vivo
+    cuerpo.insertAdjacentHTML("beforeend", crearMarcadoAccesibilidad());
+    const panel = document.getElementById("panel-accesibilidad");
+    const instanciaPanel = new bootstrap.Offcanvas(panel, { backdrop: false, scroll: true });
+
+    boton.addEventListener("click", function () { instanciaPanel.toggle(); });
+    panel.addEventListener("shown.bs.offcanvas", function () {
+        boton.setAttribute("aria-expanded", "true");
+        boton.setAttribute("aria-label", "Cerrar opciones de accesibilidad");
+    });
+    panel.addEventListener("hidden.bs.offcanvas", function () {
+        boton.setAttribute("aria-expanded", "false");
+        boton.setAttribute("aria-label", "Abrir opciones de accesibilidad");
+        boton.focus(); // El foco vuelve al botón que abrió el panel
+    });
+
+    // Refleja en el panel el estado actual de cada opción
+    const valorTamano = document.getElementById("a11y-tamano-valor");
+    function actualizarPanel() {
+        panel.querySelectorAll(".a11y-opcion[data-a11y]").forEach(function (opcion) {
+            opcion.setAttribute("aria-pressed", String(Boolean(preferencias[opcion.dataset.a11y])));
+        });
+        valorTamano.textContent = NIVELES_TEXTO[preferencias.texto] + "%";
+        panel.querySelector('[data-a11y-tamano="-1"]').disabled = preferencias.texto === 0;
+        panel.querySelector('[data-a11y-tamano="1"]').disabled = preferencias.texto === NIVELES_TEXTO.length - 1;
+    }
+
+    function guardarYAplicar() {
+        guardarAlmacen(localStorage, CLAVE_ACCESIBILIDAD, preferencias);
+        aplicarPreferenciasAccesibilidad(preferencias);
+        actualizarPanel();
+    }
+
+    // Opciones que se activan / desactivan
+    panel.querySelectorAll(".a11y-opcion[data-a11y]").forEach(function (opcion) {
+        opcion.addEventListener("click", function () {
+            const nombre = opcion.dataset.a11y;
+            preferencias[nombre] = !preferencias[nombre];
+            guardarYAplicar();
+            anunciar(OPCIONES_ACCESIBILIDAD[nombre] + (preferencias[nombre] ? " activado" : " desactivado"));
+        });
+    });
+
+    // Tamaño del texto
+    panel.querySelectorAll("[data-a11y-tamano]").forEach(function (control) {
+        control.addEventListener("click", function () {
+            const nuevo = preferencias.texto + parseInt(control.dataset.a11yTamano, 10);
+            preferencias.texto = Math.min(Math.max(nuevo, 0), NIVELES_TEXTO.length - 1);
+            guardarYAplicar();
+            anunciar("Tamaño del texto " + NIVELES_TEXTO[preferencias.texto] + " por ciento");
+        });
+    });
+
+    // ---------- Lectura en voz alta (Web Speech API) ----------
+    const voz = window.speechSynthesis;
+    const botonLeerClic = document.getElementById("a11y-leer-clic");
+    let leerAlClic = false;
+    let elementoLeyendo = null;
+
+    function quitarResaltado() {
+        if (elementoLeyendo) elementoLeyendo.classList.remove("a11y-leyendo");
+        elementoLeyendo = null;
+    }
+
+    function detenerVoz() {
+        if (voz) voz.cancel();
+        quitarResaltado();
+    }
+
+    // Lee una lista de elementos en orden, resaltando el que se está leyendo
+    function leerElementos(elementos) {
+        detenerVoz();
+        const vozEspanol = voz.getVoices().find(function (v) { return v.lang === "es-CL"; }) ||
+            voz.getVoices().find(function (v) { return v.lang.indexOf("es") === 0; });
+
+        elementos.forEach(function (elemento) {
+            const texto = (elemento.getAttribute("aria-label") || elemento.innerText || elemento.value || "").trim();
+            if (texto === "") return;
+            const frase = new SpeechSynthesisUtterance(texto);
+            frase.lang = "es-CL";
+            frase.rate = 0.95;
+            if (vozEspanol) frase.voice = vozEspanol;
+            frase.onstart = function () {
+                quitarResaltado();
+                elementoLeyendo = elemento;
+                elemento.classList.add("a11y-leyendo");
+            };
+            frase.onend = function () {
+                if (elementoLeyendo === elemento) quitarResaltado();
+            };
+            voz.speak(frase);
+        });
+    }
+
+    if (!voz) {
+        // El navegador no permite lectura en voz alta: se oculta esa sección
+        panel.querySelector(".a11y-grupo-voz").hidden = true;
+    } else {
+        document.getElementById("a11y-leer-pagina").addEventListener("click", function () {
+            if (!principal) return;
+            // Toma los textos visibles, sin repetir los que están dentro de otro (ej: <p> dentro de <li>)
+            const textos = Array.from(principal.querySelectorAll(SELECTOR_TEXTO_LEIBLE)).filter(function (elemento) {
+                return elemento.offsetParent !== null && !elemento.parentElement.closest(SELECTOR_TEXTO_LEIBLE);
+            });
+            leerElementos(textos);
+            anunciar("Leyendo la página");
+        });
+
+        document.getElementById("a11y-detener-voz").addEventListener("click", function () {
+            detenerVoz();
+            anunciar("Lectura detenida");
+        });
+
+        botonLeerClic.addEventListener("click", function () {
+            leerAlClic = !leerAlClic;
+            botonLeerClic.setAttribute("aria-pressed", String(leerAlClic));
+            if (!leerAlClic) detenerVoz();
+            anunciar("Leer al hacer clic " + (leerAlClic ? "activado" : "desactivado"));
+        });
+
+        // Con "Leer al hacer clic" activo se lee el texto donde se hace clic
+        // y también los enlaces, botones y campos al llegar a ellos con Tab
+        document.addEventListener("click", function (evento) {
+            if (!leerAlClic || evento.target.closest("#panel-accesibilidad, .boton-accesibilidad")) return;
+            const elemento = evento.target.closest(SELECTOR_TEXTO_LEIBLE + ", a, button");
+            if (elemento) leerElementos([elemento]);
+        });
+
+        document.addEventListener("focusin", function (evento) {
+            if (!leerAlClic || evento.target.closest("#panel-accesibilidad")) return;
+            const elemento = evento.target.closest("a, button, input, select, textarea");
+            if (!elemento) return;
+            if (elemento.labels && elemento.labels.length > 0) {
+                leerElementos([elemento.labels[0]]);
+            } else {
+                leerElementos([elemento]);
+            }
+        });
+
+        // Al cambiar de página la lectura se detiene
+        window.addEventListener("pagehide", detenerVoz);
+    }
+
+    // Restablecer todo
+    document.getElementById("a11y-restablecer").addEventListener("click", function () {
+        preferencias = { texto: 0 };
+        leerAlClic = false;
+        botonLeerClic.setAttribute("aria-pressed", "false");
+        detenerVoz();
+        guardarYAplicar();
+        anunciar("Ajustes de accesibilidad restablecidos");
+    });
+
+    actualizarPanel();
+}
+
+document.addEventListener("DOMContentLoaded", iniciarAccesibilidad);
