@@ -7,38 +7,79 @@
 
     <title>Agendar hora | Clínica Agenda Médica</title>
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
 
 <body>
 
-    <header class="header">
+    <!-- Encabezado común del sitio (barra de navegación responsiva de Bootstrap) -->
+    <header class="header sticky-top">
 
-        <nav class="barra-navegacion">
-            <ul class="menu">
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="quienes-somos.html">Quiénes somos</a></li>
-                <li><a href="especialidades.html">Especialidades</a></li>
-                <li><a href="medicos.html">Médicos</a></li>
-                <li><a href="agendar-hora.html">Agendar hora</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
-                <li><a href="login.html">Iniciar sesión</a></li>
-            </ul>
+        <nav class="navbar navbar-expand-lg barra-navegacion" aria-label="Navegación principal">
+            <div class="container-fluid px-3 px-lg-4">
+
+                <!-- Logo de la clínica -->
+                <a class="navbar-brand logo" href="../index.html">
+                    <img src="../img/logo.png" alt="Clínica Agenda Médica">
+                </a>
+
+                <!-- Acciones del encabezado: buscar, perfil y menú (este último solo en pantallas chicas) -->
+                <div class="acciones-header order-lg-last">
+
+                    <button type="button" class="boton-header" data-bs-toggle="collapse"
+                        data-bs-target="#buscador-sitio" aria-controls="buscador-sitio" aria-expanded="false"
+                        aria-label="Buscar en el sitio" title="Buscar">🔍</button>
+
+                    <div class="dropdown">
+                        <button type="button" class="boton-header" data-bs-toggle="dropdown" aria-expanded="false"
+                            aria-label="Opciones de perfil" title="Mi cuenta">👤</button>
+                        <ul class="dropdown-menu dropdown-menu-end menu-perfil">
+                            <li><h6 class="dropdown-header">Mi cuenta</h6></li>
+                            <li><a class="dropdown-item" href="login.html">Iniciar sesión</a></li>
+                            <li><a class="dropdown-item" href="registro-paciente.html">Crear cuenta</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="perfil-paciente.html">Mi perfil</a></li>
+                            <li><a class="dropdown-item" href="mis-horas-medicas.html">Mis horas médicas</a></li>
+                            <li><a class="dropdown-item" href="historial-atenciones.html">Historial de atenciones</a></li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="navbar-toggler boton-header" data-bs-toggle="collapse"
+                        data-bs-target="#menu-principal" aria-controls="menu-principal" aria-expanded="false"
+                        aria-label="Abrir menú" title="Menú">☰</button>
+
+                </div>
+
+                <!-- Menú principal: horizontal en escritorio, desplegable en tablet y celular -->
+                <div class="collapse navbar-collapse" id="menu-principal">
+                    <ul class="navbar-nav menu mx-lg-auto">
+                        <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="quienes-somos.html">Quiénes somos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="especialidades.html">Especialidades</a></li>
+                        <li class="nav-item"><a class="nav-link" href="medicos.html">Médicos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                        <li class="nav-item"><a class="nav-link boton-agendar" href="agendar-hora.html">Agendar hora</a></li>
+                    </ul>
+                </div>
+
+            </div>
         </nav>
 
-        <section class="header-inferior">
-
-            <a href="../index.html" class="logo">
-                <img src="../img/logo.png" alt="Clínica Agenda Médica">
-            </a>
-
-            <section class="acciones-header">
-                <button type="button">🔍</button>
-                <button type="button">🔔</button>
-                <button type="button">👤</button>
-            </section>
-
-        </section>
+        <!-- Buscador del sitio: se despliega con el botón 🔍 -->
+        <div class="collapse" id="buscador-sitio">
+            <form class="buscador-sitio container-fluid px-3 px-lg-4" role="search" id="formulario-buscador-sitio">
+                <div class="input-group">
+                    <input class="form-control" type="search" id="campo-buscador-sitio"
+                        placeholder="Busca una página: especialidades, médicos, agendar..." aria-label="Buscar en el sitio"
+                        autocomplete="off">
+                    <button class="btn boton-buscar" type="submit">Buscar</button>
+                </div>
+                <div class="list-group resultados-buscador" id="resultados-buscador"></div>
+            </form>
+        </div>
 
     </header>
 
@@ -130,6 +171,8 @@
     </footer>
 
     <!-- Conexión con JavaScript -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/script.js"></script>
 </body>
 

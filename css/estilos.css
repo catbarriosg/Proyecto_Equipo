@@ -5,73 +5,171 @@
     box-sizing: border-box;
 }
 
-/* Estilos principales del encabezado */
+/* Estilos principales del encabezado (navbar de Bootstrap) */
 .header {
     background-color: #cef6f3;
     border-bottom: 2px solid #f698c9;
 }
 
-/* Barra de navegación superior */
+/* Barra de navegación */
 .barra-navegacion {
-    width: 100%;
-    padding: 0;
+    padding: 8px 0;
 }
 
-/* Lista de opciones del menú */
-.menu {
-    list-style: none;
-    display: flex;
-    justify-content: flex-start;
-    gap: 35px;
-    padding: 15px 25px;
-    margin: 0;
-}
-
-/* Segunda fila del encabezado */
-.header-inferior {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2px 25px;
-    background-color: #f9fcf0;
-
-}
-
-/*logo de la clínica en el encabezado */
+/* Logo de la clínica en el encabezado */
 .logo {
-    text-decoration: none;
-    color: #525151;
-    font-size: 24px;
-    font-weight: bold;
+    padding: 0;
+    margin-right: 20px;
 }
 
-/*  tamaño logo de la clínica */
+/* Tamaño del logo de la clínica */
 .logo img {
-    width: 220px;
+    width: 180px;
     height: auto;
     display: block;
 }
 
-/* Acciones disponibles en el encabezado */
+/* Enlaces del menú principal */
+.menu {
+    gap: 6px;
+}
+
+.menu .nav-link {
+    color: #070707;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu .nav-link:hover,
+.menu .nav-link:focus-visible {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #1976D2;
+}
+
+/* Página en la que se encuentra el usuario */
+.menu .nav-link.active {
+    color: #1976D2;
+    background-color: #ffffff;
+}
+
+/* Enlace destacado para agendar una hora */
+.menu .nav-link.boton-agendar {
+    background-color: #1976D2;
+    color: #ffffff;
+}
+
+.menu .nav-link.boton-agendar:hover,
+.menu .nav-link.boton-agendar.active {
+    background-color: #1565c0;
+    color: #ffffff;
+}
+
+/* Acciones disponibles en el encabezado (buscar, perfil y menú) */
 .acciones-header {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 6px;
 }
 
 /* Botones de búsqueda, perfil y menú */
-.acciones-header button {
-    border: none;
-    background: none;
+.boton-header {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background-color: transparent;
     font-size: 20px;
+    line-height: 1;
     cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* Estilos de los enlaces del menú */
-.menu a {
-    text-decoration: none;
-    color: #070707;
-    font-weight: bold;
-    transition: 0.3s;
+.boton-header:hover,
+.boton-header[aria-expanded="true"] {
+    background-color: #ffffff;
+    border-color: #f698c9;
+}
+
+.boton-header:focus-visible {
+    outline: 2px solid #1976D2;
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+/* Menú desplegable del perfil */
+.menu-perfil {
+    border: 1px solid #f698c9;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.menu-perfil .dropdown-item:active {
+    background-color: #1976D2;
+}
+
+/* Buscador del sitio que se despliega bajo el encabezado */
+.buscador-sitio {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 12px;
+    background-color: #f9fcf0;
+    border-top: 1px solid rgba(246, 152, 201, 0.4);
+}
+
+.boton-buscar {
+    background-color: #1976D2;
+    color: #ffffff;
+}
+
+.boton-buscar:hover {
+    background-color: #1565c0;
+    color: #ffffff;
+}
+
+/* Resultados del buscador */
+.resultados-buscador {
+    margin-top: 8px;
+    text-align: left;
+}
+
+.resultados-buscador .list-group-item small {
+    display: block;
+    color: #6c757d;
+}
+
+/* Menú abierto en tablet y celular: enlaces uno bajo otro */
+@media (max-width: 991.98px) {
+    .menu {
+        padding: 10px 0 6px;
+        text-align: center;
+    }
+
+    .logo img {
+        width: 150px;
+    }
+}
+
+/* Celular: logo y botones más compactos */
+@media (max-width: 400px) {
+    .logo {
+        margin-right: 0;
+    }
+
+    .logo img {
+        width: 120px;
+    }
+
+    .boton-header {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
 }
 
 /* Espaciado general del contenido principal */
@@ -259,6 +357,7 @@ main h1 {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     justify-content: center;
+    z-index: 1050;
     align-items: center;
 }
 
@@ -675,43 +774,8 @@ main h1 {
 }
 
 
-/* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
-@media (max-width: 1024px) {
-
-    /* Reduce un poco el logo para dar más espacio al menú */
-    .logo img {
-        width: 160px;
-    }
-
-    /* Achica levemente el espacio entre links del menú */
-    .menu {
-        gap: 20px;
-        padding: 15px;
-    }
-}
-
-
 /* RESPONSIVE - CELULAR (pantallas hasta 600px)*/
 @media (max-width: 600px) {
-
-    /* El menú pasa de horizontal a apilado en columna */
-    .menu {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        padding: 15px;
-    }
-
-    /* Encabezado inferior también se apila (logo arriba, botones abajo) */
-    .header-inferior {
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 15px;
-    }
-
-    .logo img {
-        width: 140px;
-    }
 
     /* Menos padding general en el contenido principal */
     main {

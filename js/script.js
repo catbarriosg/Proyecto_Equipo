@@ -543,3 +543,164 @@ document.addEventListener("DOMContentLoaded", function () {
     iniciarBuscadorFaq();
     iniciarPanelAdministracion();
 });
+
+
+/* =========================================================================
+   ENCABEZADO — Menú responsivo, buscador del sitio y opciones de perfil
+   Los botones ☰ y 👤 usan los componentes Collapse y Dropdown de Bootstrap;
+   aquí se agrega el comportamiento propio del sitio.
+   ========================================================================= */
+
+// Páginas que se pueden encontrar con el buscador (rutas desde la raíz del sitio)
+const paginasDelSitio = [
+    { titulo: "Inicio", ruta: "index.html", claves: "inicio portada clinica galeria" },
+    { titulo: "Quiénes somos", ruta: "paginas/quienes-somos.html", claves: "historia mision vision equipo video nosotros" },
+    { titulo: "Especialidades", ruta: "paginas/especialidades.html", claves: "cardiologia pediatria dermatologia traumatologia ginecologia medicina general" },
+    { titulo: "Médicos", ruta: "paginas/medicos.html", claves: "doctores doctoras profesionales" },
+    { titulo: "Sucursales", ruta: "paginas/sucursales.html", claves: "direccion mapa ubicacion sedes horario" },
+    { titulo: "Contacto", ruta: "paginas/contacto.html", claves: "mensaje correo telefono escribir consulta" },
+    { titulo: "Preguntas frecuentes", ruta: "paginas/preguntas-frecuentes.html", claves: "faq ayuda dudas" },
+    { titulo: "Agendar hora", ruta: "paginas/agendar-hora.html", claves: "reservar cita atencion nueva hora" },
+    { titulo: "Buscar hora", ruta: "paginas/buscar-hora.html", claves: "disponibilidad horas disponibles" },
+    { titulo: "Mis horas médicas", ruta: "paginas/mis-horas-medicas.html", claves: "mis citas reservas" },
+    { titulo: "Modificar hora", ruta: "paginas/modificar-hora.html", claves: "cambiar reagendar cita" },
+    { titulo: "Cancelar hora", ruta: "paginas/cancelar-hora.html", claves: "anular eliminar cita" },
+    { titulo: "Historial de atenciones", ruta: "paginas/historial-atenciones.html", claves: "atenciones anteriores registro" },
+    { titulo: "Iniciar sesión", ruta: "paginas/login.html", claves: "login ingresar entrar cuenta" },
+    { titulo: "Crear cuenta", ruta: "paginas/registro-paciente.html", claves: "registro registrarse paciente nuevo" },
+    { titulo: "Mi perfil", ruta: "paginas/perfil-paciente.html", claves: "perfil datos personales paciente" },
+    { titulo: "Panel de administración", ruta: "paginas/panel-administracion.html", claves: "admin administrador gestion" }
+];
+
+// Quita tildes y mayúsculas para comparar textos
+function normalizarTexto(texto) {
+    return texto.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+}
+
+// Devuelve el nombre del archivo de una ruta (index.html si termina en "/")
+function nombrePagina(ruta) {
+    const partes = ruta.split("/");
+    return partes[partes.length - 1] || "index.html";
+}
+
+// Marca en el menú el enlace de la página actual
+function marcarPaginaActual() {
+    const paginaActual = nombrePagina(window.location.pathname);
+
+    document.querySelectorAll(".menu .nav-link, .menu-perfil .dropdown-item").forEach(function (enlace) {
+        if (nombrePagina(new URL(enlace.href).pathname) === paginaActual) {
+            enlace.classList.add("active");
+            enlace.setAttribute("aria-current", "page");
+        }
+    });
+}
+
+// Cierra un bloque desplegable de Bootstrap si está abierto
+function cerrarDesplegable(elemento) {
+    if (elemento && elemento.classList.contains("show")) {
+        bootstrap.Collapse.getOrCreateInstance(elemento, { toggle: false }).hide();
+    }
+}
+
+function iniciarBuscadorSitio() {
+    const panelBuscador = document.getElementById("buscador-sitio");
+    const formulario = document.getElementById("formulario-buscador-sitio");
+    const campo = document.getElementById("campo-buscador-sitio");
+    const resultados = document.getElementById("resultados-buscador");
+    const logo = document.querySelector(".header .logo");
+    if (!panelBuscador || !formulario || !campo || !resultados || !logo) return;
+
+    // La raíz del sitio se obtiene del enlace del logo (funciona desde index.html y desde /paginas)
+    const raizSitio = new URL(".", logo.href);
+
+    function buscarPaginas(texto) {
+        const buscado = normalizarTexto(texto);
+        if (buscado === "") return [];
+        return paginasDelSitio.filter(function (pagina) {
+            return normalizarTexto(pagina.titulo + " " + pagina.claves).includes(buscado);
+        });
+    }
+
+    function mostrarResultados(texto) {
+        const encontradas = buscarPaginas(texto);
+        resultados.innerHTML = "";
+
+        if (texto.trim() === "") return;
+
+        if (encontradas.length === 0) {
+            const aviso = document.createElement("p");
+            aviso.className = "list-group-item mb-0";
+            aviso.textContent = "No encontramos páginas con \"" + texto.trim() + "\".";
+            resultados.appendChild(aviso);
+            return;
+        }
+
+        encontradas.forEach(function (pagina) {
+            const enlace = document.createElement("a");
+            enlace.className = "list-group-item list-group-item-action";
+            enlace.href = new URL(pagina.ruta, raizSitio).href;
+            enlace.textContent = pagina.titulo;
+            resultados.appendChild(enlace);
+        });
+    }
+
+    campo.addEventListener("input", function () {
+        mostrarResultados(campo.value);
+    });
+
+    // Al enviar se abre el primer resultado encontrado
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        const encontradas = buscarPaginas(campo.value);
+        if (encontradas.length > 0) {
+            window.location.href = new URL(encontradas[0].ruta, raizSitio).href;
+        } else {
+            mostrarResultados(campo.value);
+            campo.focus();
+        }
+    });
+
+    // Al abrir el buscador se cierra el menú y se pone el cursor en el campo
+    panelBuscador.addEventListener("show.bs.collapse", function () {
+        cerrarDesplegable(document.getElementById("menu-principal"));
+    });
+    panelBuscador.addEventListener("shown.bs.collapse", function () {
+        campo.focus();
+    });
+
+    // Al cerrarlo se limpia la búsqueda
+    panelBuscador.addEventListener("hidden.bs.collapse", function () {
+        formulario.reset();
+        resultados.innerHTML = "";
+    });
+
+    // La tecla Escape cierra el buscador
+    campo.addEventListener("keydown", function (evento) {
+        if (evento.key === "Escape") cerrarDesplegable(panelBuscador);
+    });
+}
+
+function iniciarEncabezado() {
+    // Requiere el JavaScript de Bootstrap (bootstrap.bundle.min.js)
+    if (!document.querySelector(".header") || typeof bootstrap === "undefined") return;
+
+    marcarPaginaActual();
+    iniciarBuscadorSitio();
+
+    const menu = document.getElementById("menu-principal");
+    if (!menu) return;
+
+    // Al abrir el menú (☰) se cierra el buscador
+    menu.addEventListener("show.bs.collapse", function () {
+        cerrarDesplegable(document.getElementById("buscador-sitio"));
+    });
+
+    // En tablet y celular, el menú se cierra al elegir una opción
+    menu.querySelectorAll(".nav-link").forEach(function (enlace) {
+        enlace.addEventListener("click", function () {
+            cerrarDesplegable(menu);
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", iniciarEncabezado);
