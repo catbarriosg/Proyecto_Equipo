@@ -7,44 +7,88 @@
 
     <title>Iniciar sesión | Clínica Agenda Médica</title>
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
 
 <body>
 
-    <header class="header">
+    <!-- Encabezado común del sitio (barra de navegación responsiva de Bootstrap) -->
+    <header class="header sticky-top">
 
-        <nav class="barra-navegacion">
-            <ul class="menu">
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="quienes-somos.html">Quiénes somos</a></li>
-                <li><a href="especialidades.html">Especialidades</a></li>
-                <li><a href="medicos.html">Médicos</a></li>
-                <li><a href="agendar-hora.html">Agendar hora</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
-                <li><a href="login.html">Iniciar sesión</a></li>
-            </ul>
+        <nav class="navbar navbar-expand-xl barra-navegacion" aria-label="Navegación principal">
+            <div class="container-fluid px-3 px-xl-4">
+
+                <!-- Logo de la clínica -->
+                <a class="navbar-brand logo" href="../index.html">
+                    <img src="../img/logo.png" alt="Clínica Agenda Médica">
+                </a>
+
+                <!-- Acciones del encabezado: buscar, perfil y menú (este último solo en pantallas chicas) -->
+                <div class="acciones-header order-xl-last">
+
+                    <button type="button" class="boton-header" data-bs-toggle="collapse"
+                        data-bs-target="#buscador-sitio" aria-controls="buscador-sitio" aria-expanded="false"
+                        aria-label="Buscar en el sitio" title="Buscar">🔍</button>
+
+                    <div class="dropdown">
+                        <button type="button" class="boton-header" data-bs-toggle="dropdown" aria-expanded="false"
+                            aria-label="Opciones de perfil" title="Mi cuenta">👤</button>
+                        <ul class="dropdown-menu dropdown-menu-end menu-perfil">
+                            <li><h6 class="dropdown-header">Mi cuenta</h6></li>
+                            <li><a class="dropdown-item" href="login.html">Iniciar sesión</a></li>
+                            <li><a class="dropdown-item" href="registro-paciente.html">Crear cuenta</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="perfil-paciente.html">Mi perfil</a></li>
+                            <li><a class="dropdown-item" href="mis-horas-medicas.html">Mis horas médicas</a></li>
+                            <li><a class="dropdown-item" href="historial-atenciones.html">Historial de atenciones</a></li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="navbar-toggler boton-header" data-bs-toggle="collapse"
+                        data-bs-target="#menu-principal" aria-controls="menu-principal" aria-expanded="false"
+                        aria-label="Abrir menú" title="Menú">☰</button>
+
+                </div>
+
+                <!-- Menú principal: horizontal en escritorio, desplegable en pantallas menores a 1200px -->
+                <div class="collapse navbar-collapse" id="menu-principal">
+                    <ul class="navbar-nav menu mx-xl-auto">
+                        <li class="nav-item"><a class="nav-link" href="../index.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="quienes-somos.html">Quiénes somos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="especialidades.html">Especialidades</a></li>
+                        <li class="nav-item"><a class="nav-link" href="medicos.html">Médicos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                        <li class="nav-item"><a class="nav-link boton-agendar" href="agendar-hora.html">Agendar hora</a></li>
+                    </ul>
+                </div>
+
+            </div>
         </nav>
 
-        <section class="header-inferior">
-
-            <a href="../index.html" class="logo">
-                <img src="../img/logo.png" alt="Clínica Agenda Médica">
-            </a>
-
-            <section class="acciones-header">
-                <button type="button">🔍</button>
-                <button type="button">🔔</button>
-                <a href="perfil-paciente.html" class="boton-usuario">👤</a>
-            </section>
-
-        </section>
+        <!-- Buscador del sitio: se despliega con el botón 🔍 -->
+        <div class="collapse" id="buscador-sitio">
+            <form class="buscador-sitio container-fluid px-3 px-xl-4" role="search" id="formulario-buscador-sitio">
+                <div class="input-group">
+                    <input class="form-control" type="search" id="campo-buscador-sitio"
+                        placeholder="Busca una página: especialidades, médicos, agendar..." aria-label="Buscar en el sitio"
+                        autocomplete="off">
+                    <button class="btn boton-buscar" type="submit">Buscar</button>
+                </div>
+                <div class="list-group resultados-buscador" id="resultados-buscador"></div>
+            </form>
+        </div>
 
     </header>
 
     <main>
 
-        <section class="formulario-login">
+        <!-- Presentación de la página -->
+        <section class="cuenta-hero">
+
+            <span class="etiqueta-seccion">BIENVENIDO DE NUEVO</span>
 
             <h1>Iniciar sesión</h1>
 
@@ -52,29 +96,52 @@
                 Ingresa a tu cuenta para gestionar tus horas médicas.
             </p>
 
+        </section>
+
+        <!-- Formulario de inicio de sesión (validado con JavaScript) -->
+        <section class="formulario-agenda formulario-cuenta">
+
+            <!-- Aviso cuando ya hay una sesión iniciada (lo llena JavaScript) -->
+            <p id="aviso-sesion-activa" class="aviso-cuenta" role="status" hidden></p>
+
             <form id="formulario-login" novalidate>
 
                 <section class="campo-formulario">
-                    <label for="correo">Correo electrónico</label>
-                    <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.cl" maxlength="100">
+                    <label for="login-correo">Correo electrónico</label>
+                    <input type="email" id="login-correo" name="correo"
+                        placeholder="Ej: ana.perez@gmail.com" autocomplete="email"
+                        maxlength="80" required aria-describedby="error-login-correo">
+                    <small id="error-login-correo" class="mensaje-error"></small>
                 </section>
 
                 <section class="campo-formulario">
-                    <label for="contrasena">Contraseña</label>
-                    <input type="password" id="contrasena" name="contrasena" placeholder="Ingresa tu contraseña"
-                        maxlength="10">
+                    <label for="login-contrasena">Contraseña</label>
+                    <div class="campo-contrasena">
+                        <input type="password" id="login-contrasena" name="contrasena"
+                            placeholder="Tu contraseña" autocomplete="current-password"
+                            maxlength="64" required aria-describedby="error-login-contrasena">
+                        <button type="button" class="boton-ver-contrasena" aria-controls="login-contrasena"
+                            aria-label="Mostrar contraseña">Mostrar</button>
+                    </div>
+                    <small id="error-login-contrasena" class="mensaje-error"></small>
                 </section>
 
-                <button type="submit" class="boton">
-                    Iniciar sesión
-                </button>
+                <!-- Recordarme: guarda la sesión aunque se cierre el navegador -->
+                <label class="opcion-recordar" for="login-recordar">
+                    <input type="checkbox" id="login-recordar" name="recordar">
+                    Mantener la sesión iniciada
+                </label>
+
+                <!-- Error general del inicio de sesión (credenciales o bloqueo) -->
+                <p id="error-login-general" class="aviso-error" role="alert"></p>
+
+                <button type="submit" class="boton" id="boton-login">Iniciar sesión</button>
+
+                <p class="enlace-alternativo">
+                    ¿No tienes una cuenta? <a href="registro-paciente.html">Crea una aquí</a>
+                </p>
 
             </form>
-
-            <p>
-                ¿No tienes una cuenta?
-                <a href="registro-paciente.html">Regístrate aquí</a>
-            </p>
 
         </section>
 
@@ -90,6 +157,7 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+
         <p>
             <a href="sucursales.html">Sucursales</a> |
             <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
@@ -100,12 +168,8 @@
 
     </footer>
 
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- JavaScript del proyecto -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/script.js"></script>
-
 </body>
 
 </html>

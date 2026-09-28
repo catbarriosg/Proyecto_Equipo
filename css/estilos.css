@@ -5,73 +5,172 @@
     box-sizing: border-box;
 }
 
-/* Estilos principales del encabezado */
+/* Estilos principales del encabezado (navbar de Bootstrap) */
 .header {
     background-color: #cef6f3;
     border-bottom: 2px solid #f698c9;
 }
 
-/* Barra de navegación superior */
+/* Barra de navegación */
 .barra-navegacion {
-    width: 100%;
-    padding: 0;
+    padding: 8px 0;
 }
 
-/* Lista de opciones del menú */
-.menu {
-    list-style: none;
-    display: flex;
-    justify-content: flex-start;
-    gap: 35px;
-    padding: 15px 25px;
-    margin: 0;
-}
-
-/* Segunda fila del encabezado */
-.header-inferior {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2px 25px;
-    background-color: #f9fcf0;
-
-}
-
-/*logo de la clínica en el encabezado */
+/* Logo de la clínica en el encabezado */
 .logo {
-    text-decoration: none;
-    color: #525151;
-    font-size: 24px;
-    font-weight: bold;
+    padding: 0;
+    margin-right: 20px;
 }
 
-/*  tamaño logo de la clínica */
+/* Tamaño del logo de la clínica */
 .logo img {
-    width: 220px;
+    width: 180px;
     height: auto;
     display: block;
 }
 
-/* Acciones disponibles en el encabezado */
+/* Enlaces del menú principal */
+.menu {
+    gap: 6px;
+}
+
+.menu .nav-link {
+    color: #070707;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu .nav-link:hover,
+.menu .nav-link:focus-visible {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #1976D2;
+}
+
+/* Página en la que se encuentra el usuario */
+.menu .nav-link.active {
+    color: #1976D2;
+    background-color: #ffffff;
+}
+
+/* Enlace destacado para agendar una hora */
+.menu .nav-link.boton-agendar {
+    background-color: #1976D2;
+    color: #ffffff;
+}
+
+.menu .nav-link.boton-agendar:hover,
+.menu .nav-link.boton-agendar.active {
+    background-color: #1565c0;
+    color: #ffffff;
+}
+
+/* Acciones disponibles en el encabezado (buscar, perfil y menú) */
 .acciones-header {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 6px;
 }
 
 /* Botones de búsqueda, perfil y menú */
-.acciones-header button {
-    border: none;
-    background: none;
+.boton-header {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background-color: transparent;
     font-size: 20px;
+    line-height: 1;
     cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* Estilos de los enlaces del menú */
-.menu a {
-    text-decoration: none;
-    color: #070707;
-    font-weight: bold;
-    transition: 0.3s;
+.boton-header:hover,
+.boton-header[aria-expanded="true"] {
+    background-color: #ffffff;
+    border-color: #f698c9;
+}
+
+.boton-header:focus-visible {
+    outline: 2px solid #1976D2;
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+/* Menú desplegable del perfil */
+.menu-perfil {
+    border: 1px solid #f698c9;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.menu-perfil .dropdown-item:active {
+    background-color: #1976D2;
+}
+
+/* Buscador del sitio que se despliega bajo el encabezado */
+.buscador-sitio {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 12px;
+    background-color: #f9fcf0;
+    border-top: 1px solid rgba(246, 152, 201, 0.4);
+}
+
+.boton-buscar {
+    background-color: #1976D2;
+    color: #ffffff;
+}
+
+.boton-buscar:hover {
+    background-color: #1565c0;
+    color: #ffffff;
+}
+
+/* Resultados del buscador */
+.resultados-buscador {
+    margin-top: 8px;
+    text-align: left;
+}
+
+.resultados-buscador .list-group-item small {
+    display: block;
+    color: #6c757d;
+}
+
+/* Menú abierto en tablet y celular: enlaces uno bajo otro */
+@media (max-width: 1199.98px) {
+    .menu {
+        padding: 10px 0 6px;
+        text-align: center;
+    }
+
+    .logo img {
+        width: 150px;
+    }
+}
+
+/* Celular: logo y botones más compactos */
+@media (max-width: 400px) {
+    .logo {
+        margin-right: 0;
+    }
+
+    .logo img {
+        width: 120px;
+    }
+
+    .boton-header {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
 }
 
 /* Espaciado general del contenido principal */
@@ -115,9 +214,11 @@ p {
     transition: 0.3s;
 }
 
-/* Efecto opaco al pasar el cursor sobre los botones */
-.boton:hover {
-    opacity: 0.5;
+/* Botón más oscuro al pasar el cursor (antes se volvía casi transparente) */
+.boton:hover,
+.boton:focus-visible {
+    background-color: #1565c0;
+    color: #ffffff;
 }
 
 /* Nombre de la clínica en el pie de página */
@@ -259,6 +360,7 @@ main h1 {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     justify-content: center;
+    z-index: 1050;
     align-items: center;
 }
 
@@ -330,6 +432,7 @@ main h1 {
 .hero-quienes h1 {
     font-size: 48px;
     margin: 15px 0;
+    text-align: left;
 }
 
 .hero-quienes p {
@@ -443,25 +546,6 @@ main h1 {
     color: #1976D2;
 }
 
-/* Distribución de las tarjetas de valores */
-.valores-clinica .row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.valores-clinica .col-md-4 {
-    width: 33.333333%;
-}
-
-/* Distribución de misión y visión */
-.mision-vision .row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.mision-vision .col-md-6 {
-    width: 50%;
-}
 
 .galeria-clinica .carousel-control-prev,
 .galeria-clinica .carousel-control-next {
@@ -674,114 +758,6 @@ main h1 {
     z-index: 1;
 }
 
-/* FORMULARIO REGISTRO PACIENTE  */
-
-.formulario-registro {
-    max-width: 850px;
-    margin: 0 auto;
-    padding: 20px 0 50px;
-}
-
-.formulario-registro h1 {
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.formulario-registro>p {
-    text-align: center;
-    margin-bottom: 35px;
-}
-
-#formulario-registro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    background-color: #ffffff;
-    padding: 35px;
-    border-radius: 18px;
-    border: 1px solid #cef6f3;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-}
-
-.campo-formulario {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.campo-formulario label {
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #525151;
-}
-
-.campo-formulario input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #cfcfcf;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 15px;
-    outline: none;
-}
-
-.campo-formulario input:focus {
-    border-color: #7dd3e8;
-    box-shadow: 0 0 0 3px rgba(125, 211, 232, 0.2);
-}
-
-#formulario-registro .boton {
-    grid-column: 1 / -1;
-    justify-self: center;
-    border: none;
-    cursor: pointer;
-}
-
-/* FORMULARIO INICIO DE SESIÓN */
-
-.formulario-login {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px 0 50px;
-    text-align: center;
-}
-
-.formulario-login h1 {
-    margin-bottom: 15px;
-}
-
-.formulario-login>p {
-    margin-bottom: 25px;
-}
-
-#formulario-login {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background-color: #ffffff;
-    padding: 35px;
-    border-radius: 18px;
-    border: 1px solid #cef6f3;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-    text-align: left;
-}
-
-#formulario-login .boton {
-    align-self: center;
-    border: none;
-    cursor: pointer;
-}
-
-.formulario-login a {
-    color: #198fa5;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.formulario-login a:hover {
-    text-decoration: underline;
-}
-
 /* PERFIL DEL PACIENTE */
 
 .perfil-paciente {
@@ -866,12 +842,14 @@ main h1 {
     text-decoration: none;
 }
 
-.boton-cancelar {
-    background-color: #d9534f;
+/* ".boton.boton-cancelar" para ganarle a ".formulario-agenda .boton" (azul) */
+.boton.boton-cancelar {
+    background-color: #c62828;
 }
 
-.boton-cancelar:hover {
-    background-color: #c9302c;
+.boton.boton-cancelar:hover,
+.boton.boton-cancelar:focus-visible {
+    background-color: #b71c1c;
 }
 
 /* HISTORIAL DE ATENCIONES */
@@ -905,27 +883,6 @@ main h1 {
     margin-bottom: 10px;
 }
 
-/* Campo de teléfono con prefijo */
-.telefono-input {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.telefono-input span {
-    padding: 12px 10px;
-    background-color: #f1fafa;
-    border: 1px solid #cfcfcf;
-    border-radius: 8px;
-    font-weight: bold;
-    color: #525151;
-    white-space: nowrap;
-}
-
-.telefono-input input {
-    flex: 1;
-}
-
 /* =========================================================
    INTEGRANTE 2 — Agendar, modificar y cancelar horas
    ========================================================= */
@@ -954,7 +911,7 @@ main h1 {
 
 .texto-semana {
     text-align: center;
-    color: #007dc6;
+    color: #1976D2;
 }
 
 .texto-semana span {
@@ -969,7 +926,7 @@ main h1 {
 .btn-flecha {
     background: none;
     border: none;
-    color: #007dc6;
+    color: #1976D2;
     font-size: 24px;
     cursor: pointer;
     font-weight: bold;
@@ -987,7 +944,7 @@ main h1 {
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
-    color: #007dc6;
+    color: #1976D2;
 }
 
 .dia-box.activo {
@@ -1021,7 +978,7 @@ main h1 {
 }
 
 .header-centro-medico {
-    background-color: #007dc6;
+    background-color: #1976D2;
     color: white;
     padding: 15px 20px;
     display: flex;
@@ -1074,7 +1031,7 @@ main h1 {
 
 .etiqueta-modalidad {
     display: inline-block;
-    background-color: #007dc6;
+    background-color: #1976D2;
     color: white;
     padding: 8px 30px;
     font-weight: bold;
@@ -1104,7 +1061,7 @@ main h1 {
 
 .btn-hora {
     background: white;
-    border: 1px solid #007dc6;
+    border: 1px solid #1976D2;
     color: #333;
     padding: 8px 20px;
     border-radius: 4px;
@@ -1115,47 +1072,12 @@ main h1 {
 
 .btn-hora:hover,
 .btn-hora.seleccionada {
-    background-color: #007dc6;
+    background-color: #1976D2;
     color: white;
 }
 
-/* RESPONSIVE - TABLET (pantallas hasta 1024px)   */
-@media (max-width: 1024px) {
-
-    /* Reduce un poco el logo para dar más espacio al menú */
-    .logo img {
-        width: 160px;
-    }
-
-    /* Achica levemente el espacio entre links del menú */
-    .menu {
-        gap: 20px;
-        padding: 15px;
-    }
-}
-
-
 /* RESPONSIVE - CELULAR (pantallas hasta 600px)*/
 @media (max-width: 600px) {
-
-    /* El menú pasa de horizontal a apilado en columna */
-    .menu {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        padding: 15px;
-    }
-
-    /* Encabezado inferior también se apila (logo arriba, botones abajo) */
-    .header-inferior {
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 15px;
-    }
-
-    .logo img {
-        width: 140px;
-    }
 
     /* Menos padding general en el contenido principal */
     main {
@@ -1167,7 +1089,7 @@ main h1 {
     }
 
     /* Imagen circular de Inicio más pequeña en celular */
-    main img {
+    .imagen-principal {
         width: 200px;
         height: 200px;
     }
@@ -1185,26 +1107,13 @@ main h1 {
         margin: 20px 15px;
     }
 
-    /* Adaptación responsive del modal y formulario de registro
-   para dispositivos con pantallas pequeñas  */
+    /* La ventana emergente (modal) se ajusta al ancho disponible */
     .contenido-modal {
         width: 90%;
         max-width: 400px;
         padding: 20px;
     }
 
-    .formulario-registro {
-        padding: 10px 5px 40px;
-    }
-
-    #formulario-registro {
-        grid-template-columns: 1fr;
-        padding: 25px 20px;
-    }
-
-    #formulario-registro .boton {
-        width: 100%;
-    }
 
 
 
@@ -1294,7 +1203,8 @@ main h1 {
 }
 
 /* Bordes de campo según validación (JS agrega estas clases) */
-.campo-formulario .campo-invalido {
+.campo-formulario .campo-invalido,
+.campo-formulario .campo-invalido:focus {
     border-color: #c62828;
     box-shadow: 0 0 5px rgba(198, 40, 40, 0.3);
 }
@@ -1390,6 +1300,8 @@ main h1 {
 }
 
 .sucursal-card {
+    display: flex;
+    flex-direction: column;
     background-color: white;
     border-radius: 18px;
     border: 1px solid #cef6f3;
@@ -1415,6 +1327,9 @@ main h1 {
 }
 
 .sucursal-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     padding: 20px;
 }
 
@@ -1441,8 +1356,9 @@ main h1 {
 
 /* Botón de la tarjeta con texto blanco para contraste */
 .sucursal-card .boton {
+    align-self: center;
+    margin-top: auto;
     color: white;
-    margin-top: 8px;
 }
 
 /* Mapa embebido */
@@ -1799,4 +1715,832 @@ main h1 {
 
 .contenedor-video figcaption a {
     color: #1976D2;
+}
+
+
+/* =========================================================================
+   CUENTAS — Crear cuenta e Iniciar sesión
+   Reutilizan .formulario-agenda, .campo-formulario, .mensaje-error y
+   .campo-invalido / .campo-valido del resto del sitio.
+   ========================================================================= */
+
+/* Encabezado de las páginas de cuenta (mismo estilo que contacto-hero) */
+.cuenta-hero {
+    text-align: center;
+    padding: 40px 20px 10px;
+}
+
+.cuenta-hero h1 {
+    font-size: 42px;
+    margin: 15px 0;
+}
+
+.cuenta-hero p {
+    max-width: 650px;
+    margin: 0 auto 10px;
+    color: #555;
+}
+
+/* Tarjeta del formulario: más angosta en inicio de sesión */
+.formulario-cuenta {
+    max-width: 460px;
+    text-align: left;
+}
+
+.formulario-registro {
+    max-width: 640px;
+}
+
+/* Nota de campos obligatorios */
+.nota-formulario {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #777;
+}
+
+.obligatorio {
+    color: #c62828;
+}
+
+.opcional {
+    font-weight: normal;
+    color: #777;
+    font-size: 14px;
+}
+
+/* Dos campos lado a lado (se apilan en celular) */
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+}
+
+/* Los campos de cuenta dejan el margen inferior al mensaje de error */
+.formulario-cuenta .campo-formulario {
+    margin-bottom: 8px;
+}
+
+/* Campo de contraseña con el botón "Mostrar" dentro */
+.campo-contrasena {
+    position: relative;
+}
+
+.campo-formulario .campo-contrasena input {
+    padding-right: 90px;
+}
+
+.boton-ver-contrasena {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    padding: 4px 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #cef6f3;
+    color: #1976D2;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton-ver-contrasena:hover {
+    background-color: #b8ece8;
+}
+
+.boton-ver-contrasena:focus-visible {
+    outline: 2px solid #1976D2;
+    outline-offset: 2px;
+}
+
+/* Medidor de seguridad de la contraseña */
+.medidor-contrasena {
+    height: 6px;
+    margin-top: 8px;
+    border-radius: 3px;
+    background-color: #e8eef0;
+    overflow: hidden;
+}
+
+.medidor-barra {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.medidor-barra.nivel-1 { width: 25%; background-color: #c62828; }
+.medidor-barra.nivel-2 { width: 50%; background-color: #f9a825; }
+.medidor-barra.nivel-3 { width: 75%; background-color: #7cb342; }
+.medidor-barra.nivel-4 { width: 100%; background-color: #2e7d32; }
+
+.texto-seguridad,
+.texto-ayuda {
+    margin-top: 4px;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Casilla "Mantener la sesión iniciada" */
+.opcion-recordar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 12px;
+    cursor: pointer;
+}
+
+.opcion-recordar input {
+    width: 18px;
+    height: 18px;
+    accent-color: #1976D2;
+}
+
+/* Error general del formulario (credenciales incorrectas, bloqueo) */
+.aviso-error {
+    margin: 0 0 10px;
+    padding: 10px 14px;
+    background-color: #fdecea;
+    border: 1px solid #ef9a9a;
+    border-radius: 8px;
+    color: #c62828;
+    font-size: 15px;
+}
+
+.aviso-error:empty {
+    display: none;
+}
+
+/* Aviso informativo (por ejemplo, sesión ya iniciada) */
+.aviso-cuenta {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    background-color: #e8f4fd;
+    border: 1px solid #90caf9;
+    border-radius: 8px;
+    color: #0d47a1;
+}
+
+.aviso-cuenta button {
+    margin-left: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #1976D2;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Botón deshabilitado mientras se procesa el formulario */
+.formulario-agenda .boton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Enlace para cambiar entre iniciar sesión y crear cuenta */
+.enlace-alternativo {
+    margin: 15px 0 0;
+    text-align: center;
+    font-size: 15px;
+}
+
+.enlace-alternativo a {
+    color: #1976D2;
+    font-weight: bold;
+}
+
+/* Botón "Cerrar sesión" dentro del menú de perfil */
+.menu-perfil .boton-cerrar-sesion {
+    color: #c62828;
+}
+
+@media (max-width: 600px) {
+
+    .cuenta-hero h1 {
+        font-size: 28px;
+    }
+
+    .fila-campos {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================================
+   ACCESIBILIDAD — Botón flotante, panel de ajustes y modos de visualización
+   El botón y el panel los crea js/script.js en todas las páginas.
+   Los modos se activan con clases en <html> (a11y-...).
+   ========================================================================= */
+
+/* Enlace "Saltar al contenido principal": visible solo al navegar con Tab */
+.saltar-contenido {
+    position: absolute;
+    top: -60px;
+    left: 16px;
+    z-index: 1100;
+    padding: 10px 16px;
+    background-color: #1976D2;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+    transition: top 0.2s;
+}
+
+.saltar-contenido:focus {
+    top: 0;
+    color: #ffffff;
+    outline: 3px solid #f698c9;
+}
+
+/* El contenido principal recibe el foco sin mostrar un recuadro */
+main:focus {
+    outline: none;
+}
+
+/* Botón flotante: esquina inferior derecha, sigue el scroll */
+.boton-accesibilidad {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1040;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 58px;
+    min-width: 58px;
+    padding: 0 14px;
+    border: 3px solid #ffffff;
+    border-radius: 30px;
+    background-color: #1976D2;
+    color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.boton-accesibilidad svg {
+    flex-shrink: 0;
+}
+
+/* El texto "Accesibilidad" se muestra al pasar el mouse o con el foco */
+.boton-accesibilidad .texto-boton-accesibilidad {
+    display: none;
+}
+
+.boton-accesibilidad:hover .texto-boton-accesibilidad,
+.boton-accesibilidad:focus-visible .texto-boton-accesibilidad,
+.boton-accesibilidad[aria-expanded="true"] .texto-boton-accesibilidad {
+    display: inline;
+}
+
+.boton-accesibilidad:hover,
+.boton-accesibilidad[aria-expanded="true"] {
+    background-color: #1565c0;
+    transform: scale(1.05);
+}
+
+.boton-accesibilidad:focus-visible {
+    outline: 3px solid #f698c9;
+    outline-offset: 3px;
+}
+
+/* Panel lateral de accesibilidad */
+.panel-accesibilidad {
+    --bs-offcanvas-width: 380px;
+    text-align: left;
+}
+
+.panel-accesibilidad .offcanvas-header {
+    background-color: #cef6f3;
+    border-bottom: 2px solid #f698c9;
+}
+
+.panel-accesibilidad .offcanvas-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.panel-accesibilidad section {
+    text-align: left;
+}
+
+.panel-accesibilidad p {
+    margin-bottom: 16px;
+}
+
+.a11y-descripcion {
+    color: #555;
+    font-size: 15px;
+}
+
+.a11y-grupo {
+    margin-bottom: 22px;
+}
+
+.a11y-grupo h3 {
+    margin-bottom: 10px;
+    color: #1976D2;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Control de tamaño del texto: A− 100% A+ */
+.a11y-tamano {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px;
+    border: 1px solid #b8dfe3;
+    border-radius: 10px;
+}
+
+.a11y-tamano button {
+    width: 56px;
+    height: 44px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1976D2;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.a11y-tamano button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.a11y-tamano output {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Opciones activables en tarjetas de dos columnas */
+.a11y-opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.a11y-opcion,
+.a11y-accion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 84px;
+    padding: 10px 8px;
+    border: 2px solid #b8dfe3;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #070707;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.a11y-opcion:hover,
+.a11y-accion:hover {
+    border-color: #1976D2;
+}
+
+.a11y-opcion:focus-visible,
+.a11y-accion:focus-visible,
+.a11y-tamano button:focus-visible,
+.a11y-restablecer:focus-visible {
+    outline: 3px solid #f698c9;
+    outline-offset: 2px;
+}
+
+/* Opción activada */
+.a11y-opcion[aria-pressed="true"] {
+    background-color: #1976D2;
+    border-color: #1976D2;
+    color: #ffffff;
+}
+
+.a11y-icono {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.a11y-restablecer {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #c62828;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #c62828;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.a11y-restablecer:hover {
+    background-color: #fdecea;
+}
+
+.a11y-nota {
+    margin-top: 16px;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Guía de lectura: franja que sigue al mouse */
+.guia-lectura {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1035;
+    width: 100%;
+    height: 14px;
+    background-color: rgba(246, 152, 201, 0.35);
+    border-top: 2px solid #f698c9;
+    border-bottom: 2px solid #f698c9;
+    pointer-events: none;
+}
+
+html.a11y-guia .guia-lectura {
+    display: block;
+}
+
+/* Elemento que se está leyendo en voz alta */
+.a11y-leyendo {
+    outline: 3px solid #f9a825 !important;
+    outline-offset: 3px;
+    background-color: rgba(249, 168, 37, 0.15) !important;
+}
+
+/* ---------- Modos de accesibilidad ---------- */
+
+/* Tamaño del texto: amplía encabezado, contenido y pie (no el panel) */
+html[data-a11y-texto="1"] body > :is(header, main, footer) { zoom: 1.15; }
+html[data-a11y-texto="2"] body > :is(header, main, footer) { zoom: 1.3; }
+html[data-a11y-texto="3"] body > :is(header, main, footer) { zoom: 1.5; }
+
+/* Escala de grises (en <html> para no afectar elementos fijos) */
+html.a11y-grises {
+    filter: grayscale(1);
+}
+
+/* Resaltar enlaces y foco del teclado */
+html.a11y-enlaces a {
+    text-decoration: underline !important;
+    text-underline-offset: 3px;
+    outline: 2px dashed #1976D2;
+    outline-offset: 2px;
+}
+
+html.a11y-enlaces :focus-visible {
+    outline: 4px solid #f9a825 !important;
+    outline-offset: 3px !important;
+}
+
+/* Fuente legible: tipografía simple y sin cursivas */
+html.a11y-fuente body,
+html.a11y-fuente body * {
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* Espaciado de texto (valores recomendados por WCAG 1.4.12) */
+html.a11y-espaciado body :is(p, li, a, label, span, small, td, th, h1, h2, h3, h4, h5, h6, summary, button, input, select, textarea) {
+    line-height: 1.8 !important;
+    letter-spacing: 0.12em !important;
+    word-spacing: 0.16em !important;
+}
+
+/* Cursor grande */
+html.a11y-cursor,
+html.a11y-cursor * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M6 4 L6 40 L15 31 L22 46 L29 43 L22 28 L35 28 Z' fill='%23000' stroke='%23fff' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 6 4, auto !important;
+}
+
+/* Pausar animaciones y transiciones */
+html.a11y-animaciones *,
+html.a11y-animaciones *::before,
+html.a11y-animaciones *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+}
+
+/* Alto contraste: fondo negro, texto blanco y enlaces amarillos */
+html.a11y-contraste body,
+html.a11y-contraste body *:not(img):not(video):not(iframe):not(svg):not(svg *) {
+    background-color: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+html.a11y-contraste body a,
+html.a11y-contraste body a * {
+    color: #ffeb3b !important;
+    text-decoration: underline !important;
+}
+
+html.a11y-contraste body :is(button, .boton, .btn, input, select, textarea) {
+    border: 2px solid #ffeb3b !important;
+}
+
+html.a11y-contraste .a11y-opcion[aria-pressed="true"] {
+    background-color: #ffeb3b !important;
+    color: #000000 !important;
+}
+
+html.a11y-contraste .a11y-opcion[aria-pressed="true"] * {
+    background-color: transparent !important;
+    color: #000000 !important;
+}
+
+html.a11y-contraste .campo-invalido,
+html.a11y-contraste .mensaje-error,
+html.a11y-contraste .aviso-error {
+    border-color: #ff5252 !important;
+    color: #ff8a80 !important;
+}
+
+html.a11y-contraste .campo-invalido {
+    color: #ffffff !important;
+}
+
+html.a11y-contraste .boton-accesibilidad {
+    border: 3px solid #ffeb3b !important;
+}
+
+html.a11y-contraste .boton-accesibilidad svg {
+    fill: #ffeb3b;
+}
+
+html.a11y-contraste .btn-close {
+    filter: invert(1);
+    background-color: transparent !important;
+    background-image: var(--bs-btn-close-bg) !important;
+    border: none !important;
+}
+
+/* La guía de lectura sigue siendo transparente en alto contraste */
+html.a11y-contraste .guia-lectura {
+    background-color: rgba(255, 235, 59, 0.25) !important;
+    border-color: #ffeb3b !important;
+}
+
+/* Íconos decorativos (como el + de preguntas frecuentes) también en blanco */
+html.a11y-contraste body *::before,
+html.a11y-contraste body *::after {
+    color: #ffffff !important;
+}
+
+/* Figuras decorativas que tapan el contenido en alto contraste */
+html.a11y-contraste .pagina-medicos::before,
+html.a11y-contraste .pagina-medicos::after {
+    display: none;
+}
+
+@media (max-width: 600px) {
+
+    .boton-accesibilidad {
+        right: 14px;
+        bottom: 14px;
+        height: 52px;
+        min-width: 52px;
+        padding: 0 11px;
+    }
+
+    .panel-accesibilidad {
+        --bs-offcanvas-width: 100%;
+    }
+}
+
+
+/* =========================================================================
+   AJUSTES DE LA AUDITORÍA GENERAL
+   ========================================================================= */
+
+/* El pie de página deja espacio para que el botón de accesibilidad no tape el texto */
+.footer {
+    padding-right: 100px;
+}
+
+/* Quiénes somos: en tablet y celular el texto y la imagen se apilan */
+@media (max-width: 767.98px) {
+
+    .hero-quienes,
+    .bloque-informacion {
+        flex-direction: column;
+        gap: 30px;
+        min-height: 0;
+        padding: 30px 0;
+    }
+
+    .hero-quienes h1 {
+        font-size: 34px;
+    }
+
+    .hero-quienes-imagen,
+    .bloque-imagen {
+        width: 100%;
+    }
+
+    .hero-quienes-imagen img,
+    .bloque-imagen img {
+        height: 240px;
+    }
+
+    .mision-vision,
+    .valores-clinica {
+        padding: 40px 0;
+    }
+
+    .tarjeta-institucional {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .footer {
+        padding: 12px 20px 80px;
+    }
+
+    /* Médicos: se quita el relleno lateral extra para que las tarjetas usen el ancho */
+    .medicos-lista {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+
+/* =========================================================================
+   HORAS MÉDICAS — Calendario semanal integrado en agendar y modificar
+   Complementa el diseño del calendario del integrante 2 y reemplaza los
+   estilos que estaban escritos dentro del HTML (atributo style).
+   ========================================================================= */
+
+/* Formularios con calendario: un poco más anchos */
+.formulario-agenda-calendario {
+    max-width: 760px;
+}
+
+.selector-horario {
+    margin: 10px 0 25px;
+    animation: fadeIn 0.5s;
+}
+
+.titulo-selector {
+    margin-bottom: 15px;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* Días y horas como botones: se pueden usar con teclado */
+.dias-semana {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.dia-box {
+    min-width: 64px;
+    border: 2px solid transparent;
+    background-color: transparent;
+    font-family: inherit;
+}
+
+.dia-box:hover:not(:disabled) {
+    border-color: #b8dfe3;
+}
+
+.dia-box:disabled {
+    color: #9e9e9e;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.btn-flecha:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.dia-box:focus-visible,
+.btn-hora:focus-visible,
+.btn-flecha:focus-visible {
+    outline: 3px solid #f698c9;
+    outline-offset: 2px;
+}
+
+.titulo-fecha-seleccionada {
+    margin-top: 12px;
+}
+
+.botones-hora {
+    flex-wrap: wrap;
+    padding: 4px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+}
+
+.btn-hora {
+    font-family: inherit;
+}
+
+.texto-horarios,
+.texto-sin-horas {
+    margin: 0 0 12px;
+    color: #666;
+}
+
+/* Error del calendario (sin día u hora elegidos) */
+.calendario-invalido {
+    border: 2px solid #c62828;
+    border-radius: 8px;
+}
+
+/* Botón secundario: fondo celeste con texto oscuro */
+.boton.boton-secundario {
+    background-color: #7dd3e8;
+    color: #1a1a1a;
+}
+
+.boton.boton-secundario:hover,
+.boton.boton-secundario:focus-visible {
+    background-color: #5ec4dd;
+    color: #1a1a1a;
+}
+
+/* Accesos rápidos bajo el formulario de agendar */
+.acciones-reserva {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.formulario-agenda .acciones-reserva .boton {
+    margin: 0;
+    text-align: center;
+}
+
+/* Resultado de la búsqueda de una reserva */
+.resultado-reserva {
+    margin-top: 30px;
+    animation: fadeIn 0.5s;
+}
+
+.resultado-reserva h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+.resultado-reserva p {
+    margin-bottom: 8px;
+}
+
+.tarjeta-reserva-actual {
+    margin-bottom: 25px;
+    background-color: #f8f9fa;
+}
+
+/* Botones dentro de las ventanas emergentes */
+.acciones-modal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.contenido-modal h3 {
+    margin-bottom: 15px;
+}
+
+.titulo-advertencia {
+    color: #c62828;
+}
+
+@media (max-width: 600px) {
+
+    .acciones-reserva {
+        grid-template-columns: 1fr;
+    }
+
+    .dia-box {
+        min-width: 44px;
+        padding: 8px;
+    }
 }

@@ -18,7 +18,7 @@ Desarrollar una interfaz web funcional y responsive para una clínica médica, a
 - CSS3
 - JavaScript
 - Bootstrap
-- SweetAlert2
+- Lightbox2
 - Git
 - GitHub
 - Visual Studio Code
