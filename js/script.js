@@ -1,92 +1,226 @@
-// Espera a que la página termine de cargar
-document.addEventListener("DOMContentLoaded", function () {
-    
-//formulario agendar hora médica
+/* =========================================================================
+   AGENDAR HORA — Formulario de reserva con validación bajo cada campo
+   ========================================================================= */
 
+// Convierte "AAAA-MM-DD" en una fecha local (sin desfase de zona horaria)
+function crearFechaLocal(valor) {
+    const partes = valor.split("-");
+    return new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]));
+}
+
+// Horarios de atención cada 30 minutos: lunes a viernes 08:00-19:30, sábado 09:00-13:30
+function obtenerHorariosDelDia(fecha) {
+    const dia = fecha.getDay();
+    if (dia === 0) return []; // Domingo sin atención
+
+    const inicio = dia === 6 ? 9 * 60 : 8 * 60;
+    const fin = dia === 6 ? 13 * 60 + 30 : 19 * 60 + 30;
+    const horarios = [];
+
+    // Si la fecha es hoy, solo se ofrecen horas que aún no pasan
+    const ahora = new Date();
+    const esHoy = fecha.toDateString() === ahora.toDateString();
+    const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
+
+    for (let minutos = inicio; minutos <= fin; minutos += 30) {
+        if (esHoy && minutos <= minutosAhora) continue;
+        horarios.push(String(Math.floor(minutos / 60)).padStart(2, "0") + ":" + String(minutos % 60).padStart(2, "0"));
+    }
+    return horarios;
+}
+
+function iniciarAgendarHora() {
     const formulario = document.getElementById("formulario-agenda");
     if (!formulario) return; // Evita errores en las páginas que no tienen este formulario
 
-    formulario.addEventListener("submit", function (evento) {
+    const especialidad = document.getElementById("especialidad");
+    const medico = document.getElementById("medico");
+    const fecha = document.getElementById("fecha");
+    const hora = document.getElementById("hora");
+    const botonConfirmar = formulario.querySelector('button[type="submit"]');
+    const modal = document.getElementById("modal-mensaje");
+    const botonCerrar = document.getElementById("cerrar-modal");
 
+    // Se puede reservar desde hoy hasta 90 días más
+    const hoy = new Date();
+    const limite = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 90);
+    fecha.min = fechaLocalISO(hoy);
+    fecha.max = fechaLocalISO(limite);
+
+    // Muestra solo los médicos de la especialidad elegida
+    function filtrarMedicos() {
+        let disponibles = 0;
+        Array.from(medico.options).forEach(function (opcion) {
+            if (opcion.value === "") return;
+            const visible = especialidad.value === "" || opcion.dataset.especialidad === especialidad.value;
+            opcion.hidden = !visible;
+            opcion.disabled = !visible;
+            if (visible) disponibles++;
+        });
+
+        const seleccionado = medico.options[medico.selectedIndex];
+        if (seleccionado && seleccionado.disabled) medico.value = "";
+
+        // Si la especialidad tiene un solo médico, se selecciona automáticamente
+        if (especialidad.value !== "" && disponibles === 1) {
+            medico.value = medico.querySelector('option[data-especialidad="' + especialidad.value + '"]').value;
+        }
+    }
+
+    // Al elegir un médico se completa su especialidad
+    function sincronizarEspecialidad() {
+        const opcion = medico.options[medico.selectedIndex];
+        if (opcion && opcion.dataset.especialidad) {
+            especialidad.value = opcion.dataset.especialidad;
+            limpiarErrorCampo(especialidad);
+        }
+    }
+
+    // Carga en la lista las horas disponibles para la fecha elegida
+    function actualizarHorarios() {
+        const horaAnterior = hora.value;
+        hora.innerHTML = "";
+
+        const horarios = fecha.value && validarFechaAgenda(false) ? obtenerHorariosDelDia(crearFechaLocal(fecha.value)) : [];
+        const primera = document.createElement("option");
+        primera.value = "";
+        primera.textContent = fecha.value === "" ? "Primero elige una fecha"
+            : horarios.length === 0 ? "Sin horas disponibles" : "Selecciona una hora";
+        hora.appendChild(primera);
+
+        horarios.forEach(function (horario) {
+            const opcion = document.createElement("option");
+            opcion.value = horario;
+            opcion.textContent = horario;
+            hora.appendChild(opcion);
+        });
+
+        if (horarios.includes(horaAnterior)) hora.value = horaAnterior;
+    }
+
+    // mostrar = false: solo revisa sin marcar el campo
+    function validarFechaAgenda(mostrar) {
+        let mensaje = "";
+        if (fecha.value === "") {
+            mensaje = "Selecciona la fecha de tu atención.";
+        } else if (fecha.value < fecha.min) {
+            mensaje = "La fecha no puede ser anterior a hoy.";
+        } else if (fecha.value > fecha.max) {
+            mensaje = "Solo puedes agendar con hasta 90 días de anticipación.";
+        } else if (crearFechaLocal(fecha.value).getDay() === 0) {
+            mensaje = "Los domingos no hay atención. Elige otro día.";
+        } else if (obtenerHorariosDelDia(crearFechaLocal(fecha.value)).length === 0) {
+            mensaje = "Ya no quedan horas para hoy. Elige otro día.";
+        }
+
+        if (mostrar === false) return mensaje === "";
+        if (mensaje !== "") {
+            mostrarErrorCampo(fecha, mensaje);
+            return false;
+        }
+        limpiarErrorCampo(fecha);
+        return true;
+    }
+
+    const validaciones = [
+        function () { return validarSeleccion(especialidad, "Selecciona una especialidad médica."); },
+        function () { return validarSeleccion(medico, "Selecciona un médico."); },
+        function () { return validarFechaAgenda(); },
+        function () { return validarSeleccion(hora, "Selecciona la hora de tu atención."); }
+    ];
+
+    especialidad.addEventListener("change", function () {
+        filtrarMedicos();
+        validaciones[0]();
+        if (medico.value !== "" || medico.classList.contains("campo-invalido")) validaciones[1]();
+    });
+    medico.addEventListener("change", function () {
+        sincronizarEspecialidad();
+        filtrarMedicos();
+        validaciones[1]();
+    });
+    fecha.addEventListener("change", function () {
+        validaciones[2]();
+        actualizarHorarios();
+    });
+    hora.addEventListener("change", validaciones[3]);
+
+    // Datos recibidos desde Médicos o Especialidades (agendar-hora.html?medico=... o ?especialidad=...)
+    const parametros = new URLSearchParams(window.location.search);
+    if (parametros.get("medico") && medico.querySelector('option[value="' + CSS.escape(parametros.get("medico")) + '"]')) {
+        medico.value = parametros.get("medico");
+        sincronizarEspecialidad();
+    } else if (parametros.get("especialidad") && especialidad.querySelector('option[value="' + CSS.escape(parametros.get("especialidad")) + '"]')) {
+        especialidad.value = parametros.get("especialidad");
+    }
+    filtrarMedicos();
+
+    // Ventana emergente: se cierra con el botón, con Esc o haciendo clic fuera
+    function abrirModal() {
+        modal.style.display = "flex";
+        botonCerrar.focus();
+    }
+    function cerrarModal() {
+        modal.style.display = "none";
+        botonConfirmar.focus();
+    }
+    botonCerrar.addEventListener("click", cerrarModal);
+    modal.addEventListener("click", function (evento) {
+        if (evento.target === modal) cerrarModal();
+    });
+    document.addEventListener("keydown", function (evento) {
+        if (evento.key === "Escape" && modal.style.display === "flex") cerrarModal();
+    });
+
+    formulario.addEventListener("submit", function (evento) {
         evento.preventDefault();
 
-        const especialidad = document.getElementById("especialidad").value;
-        const medico = document.getElementById("medico").value;
-        const fecha = document.getElementById("fecha").value;
-        const hora = document.getElementById("hora").value;
-
-        if (especialidad === "") {
-            document.getElementById("texto-modal").textContent =
-                "Debes seleccionar una especialidad médica.";
-
-            document.getElementById("modal-mensaje").style.display = "flex";
+        // Se ejecutan todas para que cada campo muestre su propio error
+        const resultados = validaciones.map(function (validar) { return validar(); });
+        if (resultados.includes(false)) {
+            enfocarPrimerError(formulario);
             return;
         }
 
-        if (medico === "") {
-            document.getElementById("texto-modal").textContent =
-                "Debes seleccionar un médico.";
-
-            document.getElementById("modal-mensaje").style.display = "flex";
-            return;
-        }
-
-        if (fecha === "") {
-            document.getElementById("texto-modal").textContent =
-                "Debes seleccionar una fecha.";
-
-            document.getElementById("modal-mensaje").style.display = "flex";
-            return;
-        }
-
-        if (hora === "") {
-            document.getElementById("texto-modal").textContent =
-                "Debes seleccionar una hora.";
-
-            document.getElementById("modal-mensaje").style.display = "flex";
-            return;
-        }
-
-        // Mensaje cuando todos los campos están completos
         // Genera un ID único para la reserva
         const idReserva = "AM-" + Date.now();
+        const fechaTexto = crearFechaLocal(fecha.value).toLocaleDateString("es-CL", {
+            weekday: "long", day: "numeric", month: "long", year: "numeric"
+        });
 
-        // Obtiene el texto seleccionado en cada campo
-        const especialidadTexto =
-            document.getElementById("especialidad").options[
-                document.getElementById("especialidad").selectedIndex
-            ].text;
+        document.getElementById("texto-modal").textContent = "¡Hora médica agendada correctamente!";
 
-        const medicoTexto =
-            document.getElementById("medico").options[
-                document.getElementById("medico").selectedIndex
-            ].text;
+        // Comprobante con los datos de la reserva (textContent evita insertar HTML)
+        const datosReserva = document.getElementById("datos-reserva");
+        datosReserva.innerHTML = "";
+        [
+            ["ID de reserva", idReserva],
+            ["Especialidad", especialidad.options[especialidad.selectedIndex].text],
+            ["Médico", medico.options[medico.selectedIndex].text],
+            ["Fecha", fechaTexto],
+            ["Hora", hora.value]
+        ].forEach(function (dato) {
+            const linea = document.createElement("p");
+            const etiqueta = document.createElement("strong");
+            etiqueta.textContent = dato[0] + ":";
+            linea.append(etiqueta, " " + dato[1]);
+            datosReserva.appendChild(linea);
+        });
+        const nota = document.createElement("p");
+        nota.textContent = "Guarda este comprobante para tu atención.";
+        datosReserva.appendChild(nota);
 
-        // Muestra el mensaje principal
-        document.getElementById("texto-modal").textContent =
-            "¡Hora médica agendada correctamente!";
+        abrirModal();
 
-        // Muestra los datos de la reserva
-        document.getElementById("datos-reserva").innerHTML = `
-            <p><strong>ID de reserva:</strong> ${idReserva}</p>
-            <p><strong>Especialidad:</strong> ${especialidadTexto}</p>
-            <p><strong>Médico:</strong> ${medicoTexto}</p>
-            <p><strong>Fecha:</strong> ${fecha}</p>
-            <p><strong>Hora:</strong> ${hora}</p>
-            <p>Guarda este comprobante para tu atención.</p>
-        `;
-
-        // Muestra la ventana emergente
-        document.getElementById("modal-mensaje").style.display = "flex";
-
+        // Deja el formulario listo para una nueva reserva
+        formulario.reset();
+        [especialidad, medico, fecha, hora].forEach(reiniciarCampo);
+        filtrarMedicos();
+        actualizarHorarios();
     });
+}
 
-    // Permite cerrar la ventana emergente
-    document.getElementById("cerrar-modal").addEventListener("click", function () {
-        document.getElementById("modal-mensaje").style.display = "none";
-    });
-
-});
+document.addEventListener("DOMContentLoaded", iniciarAgendarHora);
 
 
 /* =========================================================================
@@ -1083,10 +1217,19 @@ function iniciarLogin() {
     }
 
     // Correo recibido desde el registro (login.html?correo=...)
-    const correoRecibido = new URLSearchParams(window.location.search).get("correo");
+    const parametros = new URLSearchParams(window.location.search);
+    const correoRecibido = parametros.get("correo");
     if (correoRecibido) {
         correo.value = correoRecibido;
         contrasena.focus();
+    }
+
+    // Página a la que se vuelve tras iniciar sesión (login.html?volver=...).
+    // Solo se aceptan páginas privadas del sitio, nunca direcciones externas.
+    const volver = PAGINAS_PRIVADAS.includes(parametros.get("volver")) ? parametros.get("volver") : "";
+    if (volver && !sesion) {
+        avisoSesion.hidden = false;
+        avisoSesion.textContent = "Inicia sesión para continuar a esa sección.";
     }
 
     const validarCorreoLogin = function () { return validarCorreo(correo); };
@@ -1172,19 +1315,65 @@ function iniciarLogin() {
         guardarAlmacen(sessionStorage, CLAVE_INTENTOS, { fallidos: 0, bloqueadoHasta: 0 });
         iniciarSesion(usuario, recordar.checked);
         boton.textContent = "¡Bienvenido, " + usuario.nombre + "!";
-        window.location.href = "../index.html";
+        window.location.href = volver || "../index.html";
     });
+}
+
+
+// ---------- PÁGINAS PRIVADAS ----------
+
+// Páginas que solo tienen sentido con una sesión iniciada
+const PAGINAS_PRIVADAS = [
+    "perfil-paciente.html",
+    "mis-horas-medicas.html",
+    "historial-atenciones.html",
+    "modificar-hora.html",
+    "cancelar-hora.html"
+];
+
+function esPaginaPrivada() {
+    return PAGINAS_PRIVADAS.includes(nombrePagina(window.location.pathname));
+}
+
+// Sin sesión, una página privada envía al inicio de sesión y luego vuelve a ella
+function protegerPaginaPrivada() {
+    if (esPaginaPrivada() && !obtenerSesion()) {
+        window.location.replace("login.html?volver=" + encodeURIComponent(nombrePagina(window.location.pathname)));
+    }
+}
+
+// Se ejecuta de inmediato para no mostrar la página privada ni un instante
+protegerPaginaPrivada();
+
+// Al cerrar sesión en una página privada se vuelve al inicio
+function salirDeLaCuenta() {
+    cerrarSesion();
+    if (esPaginaPrivada()) {
+        window.location.href = "../index.html";
+    } else {
+        window.location.reload();
+    }
 }
 
 
 // ---------- MENÚ DE PERFIL SEGÚN LA SESIÓN ----------
 
-// Con sesión iniciada, el menú 👤 saluda al usuario y cambia
-// "Iniciar sesión" y "Crear cuenta" por "Cerrar sesión"
+// Sin sesión, el menú 👤 muestra solo "Iniciar sesión" y "Crear cuenta".
+// Con sesión, saluda al usuario y cambia esas opciones por "Cerrar sesión".
 function actualizarMenuPerfil() {
     const menuPerfil = document.querySelector(".menu-perfil");
+    if (!menuPerfil) return;
+
     const sesion = obtenerSesion();
-    if (!menuPerfil || !sesion) return;
+    if (!sesion) {
+        PAGINAS_PRIVADAS.forEach(function (pagina) {
+            const enlace = menuPerfil.querySelector('a[href$="' + pagina + '"]');
+            if (enlace) enlace.closest("li").remove();
+        });
+        const separador = menuPerfil.querySelector(".dropdown-divider");
+        if (separador) separador.closest("li").remove();
+        return;
+    }
 
     const titulo = menuPerfil.querySelector(".dropdown-header");
     if (titulo) titulo.textContent = "Hola, " + sesion.nombre;
@@ -1200,10 +1389,7 @@ function actualizarMenuPerfil() {
     botonCerrar.type = "button";
     botonCerrar.className = "dropdown-item boton-cerrar-sesion";
     botonCerrar.textContent = "Cerrar sesión";
-    botonCerrar.addEventListener("click", function () {
-        cerrarSesion();
-        window.location.reload();
-    });
+    botonCerrar.addEventListener("click", salirDeLaCuenta);
     itemBoton.appendChild(botonCerrar);
     menuPerfil.append(itemCerrar, itemBoton);
 

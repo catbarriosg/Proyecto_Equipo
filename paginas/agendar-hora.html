@@ -85,74 +85,99 @@
 
     <main>
 
-        <h1>Agendar hora médica</h1>
+        <!-- Presentación de la página -->
+        <section class="cuenta-hero">
+
+            <span class="etiqueta-seccion">RESERVA EN LÍNEA</span>
+
+            <h1>Agendar hora médica</h1>
+
+            <p>
+                Elige la especialidad, el profesional y el horario que más te acomode.
+            </p>
+
+        </section>
 
         <section class="formulario-agenda">
 
-            <form id="formulario-agenda">
+            <!-- novalidate: las validaciones las controla JavaScript -->
+            <form id="formulario-agenda" novalidate>
 
                 <section class="campo-formulario">
                     <!-- Permite seleccionar la especialidad médica -->
                     <label for="especialidad">Especialidad</label>
-                    <select id="especialidad" name="especialidad">
+                    <select id="especialidad" name="especialidad" required aria-describedby="error-especialidad">
                         <option value="">Selecciona una especialidad</option>
                         <option value="medicina-general">Medicina General</option>
                         <option value="pediatria">Pediatría</option>
+                        <option value="ginecologia">Ginecología</option>
                         <option value="cardiologia">Cardiología</option>
+                        <option value="traumatologia">Traumatología</option>
                         <option value="dermatologia">Dermatología</option>
                     </select>
+                    <small id="error-especialidad" class="mensaje-error"></small>
                 </section>
 
                 <section class="campo-formulario">
-                    <!-- Permite seleccionar el médico disponible -->
+                    <!-- Solo se muestran los médicos de la especialidad elegida (JavaScript) -->
                     <label for="medico">Médico</label>
-                    <select id="medico" name="medico">
+                    <select id="medico" name="medico" required aria-describedby="error-medico">
                         <option value="">Selecciona un médico</option>
-                        <option value="dr-gonzalez">Dr. González</option>
-                        <option value="dra-martinez">Dra. Martínez</option>
-                        <option value="dr-rojas">Dr. Rojas</option>
-                        <option value="dra-soto">Dra. Soto</option>
+                        <option value="juan-perez" data-especialidad="medicina-general">Dr. Juan Pérez</option>
+                        <option value="maria-gonzalez" data-especialidad="pediatria">Dra. María González</option>
+                        <option value="ana-martinez" data-especialidad="ginecologia">Dra. Ana Martínez</option>
+                        <option value="carlos-rodriguez" data-especialidad="cardiologia">Dr. Carlos Rodríguez</option>
+                        <option value="felipe-soto" data-especialidad="traumatologia">Dr. Felipe Soto</option>
+                        <option value="camila-rojas" data-especialidad="dermatologia">Dra. Camila Rojas</option>
                     </select>
+                    <small id="error-medico" class="mensaje-error"></small>
                 </section>
 
-                <section class="campo-formulario">
-                    <!-- Permite seleccionar la fecha de la atención -->
-                    <label for="fecha">Fecha</label>
-                    <input type="date" id="fecha" name="fecha">
-                </section>
+                <div class="fila-campos">
 
-                <section class="campo-formulario">
-                    <!-- Permite seleccionar la hora de la atención -->
-                    <label for="hora">Hora</label>
-                    <input type="time" id="hora" name="hora">
-                </section>
-
-                <button type="submit" class="boton">Confirmar hora</button>
-
-                <p id="mensaje"></p>
-
-                <!-- Ventana emergente para mostrar mensajes al usuario -->
-                <section id="modal-mensaje" class="modal-mensaje">
-
-                    <section class="contenido-modal">
-                        <p id="texto-modal"></p>
-
-                        <!-- Información de la hora médica agendada -->
-                        <section id="datos-reserva"></section>
-
-                        <button type="button" id="cerrar-modal" class="boton">
-                            Cerrar
-
-                        </button>
+                    <section class="campo-formulario">
+                        <!-- El mínimo (hoy) y el máximo (90 días) los fija JavaScript -->
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" name="fecha" required aria-describedby="ayuda-fecha error-fecha">
+                        <small id="ayuda-fecha" class="texto-ayuda">Lunes a sábado. Domingos sin atención.</small>
+                        <small id="error-fecha" class="mensaje-error"></small>
                     </section>
 
-                </section>
+                    <section class="campo-formulario">
+                        <!-- Los horarios disponibles los genera JavaScript según el día -->
+                        <label for="hora">Hora</label>
+                        <select id="hora" name="hora" required aria-describedby="error-hora">
+                            <option value="">Primero elige una fecha</option>
+                        </select>
+                        <small id="error-hora" class="mensaje-error"></small>
+                    </section>
+
+                </div>
+
+                <button type="submit" class="boton">Confirmar hora</button>
 
             </form>
 
         </section>
 
+        <!-- Ventana emergente con el comprobante de la reserva -->
+        <section id="modal-mensaje" class="modal-mensaje" role="dialog" aria-modal="true" aria-labelledby="texto-modal">
+
+            <section class="contenido-modal">
+                <p id="texto-modal"></p>
+
+                <!-- Información de la hora médica agendada -->
+                <section id="datos-reserva"></section>
+
+                <button type="button" id="cerrar-modal" class="boton">
+                    Cerrar
+                </button>
+            </section>
+
+        </section>
+
     </main>
+
     <!-- Pie de página común del sitio -->
     <footer class="footer">
 
@@ -168,10 +193,7 @@
 
     </footer>
 
-    </footer>
-
     <!-- Conexión con JavaScript -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/script.js"></script>
 </body>
