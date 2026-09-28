@@ -7,8 +7,9 @@
 
 /* Estilos principales del encabezado (navbar de Bootstrap) */
 .header {
-    background-color: #cef6f3;
-    border-bottom: 2px solid #f698c9;
+    background-color: #FFFFFF; /* Blanco puro: transmite limpieza, higiene y claridad */
+    border-bottom: 3px solid #1E3A5F; /* Azul Zafiro: aporta la seriedad y confianza médica */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Sombra muy suave para darle un toque moderno y separarlo del resto de la página */
 }
 
 /* Barra de navegación */
@@ -46,24 +47,27 @@
 .menu .nav-link:hover,
 .menu .nav-link:focus-visible {
     background-color: rgba(255, 255, 255, 0.7);
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 /* Página en la que se encuentra el usuario */
 .menu .nav-link.active {
-    color: #1976D2;
-    background-color: #ffffff;
+    color: #0b4f9e;
+    background-color: #E9F8FC;
+}
+body {
+    background-color: #E9FBFB !important; 
 }
 
 /* Enlace destacado para agendar una hora */
 .menu .nav-link.boton-agendar {
-    background-color: #1976D2;
-    color: #ffffff;
+    background-color: #0b4f9e;
+    color: #E9F8FC;
 }
 
 .menu .nav-link.boton-agendar:hover,
 .menu .nav-link.boton-agendar.active {
-    background-color: #1565c0;
+    background-color: #093d7a;
     color: #ffffff;
 }
 
@@ -98,7 +102,7 @@
 }
 
 .boton-header:focus-visible {
-    outline: 2px solid #1976D2;
+    outline: 2px solid #0b4f9e;
     outline-offset: 2px;
     box-shadow: none;
 }
@@ -111,7 +115,7 @@
 }
 
 .menu-perfil .dropdown-item:active {
-    background-color: #1976D2;
+    background-color: #0b4f9e;
 }
 
 /* Buscador del sitio que se despliega bajo el encabezado */
@@ -124,12 +128,12 @@
 }
 
 .boton-buscar {
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: #ffffff;
 }
 
 .boton-buscar:hover {
-    background-color: #1565c0;
+    background-color: #093d7a;
     color: #ffffff;
 }
 
@@ -206,7 +210,7 @@ p {
     display: inline-block;
     padding: 12px 22px;
     margin: 5px;
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: #ffffff;
     text-decoration: none;
     border-radius: 8px;
@@ -217,7 +221,7 @@ p {
 /* Botón más oscuro al pasar el cursor (antes se volvía casi transparente) */
 .boton:hover,
 .boton:focus-visible {
-    background-color: #1565c0;
+    background-color: #093d7a;
     color: #ffffff;
 }
 
@@ -335,7 +339,7 @@ main h1 {
     width: 100%;
     margin: 10px 0;
     padding: 12px;
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: white;
     border: none;
     border-radius: 8px;
@@ -423,7 +427,7 @@ main h1 {
 }
 
 .etiqueta-seccion {
-    color: #1976D2;
+    color: #0b4f9e;
     font-size: 13px;
     font-weight: bold;
     letter-spacing: 2px;
@@ -486,7 +490,7 @@ main h1 {
 }
 
 .mision-vision {
-    background-color: #f9fcf0;
+    background-color: #ffffff;
     padding: 70px 20px;
     text-align: center;
 }
@@ -512,7 +516,7 @@ main h1 {
 }
 
 .tarjeta-institucional h3 {
-    color: #1976D2;
+    color: #0b4f9e;
     margin: 15px 0;
 }
 
@@ -543,7 +547,7 @@ main h1 {
 
 .valor-card h3 {
     margin: 15px 0 10px;
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 
@@ -612,7 +616,7 @@ main h1 {
 }
 
 .especialidad-card h2 {
-    color: #1976D2;
+    color: #0b4f9e;
     font-size: 24px;
     margin-bottom: 15px;
 }
@@ -625,7 +629,7 @@ main h1 {
 .enlace-agenda {
     display: block;
     margin-top: 10px;
-    color: #1976D2;
+    color: #0b4f9e;
     font-weight: bold;
     text-decoration: none;
 }
@@ -689,7 +693,7 @@ main h1 {
 }
 
 .medico-card h2 {
-    color: #1976D2;
+    color: #0b4f9e;
     font-size: 24px;
     margin-bottom: 8px;
 }
@@ -712,7 +716,7 @@ main h1 {
 .enlace-agenda {
     display: block;
     margin: 10px 0;
-    color: #1976D2;
+    color: #0b4f9e;
     font-weight: bold;
     text-decoration: none;
 }
@@ -911,7 +915,7 @@ main h1 {
 
 .texto-semana {
     text-align: center;
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 .texto-semana span {
@@ -926,7 +930,7 @@ main h1 {
 .btn-flecha {
     background: none;
     border: none;
-    color: #1976D2;
+    color: #0b4f9e;
     font-size: 24px;
     cursor: pointer;
     font-weight: bold;
@@ -944,7 +948,7 @@ main h1 {
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 .dia-box.activo {
@@ -978,7 +982,7 @@ main h1 {
 }
 
 .header-centro-medico {
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: white;
     padding: 15px 20px;
     display: flex;
@@ -1031,7 +1035,7 @@ main h1 {
 
 .etiqueta-modalidad {
     display: inline-block;
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: white;
     padding: 8px 30px;
     font-weight: bold;
@@ -1061,7 +1065,7 @@ main h1 {
 
 .btn-hora {
     background: white;
-    border: 1px solid #1976D2;
+    border: 1px solid #0b4f9e;
     color: #333;
     padding: 8px 20px;
     border-radius: 4px;
@@ -1072,7 +1076,7 @@ main h1 {
 
 .btn-hora:hover,
 .btn-hora.seleccionada {
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: white;
 }
 
@@ -1269,13 +1273,13 @@ main h1 {
 }
 
 .tarjeta-contacto a {
-    color: #1976D2;
+    color: #0b4f9e;
     text-decoration: none;
 }
 
 /* Enlace en línea dentro de un párrafo */
 .enlace-contacto {
-    color: #1976D2;
+    color: #0b4f9e;
     font-weight: bold;
     text-decoration: none;
 }
@@ -1346,7 +1350,7 @@ main h1 {
 }
 
 .sucursal-info a:not(.boton) {
-    color: #1976D2;
+    color: #0b4f9e;
     text-decoration: none;
 }
 
@@ -1430,7 +1434,7 @@ main h1 {
     top: 50%;
     transform: translateY(-50%);
     font-size: 22px;
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 .faq-item[open] summary::after {
@@ -1448,7 +1452,7 @@ main h1 {
 }
 
 .faq-item a {
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 .faq-ayuda {
@@ -1492,7 +1496,7 @@ main h1 {
     display: block;
     font-size: 36px;
     font-weight: bold;
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 .panel-indicador p {
@@ -1631,7 +1635,7 @@ main h1 {
 }
 
 .boton-editar {
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: white;
 }
 
@@ -1714,7 +1718,7 @@ main h1 {
 }
 
 .contenedor-video figcaption a {
-    color: #1976D2;
+    color: #0b4f9e;
 }
 
 
@@ -1798,7 +1802,7 @@ main h1 {
     border: none;
     border-radius: 6px;
     background-color: #cef6f3;
-    color: #1976D2;
+    color: #0b4f9e;
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
@@ -1809,7 +1813,7 @@ main h1 {
 }
 
 .boton-ver-contrasena:focus-visible {
-    outline: 2px solid #1976D2;
+    outline: 2px solid #0b4f9e;
     outline-offset: 2px;
 }
 
@@ -1854,7 +1858,7 @@ main h1 {
 .opcion-recordar input {
     width: 18px;
     height: 18px;
-    accent-color: #1976D2;
+    accent-color: #0b4f9e;
 }
 
 /* Error general del formulario (credenciales incorrectas, bloqueo) */
@@ -1887,7 +1891,7 @@ main h1 {
     padding: 0;
     border: none;
     background: none;
-    color: #1976D2;
+    color: #0b4f9e;
     font-weight: bold;
     text-decoration: underline;
     cursor: pointer;
@@ -1907,7 +1911,7 @@ main h1 {
 }
 
 .enlace-alternativo a {
-    color: #1976D2;
+    color: #0b4f9e;
     font-weight: bold;
 }
 
@@ -1941,7 +1945,7 @@ main h1 {
     left: 16px;
     z-index: 1100;
     padding: 10px 16px;
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: #ffffff;
     font-weight: bold;
     border-radius: 0 0 8px 8px;
@@ -1974,7 +1978,7 @@ main:focus {
     padding: 0 14px;
     border: 3px solid #ffffff;
     border-radius: 30px;
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: #ffffff;
     font-weight: bold;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
@@ -1999,7 +2003,7 @@ main:focus {
 
 .boton-accesibilidad:hover,
 .boton-accesibilidad[aria-expanded="true"] {
-    background-color: #1565c0;
+    background-color: #093d7a;
     transform: scale(1.05);
 }
 
@@ -2044,7 +2048,7 @@ main:focus {
 
 .a11y-grupo h3 {
     margin-bottom: 10px;
-    color: #1976D2;
+    color: #0b4f9e;
     font-size: 13px;
     font-weight: bold;
     letter-spacing: 2px;
@@ -2067,7 +2071,7 @@ main:focus {
     height: 44px;
     border: none;
     border-radius: 8px;
-    background-color: #1976D2;
+    background-color: #0b4f9e;
     color: #ffffff;
     font-size: 18px;
     font-weight: bold;
@@ -2114,7 +2118,7 @@ main:focus {
 
 .a11y-opcion:hover,
 .a11y-accion:hover {
-    border-color: #1976D2;
+    border-color: #0b4f9e;
 }
 
 .a11y-opcion:focus-visible,
@@ -2127,8 +2131,8 @@ main:focus {
 
 /* Opción activada */
 .a11y-opcion[aria-pressed="true"] {
-    background-color: #1976D2;
-    border-color: #1976D2;
+    background-color: #0b4f9e;
+    border-color: #0b4f9e;
     color: #ffffff;
 }
 
@@ -2200,7 +2204,7 @@ html.a11y-grises {
 html.a11y-enlaces a {
     text-decoration: underline !important;
     text-underline-offset: 3px;
-    outline: 2px dashed #1976D2;
+    outline: 2px dashed #0b4f9e;
     outline-offset: 2px;
 }
 
@@ -2543,4 +2547,46 @@ html.a11y-contraste .pagina-medicos::after {
         min-width: 44px;
         padding: 8px;
     }
+
+
+    /* =========================================================================
+   MEJORAS DE ACCESIBILIDAD (WCAG AAA)
+   ========================================================================= */
+
+/* Botones del encabezado: área táctil de 44x44 px */
+.boton-header {
+    width: 44px;
+    height: 44px;
+}
+
+/* Enlaces del menú: altura mínima de 44 px */
+.menu .nav-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+/* Pie de página: letra y espaciado más legibles, enlaces con contraste alto */
+.footer p {
+    font-size: 1px;
+    line-height: 1.5;
+}
+
+.footer a {
+    color: #093d7a;
+    display: inline-block;
+    padding: 12px 6px; /* deja el área del enlace en 44 px o más */
+}
+
+/* Respeta a quienes tienen activada la opción de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
 }
