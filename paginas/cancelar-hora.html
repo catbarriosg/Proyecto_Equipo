@@ -85,14 +85,80 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="cuenta-hero">
+
+            <span class="etiqueta-seccion">GESTIONA TU RESERVA</span>
 
             <h1>Cancelar hora médica</h1>
 
             <p>
-                Cancela una hora médica previamente agendada.
+                Ingresa el código de tu reserva para buscarla y cancelarla.
             </p>
 
+        </section>
+
+        <section class="formulario-agenda">
+
+            <!-- 1. Buscador de reserva -->
+            <form id="formulario-buscar-reserva" novalidate>
+
+                <section class="campo-formulario">
+                    <label for="codigo-reserva">Código de reserva</label>
+                    <input type="text" id="codigo-reserva" name="codigo-reserva" placeholder="Ej: AM-1695420000"
+                        autocomplete="off" required aria-describedby="ayuda-codigo-reserva error-codigo-reserva">
+                    <small id="ayuda-codigo-reserva" class="texto-ayuda">Lo encuentras en el comprobante que recibiste al agendar.</small>
+                    <small id="error-codigo-reserva" class="mensaje-error"></small>
+                </section>
+
+                <button type="submit" class="boton">Buscar reserva</button>
+
+            </form>
+
+            <!-- 2. Tarjeta con los datos de la reserva (oculta hasta encontrarla) -->
+            <section id="resultado-reserva" class="resultado-reserva" aria-labelledby="titulo-resultado-reserva" hidden>
+
+                <h2 id="titulo-resultado-reserva">Detalles de la cita encontrada</h2>
+
+                <div class="tarjeta-horarios">
+                    <div class="cuerpo-horarios">
+                        <p><strong>Código:</strong> <span id="reserva-codigo-display"></span></p>
+                        <p><strong>Especialidad:</strong> <span id="reserva-especialidad-display"></span></p>
+                        <p><strong>Médico:</strong> <span id="reserva-medico-display"></span></p>
+                        <p><strong>Fecha:</strong> <span id="reserva-fecha-display"></span></p>
+                        <p><strong>Hora:</strong> <span id="reserva-hora-display"></span></p>
+                        <button type="button" id="btn-iniciar-cancelacion" class="boton boton-cancelar">Cancelar esta hora</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </section>
+
+        <!-- 3. Ventanas emergentes -->
+
+        <!-- Confirmación antes de cancelar -->
+        <section id="modal-confirmacion-cancelar" class="modal-mensaje" role="alertdialog" aria-modal="true"
+            aria-labelledby="titulo-confirmar-cancelar">
+            <section class="contenido-modal">
+                <h3 id="titulo-confirmar-cancelar" class="titulo-advertencia">⚠️ Confirmación requerida</h3>
+                <p>Estás a punto de cancelar la reserva médica.</p>
+                <p>Esta acción es irreversible y liberarás el cupo. ¿Deseas continuar?</p>
+                <div class="acciones-modal">
+                    <button type="button" id="btn-si-cancelar" class="boton boton-cancelar">Sí, cancelar hora</button>
+                    <button type="button" id="btn-no-volver" class="boton">No, mantener hora</button>
+                </div>
+            </section>
+        </section>
+
+        <!-- Éxito tras cancelar -->
+        <section id="modal-exito-cancelacion" class="modal-mensaje" role="dialog" aria-modal="true"
+            aria-labelledby="titulo-exito-cancelacion">
+            <section class="contenido-modal">
+                <h3 id="titulo-exito-cancelacion">✔️ Hora cancelada</h3>
+                <p>La hora médica ha sido anulada exitosamente del sistema.</p>
+                <button type="button" id="btn-cerrar-exito-cancelacion" class="boton">Entendido</button>
+            </section>
         </section>
 
     </main>
@@ -107,6 +173,12 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 

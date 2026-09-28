@@ -113,9 +113,8 @@
 
                     <section class="campo-formulario">
                         <label for="contacto-nombre">Nombre completo</label>
-                        <input type="text" id="contacto-nombre" name="nombre"
-                            placeholder="Ej: Ana Pérez" autocomplete="name"
-                            minlength="3" maxlength="60" required
+                        <input type="text" id="contacto-nombre" name="nombre" placeholder="Ej: Ana Pérez"
+                            autocomplete="name" minlength="3" maxlength="60" required
                             aria-describedby="error-contacto-nombre">
                         <!-- Mensaje de error personalizado, lo llena JavaScript -->
                         <small id="error-contacto-nombre" class="mensaje-error"></small>
@@ -123,16 +122,15 @@
 
                     <section class="campo-formulario">
                         <label for="contacto-correo">Correo electrónico</label>
-                        <input type="email" id="contacto-correo" name="correo"
-                            placeholder="Ej: ana.perez@correo.cl" autocomplete="email" required
-                            aria-describedby="error-contacto-correo">
+                        <input type="email" id="contacto-correo" name="correo" placeholder="Ej: ana.perez@gmail.com"
+                            autocomplete="email" required aria-describedby="ayuda-contacto-correo error-contacto-correo">
+                        <small id="ayuda-contacto-correo" class="texto-ayuda">Se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</small>
                         <small id="error-contacto-correo" class="mensaje-error"></small>
                     </section>
 
                     <section class="campo-formulario">
                         <label for="contacto-asunto">Asunto</label>
-                        <select id="contacto-asunto" name="asunto" required
-                            aria-describedby="error-contacto-asunto">
+                        <select id="contacto-asunto" name="asunto" required aria-describedby="error-contacto-asunto">
                             <option value="">Selecciona un asunto</option>
                             <option value="horas">Consulta sobre horas médicas</option>
                             <option value="examenes">Resultados de exámenes</option>
@@ -146,9 +144,8 @@
                     <section class="campo-formulario">
                         <label for="contacto-mensaje">Mensaje</label>
                         <textarea id="contacto-mensaje" name="mensaje" rows="5"
-                            placeholder="Cuéntanos en qué podemos ayudarte (mínimo 10 caracteres)"
-                            minlength="10" maxlength="500" required
-                            aria-describedby="error-contacto-mensaje"></textarea>
+                            placeholder="Cuéntanos en qué podemos ayudarte (mínimo 10 caracteres)" minlength="10"
+                            maxlength="500" required aria-describedby="error-contacto-mensaje"></textarea>
                         <!-- Contador de caracteres, se actualiza con JavaScript -->
                         <small id="contador-mensaje" class="contador-caracteres">0 / 500</small>
                         <small id="error-contacto-mensaje" class="mensaje-error"></small>
@@ -214,6 +211,11 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 

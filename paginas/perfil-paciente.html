@@ -85,13 +85,41 @@
 
     <main>
 
-        <section>
+        <section class="perfil-paciente">
 
             <h1>Perfil del paciente</h1>
 
             <p>
                 Consulta y gestiona la información de tu perfil.
             </p>
+
+            <section class="tarjeta-perfil">
+
+                <section class="datos-paciente">
+
+                    <h2>Mis datos</h2>
+
+                    <!-- Los datos se completan con JavaScript desde la cuenta con sesión iniciada -->
+                    <p><strong>Nombre:</strong> <span id="perfil-nombre">—</span></p>
+                    <p><strong>Correo:</strong> <span id="perfil-correo">—</span></p>
+                    <p><strong>Fecha de nacimiento:</strong> <span id="perfil-fecha-nacimiento">—</span></p>
+                    <p><strong>Previsión:</strong> <span id="perfil-prevision">—</span></p>
+
+                </section>
+
+                <section class="acciones-perfil">
+
+                    <a href="mis-horas-medicas.html" class="boton">
+                        Mis horas médicas
+                    </a>
+
+                    <a href="historial-atenciones.html" class="boton">
+                        Historial de atenciones
+                    </a>
+
+                </section>
+
+            </section>
 
         </section>
 
@@ -107,6 +135,11 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 

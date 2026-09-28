@@ -85,14 +85,117 @@
 
     <main>
 
-        <section>
+        <!-- Presentación de la página -->
+        <section class="cuenta-hero">
+
+            <span class="etiqueta-seccion">GESTIONA TU RESERVA</span>
 
             <h1>Modificar hora médica</h1>
 
             <p>
-                Modifica la fecha o el horario de una hora médica previamente agendada.
+                Ingresa tu código de reserva para reagendar tu cita.
             </p>
 
+        </section>
+
+        <section class="formulario-agenda formulario-agenda-calendario">
+
+            <!-- 1. Buscador de reserva -->
+            <form id="formulario-buscar-modificar" novalidate>
+
+                <section class="campo-formulario">
+                    <label for="codigo-modificar">Código de reserva</label>
+                    <input type="text" id="codigo-modificar" name="codigo-modificar" placeholder="Ej: AM-1695420000"
+                        autocomplete="off" required aria-describedby="ayuda-codigo-modificar error-codigo-modificar">
+                    <small id="ayuda-codigo-modificar" class="texto-ayuda">Lo encuentras en el comprobante que recibiste al agendar.</small>
+                    <small id="error-codigo-modificar" class="mensaje-error"></small>
+                </section>
+
+                <button type="submit" class="boton">Buscar reserva</button>
+
+            </form>
+
+            <!-- 2. Reserva actual y calendario para elegir la nueva fecha (oculto hasta encontrarla) -->
+            <section id="contenedor-modificacion" class="resultado-reserva" aria-labelledby="titulo-reserva-actual" hidden>
+
+                <div class="tarjeta-horarios tarjeta-reserva-actual">
+                    <div class="cuerpo-horarios">
+                        <h2 id="titulo-reserva-actual">Reserva actual</h2>
+                        <p><strong>Médico:</strong> <span id="reserva-actual-medico"></span></p>
+                        <p><strong>Fecha actual:</strong> <span id="reserva-actual-fecha"></span></p>
+                        <p><strong>Hora actual:</strong> <span id="reserva-actual-hora"></span></p>
+                    </div>
+                </div>
+
+                <form id="formulario-nueva-fecha" novalidate>
+
+                    <!-- Selector de fecha y hora: calendario semanal (lo completa JavaScript) -->
+                    <section class="selector-horario" id="selector-horario" aria-labelledby="titulo-selector-horario">
+
+                        <h2 id="titulo-selector-horario" class="titulo-selector">Selecciona la nueva fecha y hora</h2>
+
+                        <!-- Navegador de semanas -->
+                        <div class="calendario-header">
+                            <button type="button" class="btn-flecha" data-semana="-1" aria-label="Semana anterior">❮</button>
+                            <div class="texto-semana">
+                                <span>Semana del</span>
+                                <strong class="rango-semana" aria-live="polite"></strong>
+                            </div>
+                            <button type="button" class="btn-flecha" data-semana="1" aria-label="Semana siguiente">❯</button>
+                        </div>
+
+                        <!-- Días de la semana: se generan como botones -->
+                        <div class="dias-semana" role="group" aria-label="Días de la semana"></div>
+                        <small id="error-fecha" class="mensaje-error"></small>
+
+                        <h3 class="titulo-fecha-seleccionada" aria-live="polite">Selecciona un día</h3>
+
+                        <!-- Tarjeta con el profesional y los horarios del día -->
+                        <div class="tarjeta-horarios">
+                            <div class="header-centro-medico">
+                                <span class="icono-edificio" aria-hidden="true">🏥</span>
+                                <div>
+                                    <h4>Clínica Agenda Médica</h4>
+                                    <p>Sede Principal - Región Metropolitana</p>
+                                </div>
+                            </div>
+                            <div class="cuerpo-horarios">
+                                <div class="info-medico-tarjeta">
+                                    <span class="icono-doctor" aria-hidden="true">👨‍⚕️</span>
+                                    <div>
+                                        <h5 class="tarjeta-nombre-medico">Selecciona un médico</h5>
+                                        <p class="tarjeta-especialidad">Especialidad</p>
+                                    </div>
+                                </div>
+                                <span class="etiqueta-modalidad">Presencial</span>
+                                <p class="texto-horarios">Selecciona un horario disponible:</p>
+                                <div class="botones-hora" role="group" aria-label="Horarios disponibles"></div>
+                                <small id="error-hora" class="mensaje-error"></small>
+                            </div>
+                        </div>
+
+                        <!-- Valores elegidos en el calendario (se envían con el formulario) -->
+                        <input type="hidden" id="fecha" name="fecha">
+                        <input type="hidden" id="hora" name="hora">
+
+                    </section>
+
+                    <button type="submit" class="boton boton-secundario">Confirmar modificación</button>
+
+                </form>
+
+            </section>
+
+        </section>
+
+        <!-- Éxito al modificar -->
+        <section id="modal-exito-modificar" class="modal-mensaje" role="dialog" aria-modal="true"
+            aria-labelledby="titulo-exito-modificar">
+            <section class="contenido-modal">
+                <h3 id="titulo-exito-modificar">✔️ Hora reagendada</h3>
+                <p id="texto-exito-modificar">Tu hora médica ha sido modificada exitosamente.</p>
+                <button type="button" id="btn-cerrar-modificar" class="boton">Entendido</button>
+            </section>
         </section>
 
     </main>
@@ -107,6 +210,12 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 

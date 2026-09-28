@@ -1,11 +1,25 @@
 /* =========================================================================
-   AGENDAR HORA — Formulario de reserva con validación bajo cada campo
+   HORAS MÉDICAS — Agendar, modificar y cancelar
+   El calendario semanal y las pantallas de modificar y cancelar son del
+   integrante 2. Aquí se conectan con las reservas guardadas en localStorage,
+   así el código del comprobante sirve para buscar, reagendar o cancelar.
    ========================================================================= */
+
+const CLAVE_RESERVAS = "clinica.reservas";
+const DIAS_ANTICIPACION = 90;
+const NOMBRES_DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
 // Convierte "AAAA-MM-DD" en una fecha local (sin desfase de zona horaria)
 function crearFechaLocal(valor) {
     const partes = valor.split("-");
     return new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]));
+}
+
+// "2026-10-05" -> "lunes, 5 de octubre de 2026"
+function formatearFechaLarga(valor) {
+    return crearFechaLocal(valor).toLocaleDateString("es-CL", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
 }
 
 // Horarios de atención cada 30 minutos: lunes a viernes 08:00-19:30, sábado 09:00-13:30
@@ -29,23 +43,280 @@ function obtenerHorariosDelDia(fecha) {
     return horarios;
 }
 
+
+// ---------- Reservas guardadas ----------
+
+function obtenerReservas() {
+    return leerAlmacen(localStorage, CLAVE_RESERVAS, []);
+}
+
+function guardarReservas(reservas) {
+    return guardarAlmacen(localStorage, CLAVE_RESERVAS, reservas);
+}
+
+function buscarReserva(codigo) {
+    const buscado = codigo.trim().toUpperCase();
+    return obtenerReservas().find(function (reserva) {
+        return reserva.id === buscado;
+    });
+}
+
+function actualizarReserva(reservaActualizada) {
+    const reservas = obtenerReservas().map(function (reserva) {
+        return reserva.id === reservaActualizada.id ? reservaActualizada : reserva;
+    });
+    return guardarReservas(reservas);
+}
+
+// Valida el código escrito y busca la reserva: la devuelve o muestra el error y devuelve null
+function validarCodigoReserva(campo) {
+    const valor = campo.value.trim().toUpperCase();
+    campo.value = valor;
+
+    if (valor === "") {
+        mostrarErrorCampo(campo, "Ingresa el código de tu reserva.");
+        return null;
+    }
+    if (!/^AM-\d{6,}$/.test(valor)) {
+        mostrarErrorCampo(campo, "El código empieza con AM- seguido de números, por ejemplo: AM-1695420000.");
+        return null;
+    }
+
+    const reserva = buscarReserva(valor);
+    if (!reserva) {
+        mostrarErrorCampo(campo, "No encontramos una reserva con el código " + valor + ". Revisa tu comprobante.");
+        return null;
+    }
+    if (reserva.estado === "Cancelada") {
+        mostrarErrorCampo(campo, "La reserva " + valor + " ya fue cancelada.");
+        return null;
+    }
+
+    limpiarErrorCampo(campo);
+    return reserva;
+}
+
+
+// ---------- Ventanas emergentes ----------
+
+// Abre la ventana y pone el foco en "enfocar" (o en su primer botón);
+// al cerrarla, el foco vuelve a "volverA"
+function abrirModal(modal, volverA, enfocar) {
+    modal.volverA = volverA || document.activeElement;
+    modal.style.display = "flex";
+    const destino = enfocar || modal.querySelector("button");
+    if (destino) destino.focus();
+}
+
+function cerrarModal(modal) {
+    modal.style.display = "none";
+    if (modal.volverA && modal.volverA.offsetParent !== null) modal.volverA.focus();
+}
+
+// Cualquier ventana se cierra con Esc o haciendo clic fuera de ella
+function iniciarModales() {
+    const modales = document.querySelectorAll(".modal-mensaje");
+    if (modales.length === 0) return;
+
+    modales.forEach(function (modal) {
+        modal.addEventListener("click", function (evento) {
+            if (evento.target === modal) cerrarModal(modal);
+        });
+    });
+
+    document.addEventListener("keydown", function (evento) {
+        if (evento.key !== "Escape") return;
+        modales.forEach(function (modal) {
+            if (modal.style.display === "flex") cerrarModal(modal);
+        });
+    });
+}
+
+
+// ---------- Calendario semanal ----------
+
+// Muestra 7 días desde la semana elegida y los horarios del día seleccionado.
+// Se usa en Agendar y en Modificar. Guarda lo elegido en los campos ocultos #fecha y #hora.
+function crearCalendario(contenedor) {
+    const campoFecha = contenedor.querySelector("#fecha");
+    const campoHora = contenedor.querySelector("#hora");
+    const rango = contenedor.querySelector(".rango-semana");
+    const dias = contenedor.querySelector(".dias-semana");
+    const horas = contenedor.querySelector(".botones-hora");
+    const tituloFecha = contenedor.querySelector(".titulo-fecha-seleccionada");
+    const botonAnterior = contenedor.querySelector('[data-semana="-1"]');
+    const botonSiguiente = contenedor.querySelector('[data-semana="1"]');
+    const errorFecha = contenedor.querySelector("#error-fecha");
+    const errorHora = contenedor.querySelector("#error-hora");
+
+    // Se puede reservar desde hoy hasta DIAS_ANTICIPACION días más
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const limite = new Date(hoy);
+    limite.setDate(limite.getDate() + DIAS_ANTICIPACION);
+    let inicioSemana = new Date(hoy);
+
+    function mostrarError(zona, elementoError, mensaje) {
+        zona.classList.toggle("calendario-invalido", mensaje !== "");
+        elementoError.textContent = mensaje;
+    }
+
+    function dibujarSemana() {
+        const finSemana = new Date(inicioSemana);
+        finSemana.setDate(finSemana.getDate() + 6);
+        const opciones = { day: "numeric", month: "long" };
+        rango.textContent = inicioSemana.toLocaleDateString("es-CL", opciones) + " al " +
+            finSemana.toLocaleDateString("es-CL", opciones);
+
+        dias.innerHTML = "";
+        for (let i = 0; i < 7; i++) {
+            const fecha = new Date(inicioSemana);
+            fecha.setDate(fecha.getDate() + i);
+            const valor = fechaLocalISO(fecha);
+            const disponible = fecha <= limite && obtenerHorariosDelDia(fecha).length > 0;
+
+            const boton = document.createElement("button");
+            boton.type = "button";
+            boton.className = "dia-box";
+            boton.dataset.fecha = valor;
+            boton.disabled = !disponible;
+            boton.setAttribute("aria-label", formatearFechaLarga(valor) + (disponible ? "" : ", sin horas disponibles"));
+            boton.innerHTML = '<span class="dia-nombre">' + NOMBRES_DIAS_CORTOS[fecha.getDay()] + '</span>' +
+                '<span class="dia-numero">' + fecha.getDate() + '</span>';
+            boton.addEventListener("click", function () { elegirDia(valor); });
+            dias.appendChild(boton);
+        }
+
+        // No se puede volver a semanas pasadas ni avanzar más allá del límite
+        const siguienteSemana = new Date(inicioSemana);
+        siguienteSemana.setDate(siguienteSemana.getDate() + 7);
+        botonAnterior.disabled = inicioSemana <= hoy;
+        botonSiguiente.disabled = siguienteSemana > limite;
+        marcarSeleccion();
+    }
+
+    function dibujarHoras() {
+        horas.innerHTML = "";
+
+        if (campoFecha.value === "") {
+            tituloFecha.textContent = "Selecciona un día";
+            horas.innerHTML = '<p class="texto-sin-horas">Primero elige un día en el calendario.</p>';
+            return;
+        }
+
+        const textoFecha = formatearFechaLarga(campoFecha.value);
+        tituloFecha.textContent = textoFecha.charAt(0).toUpperCase() + textoFecha.slice(1);
+
+        obtenerHorariosDelDia(crearFechaLocal(campoFecha.value)).forEach(function (horario) {
+            const boton = document.createElement("button");
+            boton.type = "button";
+            boton.className = "btn-hora";
+            boton.dataset.hora = horario;
+            boton.textContent = horario;
+            boton.addEventListener("click", function () { elegirHora(horario); });
+            horas.appendChild(boton);
+        });
+        marcarSeleccion();
+    }
+
+    // Marca el día y la hora elegidos sin volver a dibujar (así no se pierde el foco)
+    function marcarSeleccion() {
+        dias.querySelectorAll(".dia-box").forEach(function (boton) {
+            const elegido = boton.dataset.fecha === campoFecha.value;
+            boton.classList.toggle("activo", elegido);
+            boton.setAttribute("aria-pressed", String(elegido));
+        });
+        horas.querySelectorAll(".btn-hora").forEach(function (boton) {
+            const elegido = boton.dataset.hora === campoHora.value;
+            boton.classList.toggle("seleccionada", elegido);
+            boton.setAttribute("aria-pressed", String(elegido));
+        });
+    }
+
+    function elegirDia(valor) {
+        campoFecha.value = valor;
+        campoHora.value = ""; // Al cambiar de día se elige la hora de nuevo
+        mostrarError(dias, errorFecha, "");
+        mostrarError(horas, errorHora, "");
+        marcarSeleccion();
+        dibujarHoras();
+    }
+
+    function elegirHora(valor) {
+        campoHora.value = valor;
+        mostrarError(horas, errorHora, "");
+        marcarSeleccion();
+    }
+
+    botonAnterior.addEventListener("click", function () {
+        inicioSemana.setDate(inicioSemana.getDate() - 7);
+        if (inicioSemana < hoy) inicioSemana = new Date(hoy);
+        dibujarSemana();
+    });
+    botonSiguiente.addEventListener("click", function () {
+        inicioSemana.setDate(inicioSemana.getDate() + 7);
+        dibujarSemana();
+    });
+
+    function reiniciar() {
+        campoFecha.value = "";
+        campoHora.value = "";
+        inicioSemana = new Date(hoy);
+        mostrarError(dias, errorFecha, "");
+        mostrarError(horas, errorHora, "");
+        dibujarSemana();
+        dibujarHoras();
+    }
+
+    reiniciar();
+
+    return {
+        reiniciar: reiniciar,
+        valor: function () {
+            return { fecha: campoFecha.value, hora: campoHora.value };
+        },
+        validar: function () {
+            if (campoFecha.value === "") {
+                mostrarError(dias, errorFecha, "Selecciona un día en el calendario.");
+                return false;
+            }
+            if (campoHora.value === "") {
+                mostrarError(horas, errorHora, "Selecciona un horario disponible.");
+                return false;
+            }
+            return true;
+        },
+        mostrarErrorHora: function (mensaje) {
+            mostrarError(horas, errorHora, mensaje);
+        },
+        // Lleva el foco a la parte del calendario que falta completar
+        enfocar: function () {
+            const zona = campoFecha.value === "" ? dias : horas;
+            const boton = zona.querySelector("button:not(:disabled)");
+            if (boton) boton.focus();
+        }
+    };
+}
+
+// Muestra en la tarjeta del calendario el médico y la especialidad
+function mostrarMedicoEnCalendario(contenedor, medico, especialidad) {
+    contenedor.querySelector(".tarjeta-nombre-medico").textContent = medico;
+    contenedor.querySelector(".tarjeta-especialidad").textContent = especialidad;
+}
+
+
+// ---------- AGENDAR HORA ----------
+
 function iniciarAgendarHora() {
     const formulario = document.getElementById("formulario-agenda");
     if (!formulario) return; // Evita errores en las páginas que no tienen este formulario
 
     const especialidad = document.getElementById("especialidad");
     const medico = document.getElementById("medico");
-    const fecha = document.getElementById("fecha");
-    const hora = document.getElementById("hora");
+    const selector = document.getElementById("selector-horario");
     const botonConfirmar = formulario.querySelector('button[type="submit"]');
     const modal = document.getElementById("modal-mensaje");
-    const botonCerrar = document.getElementById("cerrar-modal");
-
-    // Se puede reservar desde hoy hasta 90 días más
-    const hoy = new Date();
-    const limite = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 90);
-    fecha.min = fechaLocalISO(hoy);
-    fecha.max = fechaLocalISO(limite);
+    const calendario = crearCalendario(selector);
 
     // Muestra solo los médicos de la especialidad elegida
     function filtrarMedicos() {
@@ -76,74 +347,31 @@ function iniciarAgendarHora() {
         }
     }
 
-    // Carga en la lista las horas disponibles para la fecha elegida
-    function actualizarHorarios() {
-        const horaAnterior = hora.value;
-        hora.innerHTML = "";
-
-        const horarios = fecha.value && validarFechaAgenda(false) ? obtenerHorariosDelDia(crearFechaLocal(fecha.value)) : [];
-        const primera = document.createElement("option");
-        primera.value = "";
-        primera.textContent = fecha.value === "" ? "Primero elige una fecha"
-            : horarios.length === 0 ? "Sin horas disponibles" : "Selecciona una hora";
-        hora.appendChild(primera);
-
-        horarios.forEach(function (horario) {
-            const opcion = document.createElement("option");
-            opcion.value = horario;
-            opcion.textContent = horario;
-            hora.appendChild(opcion);
-        });
-
-        if (horarios.includes(horaAnterior)) hora.value = horaAnterior;
+    // El calendario aparece cuando ya hay un médico elegido
+    function mostrarCalendario() {
+        const hayMedico = medico.value !== "";
+        selector.hidden = !hayMedico;
+        if (hayMedico) {
+            mostrarMedicoEnCalendario(selector, medico.options[medico.selectedIndex].text,
+                especialidad.options[especialidad.selectedIndex].text);
+        }
     }
 
-    // mostrar = false: solo revisa sin marcar el campo
-    function validarFechaAgenda(mostrar) {
-        let mensaje = "";
-        if (fecha.value === "") {
-            mensaje = "Selecciona la fecha de tu atención.";
-        } else if (fecha.value < fecha.min) {
-            mensaje = "La fecha no puede ser anterior a hoy.";
-        } else if (fecha.value > fecha.max) {
-            mensaje = "Solo puedes agendar con hasta 90 días de anticipación.";
-        } else if (crearFechaLocal(fecha.value).getDay() === 0) {
-            mensaje = "Los domingos no hay atención. Elige otro día.";
-        } else if (obtenerHorariosDelDia(crearFechaLocal(fecha.value)).length === 0) {
-            mensaje = "Ya no quedan horas para hoy. Elige otro día.";
-        }
-
-        if (mostrar === false) return mensaje === "";
-        if (mensaje !== "") {
-            mostrarErrorCampo(fecha, mensaje);
-            return false;
-        }
-        limpiarErrorCampo(fecha);
-        return true;
-    }
-
-    const validaciones = [
-        function () { return validarSeleccion(especialidad, "Selecciona una especialidad médica."); },
-        function () { return validarSeleccion(medico, "Selecciona un médico."); },
-        function () { return validarFechaAgenda(); },
-        function () { return validarSeleccion(hora, "Selecciona la hora de tu atención."); }
-    ];
+    const validarEspecialidad = function () { return validarSeleccion(especialidad, "Selecciona una especialidad médica."); };
+    const validarMedico = function () { return validarSeleccion(medico, "Selecciona un médico."); };
 
     especialidad.addEventListener("change", function () {
         filtrarMedicos();
-        validaciones[0]();
-        if (medico.value !== "" || medico.classList.contains("campo-invalido")) validaciones[1]();
+        validarEspecialidad();
+        if (medico.value !== "" || medico.classList.contains("campo-invalido")) validarMedico();
+        mostrarCalendario();
     });
     medico.addEventListener("change", function () {
         sincronizarEspecialidad();
         filtrarMedicos();
-        validaciones[1]();
+        validarMedico();
+        mostrarCalendario();
     });
-    fecha.addEventListener("change", function () {
-        validaciones[2]();
-        actualizarHorarios();
-    });
-    hora.addEventListener("change", validaciones[3]);
 
     // Datos recibidos desde Médicos o Especialidades (agendar-hora.html?medico=... o ?especialidad=...)
     const parametros = new URLSearchParams(window.location.search);
@@ -154,39 +382,42 @@ function iniciarAgendarHora() {
         especialidad.value = parametros.get("especialidad");
     }
     filtrarMedicos();
+    mostrarCalendario();
 
-    // Ventana emergente: se cierra con el botón, con Esc o haciendo clic fuera
-    function abrirModal() {
-        modal.style.display = "flex";
-        botonCerrar.focus();
-    }
-    function cerrarModal() {
-        modal.style.display = "none";
-        botonConfirmar.focus();
-    }
-    botonCerrar.addEventListener("click", cerrarModal);
-    modal.addEventListener("click", function (evento) {
-        if (evento.target === modal) cerrarModal();
-    });
-    document.addEventListener("keydown", function (evento) {
-        if (evento.key === "Escape" && modal.style.display === "flex") cerrarModal();
+    document.getElementById("cerrar-modal").addEventListener("click", function () {
+        cerrarModal(modal);
     });
 
     formulario.addEventListener("submit", function (evento) {
         evento.preventDefault();
 
         // Se ejecutan todas para que cada campo muestre su propio error
-        const resultados = validaciones.map(function (validar) { return validar(); });
-        if (resultados.includes(false)) {
+        const especialidadValida = validarEspecialidad();
+        const medicoValido = validarMedico();
+        if (!especialidadValida || !medicoValido) {
             enfocarPrimerError(formulario);
             return;
         }
+        if (!calendario.validar()) {
+            calendario.enfocar();
+            return;
+        }
 
-        // Genera un ID único para la reserva
-        const idReserva = "AM-" + Date.now();
-        const fechaTexto = crearFechaLocal(fecha.value).toLocaleDateString("es-CL", {
-            weekday: "long", day: "numeric", month: "long", year: "numeric"
-        });
+        // Guarda la reserva para poder modificarla o cancelarla con su código
+        const elegido = calendario.valor();
+        const sesion = obtenerSesion();
+        const reserva = {
+            id: "AM-" + Date.now(),
+            especialidad: especialidad.options[especialidad.selectedIndex].text,
+            medico: medico.options[medico.selectedIndex].text,
+            fecha: elegido.fecha,
+            hora: elegido.hora,
+            estado: "Confirmada",
+            correo: sesion ? sesion.correo : ""
+        };
+        const reservas = obtenerReservas();
+        reservas.push(reserva);
+        guardarReservas(reservas);
 
         document.getElementById("texto-modal").textContent = "¡Hora médica agendada correctamente!";
 
@@ -194,11 +425,11 @@ function iniciarAgendarHora() {
         const datosReserva = document.getElementById("datos-reserva");
         datosReserva.innerHTML = "";
         [
-            ["ID de reserva", idReserva],
-            ["Especialidad", especialidad.options[especialidad.selectedIndex].text],
-            ["Médico", medico.options[medico.selectedIndex].text],
-            ["Fecha", fechaTexto],
-            ["Hora", hora.value]
+            ["Código de reserva", reserva.id],
+            ["Especialidad", reserva.especialidad],
+            ["Médico", reserva.medico],
+            ["Fecha", formatearFechaLarga(reserva.fecha)],
+            ["Hora", reserva.hora]
         ].forEach(function (dato) {
             const linea = document.createElement("p");
             const etiqueta = document.createElement("strong");
@@ -207,20 +438,164 @@ function iniciarAgendarHora() {
             datosReserva.appendChild(linea);
         });
         const nota = document.createElement("p");
-        nota.textContent = "Guarda este comprobante para tu atención.";
+        nota.textContent = "Guarda el código: lo necesitas para modificar o cancelar tu hora.";
         datosReserva.appendChild(nota);
 
-        abrirModal();
+        abrirModal(modal, botonConfirmar);
 
         // Deja el formulario listo para una nueva reserva
         formulario.reset();
-        [especialidad, medico, fecha, hora].forEach(reiniciarCampo);
+        [especialidad, medico].forEach(reiniciarCampo);
         filtrarMedicos();
-        actualizarHorarios();
+        calendario.reiniciar();
+        mostrarCalendario();
     });
 }
 
-document.addEventListener("DOMContentLoaded", iniciarAgendarHora);
+
+// ---------- CANCELAR HORA ----------
+
+function iniciarCancelarHora() {
+    const formulario = document.getElementById("formulario-buscar-reserva");
+    if (!formulario) return; // Solo actúa en cancelar-hora.html
+
+    const campo = document.getElementById("codigo-reserva");
+    const resultado = document.getElementById("resultado-reserva");
+    const botonIniciar = document.getElementById("btn-iniciar-cancelacion");
+    const modalConfirmacion = document.getElementById("modal-confirmacion-cancelar");
+    const modalExito = document.getElementById("modal-exito-cancelacion");
+    let reservaEncontrada = null;
+
+    // Al corregir el código se quita la marca de error
+    campo.addEventListener("input", function () {
+        if (campo.classList.contains("campo-invalido")) reiniciarCampo(campo);
+    });
+
+    // 1. Buscar la reserva por su código
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        reservaEncontrada = validarCodigoReserva(campo);
+
+        if (!reservaEncontrada) {
+            resultado.hidden = true;
+            campo.focus();
+            return;
+        }
+
+        document.getElementById("reserva-codigo-display").textContent = reservaEncontrada.id;
+        document.getElementById("reserva-especialidad-display").textContent = reservaEncontrada.especialidad;
+        document.getElementById("reserva-medico-display").textContent = reservaEncontrada.medico;
+        document.getElementById("reserva-fecha-display").textContent = formatearFechaLarga(reservaEncontrada.fecha);
+        document.getElementById("reserva-hora-display").textContent = reservaEncontrada.hora;
+        resultado.hidden = false;
+    });
+
+    // 2. Pedir confirmación antes de cancelar (el foco queda en la opción segura)
+    botonIniciar.addEventListener("click", function () {
+        abrirModal(modalConfirmacion, botonIniciar, document.getElementById("btn-no-volver"));
+    });
+
+    // 3. "No, mantener hora": cierra la confirmación
+    document.getElementById("btn-no-volver").addEventListener("click", function () {
+        cerrarModal(modalConfirmacion);
+    });
+
+    // 4. "Sí, cancelar hora": marca la reserva como cancelada
+    document.getElementById("btn-si-cancelar").addEventListener("click", function () {
+        reservaEncontrada.estado = "Cancelada";
+        actualizarReserva(reservaEncontrada);
+
+        modalConfirmacion.style.display = "none";
+        resultado.hidden = true;
+        formulario.reset();
+        reiniciarCampo(campo);
+        abrirModal(modalExito, campo);
+    });
+
+    // 5. Cerrar el mensaje de éxito
+    document.getElementById("btn-cerrar-exito-cancelacion").addEventListener("click", function () {
+        cerrarModal(modalExito);
+    });
+}
+
+
+// ---------- MODIFICAR HORA ----------
+
+function iniciarModificarHora() {
+    const formularioBuscar = document.getElementById("formulario-buscar-modificar");
+    if (!formularioBuscar) return; // Solo actúa en modificar-hora.html
+
+    const campo = document.getElementById("codigo-modificar");
+    const contenedor = document.getElementById("contenedor-modificacion");
+    const formularioNuevaFecha = document.getElementById("formulario-nueva-fecha");
+    const selector = document.getElementById("selector-horario");
+    const modalExito = document.getElementById("modal-exito-modificar");
+    const calendario = crearCalendario(selector);
+    let reserva = null;
+
+    campo.addEventListener("input", function () {
+        if (campo.classList.contains("campo-invalido")) reiniciarCampo(campo);
+    });
+
+    // 1. Buscar la reserva y mostrar sus datos actuales
+    formularioBuscar.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        reserva = validarCodigoReserva(campo);
+
+        if (!reserva) {
+            contenedor.hidden = true;
+            campo.focus();
+            return;
+        }
+
+        document.getElementById("reserva-actual-medico").textContent = reserva.medico;
+        document.getElementById("reserva-actual-fecha").textContent = formatearFechaLarga(reserva.fecha);
+        document.getElementById("reserva-actual-hora").textContent = reserva.hora;
+        mostrarMedicoEnCalendario(selector, reserva.medico, reserva.especialidad);
+        calendario.reiniciar();
+        contenedor.hidden = false;
+    });
+
+    // 2. Confirmar la nueva fecha y hora
+    formularioNuevaFecha.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        if (!calendario.validar()) {
+            calendario.enfocar();
+            return;
+        }
+
+        const elegido = calendario.valor();
+        if (elegido.fecha === reserva.fecha && elegido.hora === reserva.hora) {
+            calendario.mostrarErrorHora("Elegiste la misma fecha y hora de tu reserva actual.");
+            return;
+        }
+
+        reserva.fecha = elegido.fecha;
+        reserva.hora = elegido.hora;
+        actualizarReserva(reserva);
+
+        document.getElementById("texto-exito-modificar").textContent =
+            "Tu hora con " + reserva.medico + " quedó para el " + formatearFechaLarga(reserva.fecha) +
+            " a las " + reserva.hora + ".";
+
+        contenedor.hidden = true;
+        formularioBuscar.reset();
+        reiniciarCampo(campo);
+        abrirModal(modalExito, campo);
+    });
+
+    // 3. Cerrar el mensaje de éxito
+    document.getElementById("btn-cerrar-modificar").addEventListener("click", function () {
+        cerrarModal(modalExito);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    iniciarModales();
+    iniciarAgendarHora();
+    iniciarCancelarHora();
+    iniciarModificarHora();
+});
 
 
 /* =========================================================================
@@ -285,14 +660,15 @@ function validarNombre(campo) {
 // Valida un correo electrónico con un formato básico usuario@dominio.ext
 function validarCorreo(campo) {
     const valor = campo.value.trim();
-    const formatoCorreo = /^[\w.+-]+@[\w-]+\.[\w.-]+$/;
+    // "i": los correos no distinguen mayúsculas (Ana@Gmail.com es válido)
+    const formatoCorreo = /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/i;
 
     if (valor === "") {
         mostrarErrorCampo(campo, "El correo es obligatorio.");
         return false;
     }
     if (!formatoCorreo.test(valor)) {
-        mostrarErrorCampo(campo, "Ingresa un correo válido, por ejemplo: nombre@correo.cl");
+        mostrarErrorCampo(campo, "Correo no válido. Usa un correo @duoc.cl, @profesor.duoc.cl o @gmail.com.");
         return false;
     }
     limpiarErrorCampo(campo);
@@ -695,7 +1071,6 @@ const paginasDelSitio = [
     { titulo: "Contacto", ruta: "paginas/contacto.html", claves: "mensaje correo telefono escribir consulta" },
     { titulo: "Preguntas frecuentes", ruta: "paginas/preguntas-frecuentes.html", claves: "faq ayuda dudas" },
     { titulo: "Agendar hora", ruta: "paginas/agendar-hora.html", claves: "reservar cita atencion nueva hora" },
-    { titulo: "Buscar hora", ruta: "paginas/buscar-hora.html", claves: "disponibilidad horas disponibles" },
     { titulo: "Mis horas médicas", ruta: "paginas/mis-horas-medicas.html", claves: "mis citas reservas" },
     { titulo: "Modificar hora", ruta: "paginas/modificar-hora.html", claves: "cambiar reagendar cita" },
     { titulo: "Cancelar hora", ruta: "paginas/cancelar-hora.html", claves: "anular eliminar cita" },
@@ -1322,13 +1697,12 @@ function iniciarLogin() {
 
 // ---------- PÁGINAS PRIVADAS ----------
 
-// Páginas que solo tienen sentido con una sesión iniciada
+// Páginas que solo tienen sentido con una sesión iniciada.
+// Modificar y cancelar no están aquí: funcionan con el código de la reserva.
 const PAGINAS_PRIVADAS = [
     "perfil-paciente.html",
     "mis-horas-medicas.html",
-    "historial-atenciones.html",
-    "modificar-hora.html",
-    "cancelar-hora.html"
+    "historial-atenciones.html"
 ];
 
 function esPaginaPrivada() {
@@ -1398,10 +1772,28 @@ function actualizarMenuPerfil() {
     if (primerItem) primerItem.closest("li").remove();
 }
 
+// ---------- PERFIL DEL PACIENTE ----------
+
+// Completa la tarjeta "Mis datos" con la cuenta que tiene la sesión iniciada
+function mostrarDatosPerfil() {
+    const nombre = document.getElementById("perfil-nombre");
+    const sesion = obtenerSesion();
+    if (!nombre || !sesion) return; // Solo actúa en perfil-paciente.html
+
+    const usuario = buscarUsuarioPorCorreo(sesion.correo) || sesion;
+    nombre.textContent = usuario.nombre + " " + usuario.apellido;
+    document.getElementById("perfil-correo").textContent = usuario.correo;
+    document.getElementById("perfil-fecha-nacimiento").textContent = usuario.fechaNacimiento
+        ? crearFechaLocal(usuario.fechaNacimiento).toLocaleDateString("es-CL")
+        : "No registrada";
+    document.getElementById("perfil-prevision").textContent = usuario.prevision || "No indicada";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     actualizarMenuPerfil();
     iniciarRegistro();
     iniciarLogin();
+    mostrarDatosPerfil();
 });
 
 

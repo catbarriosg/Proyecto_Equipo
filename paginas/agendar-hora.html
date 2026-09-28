@@ -98,63 +98,103 @@
 
         </section>
 
-        <section class="formulario-agenda">
+        <section class="formulario-agenda formulario-agenda-calendario">
 
             <!-- novalidate: las validaciones las controla JavaScript -->
             <form id="formulario-agenda" novalidate>
 
-                <section class="campo-formulario">
-                    <!-- Permite seleccionar la especialidad médica -->
-                    <label for="especialidad">Especialidad</label>
-                    <select id="especialidad" name="especialidad" required aria-describedby="error-especialidad">
-                        <option value="">Selecciona una especialidad</option>
-                        <option value="medicina-general">Medicina General</option>
-                        <option value="pediatria">Pediatría</option>
-                        <option value="ginecologia">Ginecología</option>
-                        <option value="cardiologia">Cardiología</option>
-                        <option value="traumatologia">Traumatología</option>
-                        <option value="dermatologia">Dermatología</option>
-                    </select>
-                    <small id="error-especialidad" class="mensaje-error"></small>
-                </section>
-
-                <section class="campo-formulario">
-                    <!-- Solo se muestran los médicos de la especialidad elegida (JavaScript) -->
-                    <label for="medico">Médico</label>
-                    <select id="medico" name="medico" required aria-describedby="error-medico">
-                        <option value="">Selecciona un médico</option>
-                        <option value="juan-perez" data-especialidad="medicina-general">Dr. Juan Pérez</option>
-                        <option value="maria-gonzalez" data-especialidad="pediatria">Dra. María González</option>
-                        <option value="ana-martinez" data-especialidad="ginecologia">Dra. Ana Martínez</option>
-                        <option value="carlos-rodriguez" data-especialidad="cardiologia">Dr. Carlos Rodríguez</option>
-                        <option value="felipe-soto" data-especialidad="traumatologia">Dr. Felipe Soto</option>
-                        <option value="camila-rojas" data-especialidad="dermatologia">Dra. Camila Rojas</option>
-                    </select>
-                    <small id="error-medico" class="mensaje-error"></small>
-                </section>
-
                 <div class="fila-campos">
 
                     <section class="campo-formulario">
-                        <!-- El mínimo (hoy) y el máximo (90 días) los fija JavaScript -->
-                        <label for="fecha">Fecha</label>
-                        <input type="date" id="fecha" name="fecha" required aria-describedby="ayuda-fecha error-fecha">
-                        <small id="ayuda-fecha" class="texto-ayuda">Lunes a sábado. Domingos sin atención.</small>
-                        <small id="error-fecha" class="mensaje-error"></small>
+                        <!-- Permite seleccionar la especialidad médica -->
+                        <label for="especialidad">Especialidad</label>
+                        <select id="especialidad" name="especialidad" required aria-describedby="error-especialidad">
+                            <option value="">Selecciona una especialidad</option>
+                            <option value="medicina-general">Medicina General</option>
+                            <option value="pediatria">Pediatría</option>
+                            <option value="ginecologia">Ginecología</option>
+                            <option value="cardiologia">Cardiología</option>
+                            <option value="traumatologia">Traumatología</option>
+                            <option value="dermatologia">Dermatología</option>
+                        </select>
+                        <small id="error-especialidad" class="mensaje-error"></small>
                     </section>
 
                     <section class="campo-formulario">
-                        <!-- Los horarios disponibles los genera JavaScript según el día -->
-                        <label for="hora">Hora</label>
-                        <select id="hora" name="hora" required aria-describedby="error-hora">
-                            <option value="">Primero elige una fecha</option>
+                        <!-- Solo se muestran los médicos de la especialidad elegida (JavaScript) -->
+                        <label for="medico">Médico</label>
+                        <select id="medico" name="medico" required aria-describedby="error-medico">
+                            <option value="">Selecciona un médico</option>
+                            <option value="juan-perez" data-especialidad="medicina-general">Dr. Juan Pérez</option>
+                            <option value="maria-gonzalez" data-especialidad="pediatria">Dra. María González</option>
+                            <option value="ana-martinez" data-especialidad="ginecologia">Dra. Ana Martínez</option>
+                            <option value="carlos-rodriguez" data-especialidad="cardiologia">Dr. Carlos Rodríguez</option>
+                            <option value="felipe-soto" data-especialidad="traumatologia">Dr. Felipe Soto</option>
+                            <option value="camila-rojas" data-especialidad="dermatologia">Dra. Camila Rojas</option>
                         </select>
-                        <small id="error-hora" class="mensaje-error"></small>
+                        <small id="error-medico" class="mensaje-error"></small>
                     </section>
 
                 </div>
 
+                <!-- Selector de fecha y hora: calendario semanal (lo completa JavaScript) -->
+                <section class="selector-horario" id="selector-horario" aria-labelledby="titulo-selector-horario" hidden>
+
+                    <h2 id="titulo-selector-horario" class="titulo-selector">Elige el día y la hora</h2>
+
+                    <!-- Navegador de semanas -->
+                    <div class="calendario-header">
+                        <button type="button" class="btn-flecha" data-semana="-1" aria-label="Semana anterior">❮</button>
+                        <div class="texto-semana">
+                            <span>Semana del</span>
+                            <strong class="rango-semana" aria-live="polite"></strong>
+                        </div>
+                        <button type="button" class="btn-flecha" data-semana="1" aria-label="Semana siguiente">❯</button>
+                    </div>
+
+                    <!-- Días de la semana: se generan como botones -->
+                    <div class="dias-semana" role="group" aria-label="Días de la semana"></div>
+                    <small id="error-fecha" class="mensaje-error"></small>
+
+                    <h3 class="titulo-fecha-seleccionada" aria-live="polite">Selecciona un día</h3>
+
+                    <!-- Tarjeta con el profesional y los horarios del día -->
+                    <div class="tarjeta-horarios">
+                        <div class="header-centro-medico">
+                            <span class="icono-edificio" aria-hidden="true">🏥</span>
+                            <div>
+                                <h4>Clínica Agenda Médica</h4>
+                                <p>Sede Principal - Región Metropolitana</p>
+                            </div>
+                        </div>
+                        <div class="cuerpo-horarios">
+                            <div class="info-medico-tarjeta">
+                                <span class="icono-doctor" aria-hidden="true">👨‍⚕️</span>
+                                <div>
+                                    <h5 class="tarjeta-nombre-medico">Selecciona un médico</h5>
+                                    <p class="tarjeta-especialidad">Especialidad</p>
+                                </div>
+                            </div>
+                            <span class="etiqueta-modalidad">Presencial</span>
+                            <p class="texto-horarios">Selecciona un horario disponible:</p>
+                            <div class="botones-hora" role="group" aria-label="Horarios disponibles"></div>
+                            <small id="error-hora" class="mensaje-error"></small>
+                        </div>
+                    </div>
+
+                    <!-- Valores elegidos en el calendario (se envían con el formulario) -->
+                    <input type="hidden" id="fecha" name="fecha">
+                    <input type="hidden" id="hora" name="hora">
+
+                </section>
+
                 <button type="submit" class="boton">Confirmar hora</button>
+
+                <!-- Accesos rápidos para gestionar una reserva existente -->
+                <div class="acciones-reserva">
+                    <a href="modificar-hora.html" class="boton boton-secundario">Modificar una hora</a>
+                    <a href="cancelar-hora.html" class="boton boton-cancelar">Cancelar una hora</a>
+                </div>
 
             </form>
 
@@ -188,6 +228,12 @@
         <p>📞 +56 2 2345 6789</p>
 
         <p>✉️ contacto@clinicaagendamedica.cl</p>
+
+        <p>
+            <a href="sucursales.html">Sucursales</a> |
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
+            <a href="panel-administracion.html">Administración</a>
+        </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>
 
