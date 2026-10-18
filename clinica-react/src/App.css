@@ -1,0 +1,301 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-header {
+  background-color: #ffffff;
+  border-bottom: 3px solid #1e3a5f;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 8px clamp(16px, 4vw, 48px);
+}
+
+.header-inner {
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1440px;
+}
+
+.brand-logo {
+  flex: 0 0 auto;
+}
+
+.brand-logo img {
+  display: block;
+  width: 180px;
+}
+
+.menu-principal {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.menu-principal a {
+  border-radius: 8px;
+  color: #070707;
+  font-weight: bold;
+  padding: 8px 12px;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.menu-principal a:hover,
+.menu-principal a:focus-visible {
+  background-color: #e9f8fc;
+  color: #0b4f9e;
+}
+
+.menu-principal .link-agendar {
+  background-color: #0b4f9e;
+  color: #ffffff;
+}
+
+.menu-principal .link-agendar:hover,
+.menu-principal .link-agendar:focus-visible {
+  background-color: #093d7a;
+  color: #ffffff;
+}
+
+main {
+  flex: 1;
+  margin: 0 auto;
+  max-width: 1000px;
+  padding: 60px 24px;
+  text-align: center;
+  width: 100%;
+}
+
+main h2 {
+  color: #0b4f9e;
+  font-size: 2rem;
+}
+
+main p {
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+main button {
+  background-color: #0b4f9e;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 12px 22px;
+  transition: background-color 0.2s;
+}
+
+main button:hover,
+main button:focus-visible {
+  background-color: #093d7a;
+}
+
+main > ul:not(.lista-horas) {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  list-style: none;
+  margin: 28px auto 0;
+  max-width: 850px;
+  padding: 0;
+}
+
+main > ul:not(.lista-horas) li {
+  background-color: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+}
+
+.site-footer {
+  background-color: #cef6f3;
+  border-top: 2px solid #d9a9c2;
+  color: #333333;
+  margin-top: 30px;
+  padding: 18px 24px;
+  text-align: center;
+}
+
+.footer-inner {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.footer-inner p {
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.footer-inner .nombre-clinica {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.footer-inner .copyright {
+  flex-basis: 100%;
+  font-size: 12px;
+}
+
+.formulario-agenda {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 10px;
+  margin: 30px auto;
+  max-width: 600px;
+  padding: 30px;
+  text-align: left;
+}
+
+.formulario-agenda label {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.formulario-agenda input,
+.formulario-agenda select,
+.formulario-edicion-hora input,
+.formulario-edicion-hora select {
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
+
+.formulario-agenda input:focus,
+.formulario-agenda select:focus,
+.formulario-edicion-hora input:focus,
+.formulario-edicion-hora select:focus {
+  border-color: #7dd3e8;
+  box-shadow: 0 0 5px rgba(125, 211, 232, 0.5);
+  outline: none;
+}
+
+.formulario-agenda button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.mensaje-confirmacion {
+  background: #ffffff;
+  border: 1px solid #7dd3e8;
+  border-radius: 10px;
+  color: #0b4f9e;
+  margin: 24px auto 0;
+  max-width: 600px;
+  padding: 14px 18px;
+}
+
+.lista-horas {
+  display: grid;
+  gap: 16px;
+  list-style: none;
+  margin: 32px auto 0;
+  max-width: 720px;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.tarjeta-hora {
+  background-color: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+}
+
+.datos-hora p,
+.formulario-edicion-hora p {
+  margin: 0 0 8px;
+}
+
+.acciones-hora {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.formulario-edicion-hora {
+  display: grid;
+  gap: 10px;
+  text-align: left;
+}
+
+.formulario-edicion-hora label {
+  font-weight: bold;
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .menu-principal {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 600px) {
+  .brand-logo img {
+    width: 150px;
+  }
+
+  .menu-principal {
+    gap: 2px;
+  }
+
+  .menu-principal a {
+    padding: 8px 10px;
+  }
+
+  main {
+    padding: 48px 20px;
+  }
+
+  main h2 {
+    font-size: 1.6rem;
+  }
+
+  .formulario-agenda {
+    padding: 22px 18px;
+  }
+
+  .tarjeta-hora {
+    padding: 18px;
+  }
+
+  .acciones-hora button {
+    flex: 1;
+  }
+
+  .site-footer {
+    padding: 18px 16px;
+  }
+}
