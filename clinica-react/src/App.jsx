@@ -79,7 +79,7 @@ function App() {
         <Route path="/panel-administracion" element={<PanelAdministracion horas={horas} actualizarHora={actualizarHora} />} />
         <Route
           path="/agendar-hora"
-          element={<AgendarHora agregarHora={agregarHora} />}
+          element={<AgendarHora horas={horas} agregarHora={agregarHora} />}
         />
         <Route
           path="/mis-horas"

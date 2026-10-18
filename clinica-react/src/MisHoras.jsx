@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+function codigoReserva(hora) {
+  return hora.codigo || `AM-${String(hora.id).padStart(4, '0')}`
+}
+
 function MisHoras({ horas, eliminarHora, actualizarHora }) {
   const [horaEditando, setHoraEditando] = useState(null)
   const [datosEditados, setDatosEditados] = useState({ especialidad: '', fecha: '', estado: '' })
@@ -18,9 +22,11 @@ function MisHoras({ horas, eliminarHora, actualizarHora }) {
   }
 
   return (
-    <main>
-      <h2>Mis horas médicas</h2>
-      <p>Listado de solicitudes de horas médicas.</p>
+    <main className="pagina-mis-horas">
+      <header className="mis-horas-hero">
+        <h1>Mis horas médicas</h1>
+        <p>Listado de solicitudes de horas médicas.</p>
+      </header>
       {horas.length === 0 ? (
         <p>No hay horas médicas registradas.</p>
       ) : (
@@ -29,7 +35,7 @@ function MisHoras({ horas, eliminarHora, actualizarHora }) {
             <li key={hora.id} className="tarjeta-hora">
               {horaEditando === hora.id ? (
                 <form className="formulario-edicion-hora" onSubmit={(event) => guardarCambios(event, hora)}>
-                  <p><strong>Código de reserva:</strong> {hora.codigo || `AM-${hora.id}`}</p>
+                  <p><strong>Código de reserva:</strong> {codigoReserva(hora)}</p>
                   <p><strong>Paciente:</strong> {hora.paciente}</p>
                   <label htmlFor={`especialidad-${hora.id}`}>Especialidad</label>
                   <select id={`especialidad-${hora.id}`} value={datosEditados.especialidad}
@@ -54,18 +60,18 @@ function MisHoras({ horas, eliminarHora, actualizarHora }) {
               ) : (
                 <div className="contenido-hora">
                   <div className="datos-hora">
-                    <p><strong>Código de reserva:</strong> {hora.codigo || `AM-${hora.id}`}</p>
+                    <p><strong>Código de reserva:</strong> {codigoReserva(hora)}</p>
                     <p><strong>Paciente:</strong> {hora.paciente}</p>
                     <p><strong>Especialidad:</strong> {hora.especialidad}</p>
                     <p><strong>Fecha:</strong> {hora.fecha}</p>
                     <p><strong>Estado:</strong> {hora.estado}</p>
                   </div>
                   <div className="acciones-hora">
-                    <button type="button" onClick={() => iniciarEdicion(hora)}>Editar</button>
+                    {hora.estado !== 'Cancelada' && <button type="button" onClick={() => iniciarEdicion(hora)}>Editar</button>}
                     {hora.estado !== 'Cancelada' && (
                       <>
-                      <Link className="accion-link-hora accion-link-modificar" to={`/modificar-hora?codigo=${encodeURIComponent(hora.codigo || `AM-${hora.id}`)}`}>Modificar hora</Link>
-                      <Link className="accion-link-hora" to={`/cancelar-hora?codigo=${encodeURIComponent(hora.codigo || `AM-${hora.id}`)}`}>Cancelar hora</Link>
+                      <Link className="accion-link-hora accion-link-modificar" to={`/modificar-hora?codigo=${encodeURIComponent(codigoReserva(hora))}`}>Modificar hora</Link>
+                      <Link className="accion-link-hora" to={`/cancelar-hora?codigo=${encodeURIComponent(codigoReserva(hora))}`}>Cancelar hora</Link>
                       </>
                     )}
                     <button type="button" onClick={() => eliminarHora(hora.id)}>Eliminar</button>

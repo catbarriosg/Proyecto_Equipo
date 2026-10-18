@@ -220,6 +220,28 @@ main > ul:not(.lista-horas) li {
   width: 100%;
 }
 
+.pagina-mis-horas {
+  max-width: 1100px;
+  padding-top: 32px;
+}
+
+.mis-horas-hero {
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.mis-horas-hero h1 {
+  color: #0b4f9e;
+  font-size: 40px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.mis-horas-hero p {
+  font-size: 18px;
+  margin: 0;
+}
+
 .tarjeta-hora {
   background-color: #ffffff;
   border: 1px solid #cef6f3;
@@ -239,6 +261,18 @@ main > ul:not(.lista-horas) li {
   gap: 10px;
   justify-content: center;
   margin-top: 16px;
+}
+
+.acciones-hora > button,
+.acciones-hora > a {
+  align-items: center;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  min-height: 48px;
 }
 
 .formulario-edicion-hora {
@@ -289,6 +323,10 @@ main > ul:not(.lista-horas) li {
 
   .tarjeta-hora {
     padding: 18px;
+  }
+
+  .mis-horas-hero h1 {
+    font-size: 34px;
   }
 
   .acciones-hora button {
@@ -2372,5 +2410,341 @@ main > ul:not(.lista-horas) li {
 
   .especialidad-card-react:hover {
     transform: none;
+  }
+}
+.sucursal-card-react {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sucursal-card-react:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+}
+
+.clinica-swal-popup {
+  border-radius: 16px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+
+.clinica-swal-confirm,
+.clinica-swal-cancel {
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  margin: 0 5px;
+  padding: 11px 18px;
+}
+
+.clinica-swal-confirm {
+  background: #0b4f9e;
+  color: #ffffff;
+}
+
+.clinica-swal-confirm:hover {
+  background: #093d7a;
+}
+
+.clinica-swal-cancel {
+  background: #e9f7f8;
+  color: #0b4f9e;
+}
+
+.clinica-swal-cancel:hover {
+  background: #d8f0f2;
+}
+.pagina-agenda-react {
+  max-width: 1120px;
+  padding-top: 30px;
+  text-align: left;
+}
+
+.agenda-hero-react {
+  margin: 0 auto 24px;
+  max-width: 760px;
+  text-align: center;
+}
+
+.agenda-hero-react h1 {
+  color: #0b4f9e;
+  font-size: clamp(34px, 5vw, 44px);
+  margin: 10px 0;
+}
+
+.agenda-hero-react p {
+  font-size: 18px;
+  margin: 0;
+}
+
+.formulario-agenda-react {
+  max-width: 960px;
+  padding: clamp(20px, 4vw, 36px);
+}
+
+.agenda-campos-grid {
+  display: grid;
+  gap: 18px 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.agenda-campo {
+  display: grid;
+  gap: 7px;
+}
+
+.agenda-campo input,
+.agenda-campo select {
+  background: #ffffff;
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  font: inherit;
+  min-height: 46px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.agenda-campo input:focus,
+.agenda-campo select:focus {
+  border-color: #0b4f9e;
+  outline: 2px solid rgba(11, 79, 158, 0.16);
+}
+
+.agenda-campo select:disabled {
+  background: #f1f5f6;
+  color: #66777b;
+  cursor: not-allowed;
+}
+
+.agenda-aviso-medico,
+.agenda-ayuda {
+  color: #4d6269;
+  font-size: 14px;
+}
+
+.agenda-aviso-medico {
+  background: #e9f7f8;
+  border-radius: 8px;
+  margin: 0 0 18px;
+  padding: 10px 12px;
+}
+
+.calendario-react {
+  background: #ffffff;
+  border: 1px solid #d6eeee;
+  border-radius: 15px;
+  margin-top: 28px;
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.calendario-react > h2 {
+  font-size: 24px;
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.calendario-react-header {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.calendario-react-header button {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #0b4f9e;
+  border-radius: 8px;
+  color: #0b4f9e;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 18px;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.calendario-react-header button:disabled {
+  border-color: #d5e0e2;
+  color: #a3b0b2;
+  cursor: not-allowed;
+}
+
+.calendario-react-header p {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  text-align: center;
+}
+
+.calendario-react-header p span {
+  color: #4d6269;
+  font-size: 14px;
+}
+
+.calendario-react-header p strong {
+  color: #0b4f9e;
+}
+
+.calendario-react-dias {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin-bottom: 22px;
+}
+
+.calendario-react-dia {
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 9px;
+  color: #0b4f9e;
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  min-width: 0;
+  padding: 10px 4px;
+}
+
+.calendario-react-dia span {
+  font-size: 13px;
+}
+
+.calendario-react-dia strong {
+  font-size: 20px;
+}
+
+.calendario-react-dia:hover:not(:disabled) {
+  border-color: #b8dfe3;
+}
+
+.calendario-react-dia.activo {
+  border-color: #c1006a;
+  color: #c1006a;
+}
+
+.calendario-react-dia:disabled {
+  color: #9e9e9e;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.calendario-react-dia:focus-visible,
+.calendario-react-header button:focus-visible,
+.calendario-react-horas button:focus-visible {
+  outline: 3px solid #f698c9;
+  outline-offset: 2px;
+}
+
+.calendario-react-fecha {
+  color: #0b4f9e;
+  font-size: 19px;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.calendario-react-medico {
+  border: 1px solid #d6eeee;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.calendario-react-clinica,
+.calendario-react-info-medico {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.calendario-react-clinica {
+  background: #f1fbfc;
+  border-bottom: 1px solid #d6eeee;
+}
+
+.calendario-react-clinica > span,
+.calendario-react-info-medico > span:first-child {
+  font-size: 25px;
+}
+
+.calendario-react-clinica div,
+.calendario-react-info-medico div {
+  display: grid;
+  gap: 3px;
+}
+
+.calendario-react-clinica small,
+.calendario-react-info-medico small {
+  color: #52666b;
+}
+
+.calendario-react-modalidad {
+  background: #e7f6ed;
+  border-radius: 999px;
+  color: #21643a;
+  font-size: 13px;
+  margin-left: auto;
+  padding: 6px 10px;
+}
+
+.calendario-react-medico > p {
+  margin: 0;
+  padding: 0 16px 10px;
+}
+
+.calendario-react-horas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 12px 16px;
+}
+
+.calendario-react-horas button {
+  background: #ffffff;
+  border: 1px solid #0b4f9e;
+  border-radius: 6px;
+  color: #333333;
+  cursor: pointer;
+  padding: 8px 18px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.calendario-react-horas button:hover,
+.calendario-react-horas button.seleccionada {
+  background: #0b4f9e;
+  color: #ffffff;
+}
+
+.calendario-react-sin-horas {
+  color: #52666b;
+  padding: 0 16px 16px !important;
+}
+
+.agenda-boton-confirmar {
+  margin-top: 22px;
+  width: 100%;
+}
+
+@media (max-width: 650px) {
+  .agenda-campos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calendario-react-dias {
+    gap: 3px;
+  }
+
+  .calendario-react-dia {
+    padding: 9px 2px;
+  }
+
+  .calendario-react-dia span {
+    font-size: 12px;
+  }
+
+  .calendario-react-modalidad {
+    font-size: 11px;
+    padding: 5px 7px;
   }
 }

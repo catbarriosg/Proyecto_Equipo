@@ -92,7 +92,7 @@ function PanelContenido({ horas, actualizarHora }) {
 
   function cancelarHora(hora) {
     actualizarHora({ ...hora, estado: 'Cancelada' })
-    setAviso(`La hora ${hora.codigo || `AM-${hora.id}`} se marcó como cancelada.`)
+    setAviso(`La hora ${hora.codigo || `AM-${String(hora.id).padStart(4, '0')}`} se marcó como cancelada.`)
   }
 
   return (
