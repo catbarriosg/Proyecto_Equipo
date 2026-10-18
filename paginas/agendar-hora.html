@@ -36,13 +36,27 @@
                         <button type="button" class="boton-header" data-bs-toggle="dropdown" aria-expanded="false"
                             aria-label="Opciones de perfil" title="Mi cuenta">👤</button>
                         <ul class="dropdown-menu dropdown-menu-end menu-perfil">
-                            <li><h6 class="dropdown-header">Mi cuenta</h6></li>
+                            <li>
+                                <h6 class="dropdown-header">Mi cuenta</h6>
+                            </li>
                             <li><a class="dropdown-item" href="login.html">Iniciar sesión</a></li>
                             <li><a class="dropdown-item" href="registro-paciente.html">Crear cuenta</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="perfil-paciente.html">Mi perfil</a></li>
                             <li><a class="dropdown-item" href="mis-horas-medicas.html">Mis horas médicas</a></li>
-                            <li><a class="dropdown-item" href="historial-atenciones.html">Historial de atenciones</a></li>
+                            <li><a class="dropdown-item" href="historial-atenciones.html">Historial de atenciones</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="paginas/panel-administracion.html"></a>
+                                    🔐 Acceso personal
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
@@ -61,7 +75,8 @@
                         <li class="nav-item"><a class="nav-link" href="medicos.html">Médicos</a></li>
                         <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
                         <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
-                        <li class="nav-item"><a class="nav-link boton-agendar" href="agendar-hora.html">Agendar hora</a></li>
+                        <li class="nav-item"><a class="nav-link boton-agendar" href="agendar-hora.html">Agendar hora</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -73,8 +88,8 @@
             <form class="buscador-sitio container-fluid px-3 px-xl-4" role="search" id="formulario-buscador-sitio">
                 <div class="input-group">
                     <input class="form-control" type="search" id="campo-buscador-sitio"
-                        placeholder="Busca una página: especialidades, médicos, agendar..." aria-label="Buscar en el sitio"
-                        autocomplete="off">
+                        placeholder="Busca una página: especialidades, médicos, agendar..."
+                        aria-label="Buscar en el sitio" autocomplete="off">
                     <button class="btn boton-buscar" type="submit">Buscar</button>
                 </div>
                 <div class="list-group resultados-buscador" id="resultados-buscador"></div>
@@ -128,7 +143,8 @@
                             <option value="juan-perez" data-especialidad="medicina-general">Dr. Juan Pérez</option>
                             <option value="maria-gonzalez" data-especialidad="pediatria">Dra. María González</option>
                             <option value="ana-martinez" data-especialidad="ginecologia">Dra. Ana Martínez</option>
-                            <option value="carlos-rodriguez" data-especialidad="cardiologia">Dr. Carlos Rodríguez</option>
+                            <option value="carlos-rodriguez" data-especialidad="cardiologia">Dr. Carlos Rodríguez
+                            </option>
                             <option value="felipe-soto" data-especialidad="traumatologia">Dr. Felipe Soto</option>
                             <option value="camila-rojas" data-especialidad="dermatologia">Dra. Camila Rojas</option>
                         </select>
@@ -138,18 +154,21 @@
                 </div>
 
                 <!-- Selector de fecha y hora: calendario semanal (lo completa JavaScript) -->
-                <section class="selector-horario" id="selector-horario" aria-labelledby="titulo-selector-horario" hidden>
+                <section class="selector-horario" id="selector-horario" aria-labelledby="titulo-selector-horario"
+                    hidden>
 
                     <h2 id="titulo-selector-horario" class="titulo-selector">Elige el día y la hora</h2>
 
                     <!-- Navegador de semanas -->
                     <div class="calendario-header">
-                        <button type="button" class="btn-flecha" data-semana="-1" aria-label="Semana anterior">❮</button>
+                        <button type="button" class="btn-flecha" data-semana="-1"
+                            aria-label="Semana anterior">❮</button>
                         <div class="texto-semana">
                             <span>Semana del</span>
                             <strong class="rango-semana" aria-live="polite"></strong>
                         </div>
-                        <button type="button" class="btn-flecha" data-semana="1" aria-label="Semana siguiente">❯</button>
+                        <button type="button" class="btn-flecha" data-semana="1"
+                            aria-label="Semana siguiente">❯</button>
                     </div>
 
                     <!-- Días de la semana: se generan como botones -->
@@ -230,9 +249,7 @@
         <p>✉️ contacto@clinicaagendamedica.cl</p>
 
         <p>
-            <a href="sucursales.html">Sucursales</a> |
-            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
-            <a href="panel-administracion.html">Administración</a>
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a>
         </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>

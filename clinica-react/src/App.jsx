@@ -9,6 +9,13 @@ import QuienesSomos from './QuienesSomos'
 import Especialidades from './Especialidades'
 import AgendarHora from './AgendarHora'
 import MisHoras from './MisHoras'
+import Medicos from './Medicos.jsx'
+import Contacto from './Contacto.jsx'
+import Sucursales from './Sucursales.jsx'
+import PreguntasFrecuentes from './PreguntasFrecuentes.jsx'
+import Login from './Login.jsx'
+import RegistroPaciente from './RegistroPaciente.jsx'
+import PerfilPaciente from './PerfilPaciente.jsx'
 import horasIniciales from './horas.js'
 
 function App() {
@@ -53,6 +60,13 @@ function App() {
         <Route path="/" element={<Inicio />} />
         <Route path="/quienes-somos" element={<QuienesSomos />} />
         <Route path="/especialidades" element={<Especialidades />} />
+        <Route path="/medicos" element={<Medicos />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/sucursales" element={<Sucursales />} />
+        <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro-paciente" element={<RegistroPaciente />} />
+        <Route path="/perfil" element={<PerfilPaciente />} />
         <Route
           path="/agendar-hora"
           element={<AgendarHora agregarHora={agregarHora} />}

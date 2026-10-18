@@ -12,6 +12,13 @@ function Header() {
           <Link to="/">Inicio</Link>
           <Link to="/quienes-somos">Quiénes somos</Link>
           <Link to="/especialidades">Especialidades</Link>
+          <Link to="/medicos">Médicos</Link>
+          <Link to="/sucursales">Sucursales</Link>
+          <Link to="/contacto">Contacto</Link>
+          <Link to="/preguntas-frecuentes">Preguntas frecuentes</Link>
+          <Link to="/login">Iniciar sesión</Link>
+          <Link to="/registro-paciente">Crear cuenta</Link>
+          <Link to="/perfil">Mi perfil</Link>
           <Link to="/mis-horas">Mis horas médicas</Link>
           <Link to="/agendar-hora" className="link-agendar">Agendar hora</Link>
         </nav>

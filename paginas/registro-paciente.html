@@ -35,14 +35,49 @@
                     <div class="dropdown">
                         <button type="button" class="boton-header" data-bs-toggle="dropdown" aria-expanded="false"
                             aria-label="Opciones de perfil" title="Mi cuenta">👤</button>
+
                         <ul class="dropdown-menu dropdown-menu-end menu-perfil">
-                            <li><h6 class="dropdown-header">Mi cuenta</h6></li>
-                            <li><a class="dropdown-item" href="login.html">Iniciar sesión</a></li>
-                            <li><a class="dropdown-item" href="registro-paciente.html">Crear cuenta</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="perfil-paciente.html">Mi perfil</a></li>
-                            <li><a class="dropdown-item" href="mis-horas-medicas.html">Mis horas médicas</a></li>
-                            <li><a class="dropdown-item" href="historial-atenciones.html">Historial de atenciones</a></li>
+
+                            <li>
+                                <h6 class="dropdown-header">Mi cuenta</h6>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="login.html">Iniciar sesión</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="registro-paciente.html">Crear cuenta</a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="perfil-paciente.html">Mi perfil</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="mis-horas-medicas.html">Mis horas médicas</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="historial-atenciones.html">
+                                    Historial de atenciones
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="panel-administracion.html">
+                                    🔐 Acceso personal
+                                </a>
+                            </li>
+
                         </ul>
                     </div>
 
@@ -61,7 +96,8 @@
                         <li class="nav-item"><a class="nav-link" href="medicos.html">Médicos</a></li>
                         <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
                         <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
-                        <li class="nav-item"><a class="nav-link boton-agendar" href="agendar-hora.html">Agendar hora</a></li>
+                        <li class="nav-item"><a class="nav-link boton-agendar" href="agendar-hora.html">Agendar hora</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -73,8 +109,8 @@
             <form class="buscador-sitio container-fluid px-3 px-xl-4" role="search" id="formulario-buscador-sitio">
                 <div class="input-group">
                     <input class="form-control" type="search" id="campo-buscador-sitio"
-                        placeholder="Busca una página: especialidades, médicos, agendar..." aria-label="Buscar en el sitio"
-                        autocomplete="off">
+                        placeholder="Busca una página: especialidades, médicos, agendar..."
+                        aria-label="Buscar en el sitio" autocomplete="off">
                     <button class="btn boton-buscar" type="submit">Buscar</button>
                 </div>
                 <div class="list-group resultados-buscador" id="resultados-buscador"></div>
@@ -104,25 +140,25 @@
             <!-- novalidate: las validaciones las controla JavaScript -->
             <form id="formulario-registro" novalidate>
 
-                <p class="nota-formulario">Los campos marcados con <span class="obligatorio">*</span> son obligatorios.</p>
+                <p class="nota-formulario">Los campos marcados con <span class="obligatorio">*</span> son obligatorios.
+                </p>
 
                 <!-- Nombre y apellido lado a lado en pantallas grandes -->
                 <div class="fila-campos">
 
                     <section class="campo-formulario">
                         <label for="registro-nombre">Nombre <span class="obligatorio">*</span></label>
-                        <input type="text" id="registro-nombre" name="nombre"
-                            placeholder="Ej: Ana" autocomplete="given-name"
-                            maxlength="30" required aria-describedby="error-registro-nombre">
+                        <input type="text" id="registro-nombre" name="nombre" placeholder="Ej: Ana"
+                            autocomplete="given-name" maxlength="30" required aria-describedby="error-registro-nombre">
                         <!-- Mensaje de error personalizado, lo llena JavaScript -->
                         <small id="error-registro-nombre" class="mensaje-error"></small>
                     </section>
 
                     <section class="campo-formulario">
                         <label for="registro-apellido">Apellido <span class="obligatorio">*</span></label>
-                        <input type="text" id="registro-apellido" name="apellido"
-                            placeholder="Ej: Pérez" autocomplete="family-name"
-                            maxlength="30" required aria-describedby="error-registro-apellido">
+                        <input type="text" id="registro-apellido" name="apellido" placeholder="Ej: Pérez"
+                            autocomplete="family-name" maxlength="30" required
+                            aria-describedby="error-registro-apellido">
                         <small id="error-registro-apellido" class="mensaje-error"></small>
                     </section>
 
@@ -130,25 +166,28 @@
 
                 <section class="campo-formulario">
                     <label for="registro-correo">Correo electrónico <span class="obligatorio">*</span></label>
-                    <input type="email" id="registro-correo" name="correo"
-                        placeholder="Ej: ana.perez@gmail.com" autocomplete="email"
-                        maxlength="80" required aria-describedby="ayuda-registro-correo error-registro-correo">
-                    <small id="ayuda-registro-correo" class="texto-ayuda">Se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</small>
+                    <input type="email" id="registro-correo" name="correo" placeholder="Ej: ana.perez@gmail.com"
+                        autocomplete="email" maxlength="80" required
+                        aria-describedby="ayuda-registro-correo error-registro-correo">
+                    <small id="ayuda-registro-correo" class="texto-ayuda">Se aceptan correos @duoc.cl, @profesor.duoc.cl
+                        o @gmail.com.</small>
                     <small id="error-registro-correo" class="mensaje-error"></small>
                 </section>
 
                 <div class="fila-campos">
 
                     <section class="campo-formulario">
-                        <label for="registro-fecha-nacimiento">Fecha de nacimiento <span class="obligatorio">*</span></label>
+                        <label for="registro-fecha-nacimiento">Fecha de nacimiento <span
+                                class="obligatorio">*</span></label>
                         <!-- El máximo (hoy) y el mínimo (120 años atrás) los fija JavaScript -->
-                        <input type="date" id="registro-fecha-nacimiento" name="fechaNacimiento"
-                            autocomplete="bday" required aria-describedby="error-registro-fecha-nacimiento">
+                        <input type="date" id="registro-fecha-nacimiento" name="fechaNacimiento" autocomplete="bday"
+                            required aria-describedby="error-registro-fecha-nacimiento">
                         <small id="error-registro-fecha-nacimiento" class="mensaje-error"></small>
                     </section>
 
                     <section class="campo-formulario">
-                        <label for="registro-prevision">Previsión médica <span class="opcional">(opcional)</span></label>
+                        <label for="registro-prevision">Previsión médica <span
+                                class="opcional">(opcional)</span></label>
                         <select id="registro-prevision" name="prevision">
                             <option value="">Prefiero no indicarla</option>
                             <option value="Fonasa">Fonasa</option>
@@ -170,9 +209,8 @@
                     <!-- Contenedor para ubicar el botón "Mostrar" dentro del campo -->
                     <div class="campo-contrasena">
                         <input type="password" id="registro-contrasena" name="contrasena"
-                            placeholder="Mínimo 8 caracteres" autocomplete="new-password"
-                            minlength="8" maxlength="64" required
-                            aria-describedby="error-registro-contrasena seguridad-contrasena">
+                            placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" maxlength="64"
+                            required aria-describedby="error-registro-contrasena seguridad-contrasena">
                         <button type="button" class="boton-ver-contrasena" aria-controls="registro-contrasena"
                             aria-label="Mostrar contraseña">Mostrar</button>
                     </div>
@@ -185,11 +223,12 @@
                 </section>
 
                 <section class="campo-formulario">
-                    <label for="registro-repetir-contrasena">Repetir contraseña <span class="obligatorio">*</span></label>
+                    <label for="registro-repetir-contrasena">Repetir contraseña <span
+                            class="obligatorio">*</span></label>
                     <div class="campo-contrasena">
                         <input type="password" id="registro-repetir-contrasena" name="repetirContrasena"
-                            placeholder="Escribe la misma contraseña" autocomplete="new-password"
-                            maxlength="64" required aria-describedby="error-registro-repetir-contrasena">
+                            placeholder="Escribe la misma contraseña" autocomplete="new-password" maxlength="64"
+                            required aria-describedby="error-registro-repetir-contrasena">
                         <button type="button" class="boton-ver-contrasena" aria-controls="registro-repetir-contrasena"
                             aria-label="Mostrar contraseña">Mostrar</button>
                     </div>
@@ -223,9 +262,7 @@
         <p>✉️ contacto@clinicaagendamedica.cl</p>
 
         <p>
-            <a href="sucursales.html">Sucursales</a> |
-            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a> |
-            <a href="panel-administracion.html">Administración</a>
+            <a href="preguntas-frecuentes.html">Preguntas frecuentes</a>
         </p>
 
         <p>© 2026 Clínica Agenda Médica. Todos los derechos reservados.</p>

@@ -299,3 +299,859 @@ main > ul:not(.lista-horas) li {
     padding: 18px 16px;
   }
 }
+.medicos-hero {
+  padding: 24px 20px 32px;
+  text-align: center;
+}
+
+.etiqueta-seccion {
+  color: #0b4f9e;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.medicos-hero h1 {
+  color: #0b4f9e;
+  font-size: 42px;
+  margin: 15px 0;
+}
+
+.medicos-hero p {
+  font-size: 18px;
+  margin: 0 auto;
+  max-width: 650px;
+}
+
+.medicos-lista {
+  padding: 20px 0 30px;
+}
+
+.lista-medicos {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.medico-card {
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 28px 24px;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.medico-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.foto-medico {
+  border-radius: 50%;
+  height: 140px;
+  margin: 0 auto 18px;
+  overflow: hidden;
+  width: 140px;
+}
+
+.foto-medico img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.medico-card h2 {
+  color: #0b4f9e;
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+
+.medico-card h3 {
+  color: #525151;
+  font-size: 17px;
+  margin: 0 0 14px;
+}
+
+.medico-card p {
+  flex: 1;
+  font-size: 15px;
+  margin: 0 0 18px;
+}
+
+.enlace-especialidad {
+  color: #0b4f9e;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.enlace-especialidad:hover,
+.enlace-especialidad:focus-visible {
+  text-decoration: underline;
+}
+
+.boton-medico {
+  background-color: #0b4f9e;
+  border-radius: 8px;
+  color: #ffffff;
+  display: block;
+  font-weight: bold;
+  padding: 12px 22px;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.boton-medico:hover,
+.boton-medico:focus-visible {
+  background-color: #093d7a;
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .lista-medicos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .medicos-hero h1 {
+    font-size: 34px;
+  }
+
+  .lista-medicos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pagina-contacto {
+  max-width: 1100px;
+}
+
+.contacto-hero {
+  padding: 20px 16px 36px;
+  text-align: center;
+}
+
+.contacto-hero h1 {
+  color: #0b4f9e;
+  font-size: 42px;
+  margin: 14px 0;
+}
+
+.contacto-hero p {
+  font-size: 18px;
+  margin: 0 auto;
+  max-width: 680px;
+}
+
+.contacto-contenido {
+  align-items: start;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  text-align: left;
+}
+
+.formulario-contacto-react {
+  margin: 0;
+  max-width: none;
+}
+
+.formulario-contacto-react textarea {
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  font: inherit;
+  padding: 10px;
+  resize: vertical;
+  width: 100%;
+}
+
+.formulario-contacto-react textarea:focus {
+  border-color: #7dd3e8;
+  box-shadow: 0 0 5px rgba(125, 211, 232, 0.5);
+  outline: none;
+}
+
+.contacto-ayuda {
+  color: #535d67;
+  font-size: 13px;
+}
+
+.contacto-error {
+  color: #a32121;
+  font-size: 14px;
+}
+
+.contacto-confirmacion {
+  background: #e8f8f4;
+  border: 1px solid #7ac9b6;
+  border-radius: 8px;
+  color: #155b49;
+  margin: 6px 0 0;
+  padding: 12px;
+}
+
+.datos-contacto-react h2 {
+  margin: 0 0 18px;
+}
+
+.tarjeta-contacto-react {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+  padding: 18px;
+}
+
+.tarjeta-contacto-react > span {
+  font-size: 24px;
+}
+
+.tarjeta-contacto-react h3 {
+  color: #0b4f9e;
+  font-size: 18px;
+  margin: 8px 0 5px;
+}
+
+.tarjeta-contacto-react p {
+  margin: 0;
+}
+
+.tarjeta-contacto-react address {
+  font-style: normal;
+  margin: 0;
+}
+
+.tarjeta-contacto-react a {
+  color: #0b4f9e;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 750px) {
+  .contacto-contenido {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-hero h1 {
+    font-size: 34px;
+  }
+}
+
+.pagina-sucursales {
+  max-width: 1200px;
+}
+
+.sucursales-hero {
+  padding: 20px 16px 36px;
+  text-align: center;
+}
+
+.sucursales-hero h1 {
+  color: #0b4f9e;
+  font-size: 42px;
+  margin: 14px 0;
+}
+
+.sucursales-hero p {
+  font-size: 18px;
+  margin: 0 auto;
+  max-width: 680px;
+}
+
+.sucursales-lista {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  text-align: left;
+}
+
+.sucursal-card-react {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+
+.sucursal-card-react figure {
+  height: 230px;
+  margin: 0;
+  overflow: hidden;
+}
+
+.sucursal-card-react figure img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.sucursal-info-react {
+  padding: 22px;
+}
+
+.sucursal-info-react h2 {
+  margin: 0 0 12px;
+}
+
+.sucursal-info-react address {
+  font-style: normal;
+  margin-bottom: 10px;
+}
+
+.sucursal-info-react p {
+  margin: 0 0 10px;
+}
+
+.sucursal-info-react a:not(.boton-sucursal),
+.sucursal-mapa-react a {
+  color: #0b4f9e;
+}
+
+.sucursal-horario-react span {
+  display: block;
+}
+
+.boton-sucursal {
+  background: #0b4f9e;
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  margin-top: 4px;
+  padding: 11px 18px;
+}
+
+.boton-sucursal:hover,
+.boton-sucursal:focus-visible {
+  background: #093d7a;
+  color: #ffffff;
+}
+
+.sucursal-mapa-react {
+  margin: 54px auto 8px;
+  max-width: 850px;
+  text-align: center;
+}
+
+.sucursal-mapa-react iframe {
+  border: 0;
+  border-radius: 16px;
+  height: 380px;
+  max-width: 100%;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .sucursales-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .sucursales-hero h1 {
+    font-size: 34px;
+  }
+
+  .sucursal-card-react figure {
+    height: 210px;
+  }
+
+  .sucursal-mapa-react iframe {
+    height: 300px;
+  }
+}
+
+.pagina-faq {
+  max-width: 900px;
+}
+
+.faq-hero-react {
+  padding: 18px 16px 34px;
+  text-align: center;
+}
+
+.faq-hero-react h1 {
+  color: #0b4f9e;
+  font-size: 42px;
+  margin: 14px 0;
+}
+
+.faq-hero-react > p {
+  font-size: 18px;
+  margin: 0 auto 24px;
+  max-width: 700px;
+}
+
+.faq-buscador-react {
+  margin: 0 auto;
+  max-width: 620px;
+  text-align: left;
+}
+
+.faq-buscador-react label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.faq-buscador-react input {
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+}
+
+.faq-buscador-react input:focus {
+  border-color: #7dd3e8;
+  box-shadow: 0 0 5px rgba(125, 211, 232, 0.5);
+  outline: none;
+}
+
+.faq-grupo-react {
+  margin: 22px auto;
+  text-align: left;
+}
+
+.faq-grupo-react h2 {
+  border-bottom: 2px solid #cef6f3;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+}
+
+.faq-item-react {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.faq-item-react summary {
+  color: #0b4f9e;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: bold;
+  list-style: none;
+  padding: 17px 48px 17px 18px;
+  position: relative;
+}
+
+.faq-item-react summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item-react summary::after {
+  color: #0b4f9e;
+  content: '+';
+  font-size: 22px;
+  position: absolute;
+  right: 18px;
+  top: 12px;
+}
+
+.faq-item-react[open] summary::after {
+  content: '−';
+}
+
+.faq-item-react[open] summary {
+  background: #f1fbfc;
+}
+
+.faq-item-react p {
+  margin: 0;
+  padding: 16px 18px 18px;
+}
+
+.faq-item-react a {
+  color: #0b4f9e;
+  font-weight: bold;
+}
+
+.faq-sin-resultados {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 12px;
+  margin: 24px auto;
+  max-width: 620px;
+  padding: 20px;
+}
+
+.faq-ayuda-react {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 16px;
+  margin: 42px auto 12px;
+  max-width: 650px;
+  padding: 26px;
+  text-align: center;
+}
+
+.faq-ayuda-react h2 {
+  margin-top: 0;
+}
+
+.faq-ayuda-react p {
+  margin-bottom: 18px;
+}
+
+.boton-faq {
+  background: #0b4f9e;
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  padding: 12px 22px;
+}
+
+.boton-faq:hover,
+.boton-faq:focus-visible {
+  background: #093d7a;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .faq-hero-react h1 {
+    font-size: 34px;
+  }
+
+  .faq-item-react summary {
+    font-size: 16px;
+    padding-left: 14px;
+  }
+}
+
+.pagina-login {
+  margin: 0 auto;
+  max-width: 720px;
+  padding: 26px 20px 58px;
+}
+
+.login-hero {
+  padding: 12px 10px 28px;
+  text-align: center;
+}
+
+.login-hero h1 {
+  color: #0b4f9e;
+  font-size: 42px;
+  margin: 12px 0;
+}
+
+.login-hero p {
+  font-size: 18px;
+  margin: 0;
+}
+
+.login-card {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(0, 65, 100, 0.08);
+  margin: 0 auto;
+  max-width: 520px;
+  padding: 30px;
+}
+
+.login-campo {
+  margin-bottom: 20px;
+}
+
+.login-campo label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.login-campo input {
+  background: #ffffff;
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font: inherit;
+  min-width: 0;
+  padding: 12px;
+  width: 100%;
+}
+
+.login-campo input:focus {
+  border-color: #0b4f9e;
+  outline: 2px solid rgba(11, 79, 158, 0.16);
+}
+
+.login-password-wrap {
+  display: flex;
+  gap: 8px;
+}
+
+.login-mostrar {
+  background: #e9f7f8;
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  color: #0b4f9e;
+  cursor: pointer;
+  padding: 0 12px;
+}
+
+.login-recordar {
+  align-items: center;
+  display: flex;
+  gap: 9px;
+  margin: 4px 0 18px;
+}
+
+.login-recordar input {
+  accent-color: #0b4f9e;
+  height: 17px;
+  width: 17px;
+}
+
+.login-mensaje {
+  border-radius: 8px;
+  line-height: 1.5;
+  padding: 11px 13px;
+}
+
+.login-error {
+  background: #fff1f0;
+  color: #9d2525;
+}
+
+.login-aviso {
+  background: #e9f7f8;
+  color: #174a5a;
+}
+
+.login-enviar {
+  background: #0b4f9e;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: bold;
+  padding: 13px 20px;
+  width: 100%;
+}
+
+.login-enviar:hover,
+.login-enviar:focus-visible {
+  background: #093d7a;
+}
+
+.login-nota {
+  color: #4d6269;
+  font-size: 14px;
+  margin: 18px 0 0;
+  text-align: center;
+}
+
+.login-ayuda {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.login-ayuda a {
+  color: #0b4f9e;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .login-hero h1 {
+    font-size: 34px;
+  }
+
+  .login-card {
+    padding: 22px 18px;
+  }
+}
+.registro-card {
+  max-width: 680px;
+  text-align: left;
+}
+
+.registro-card label span[aria-hidden="true"],
+.registro-nota span {
+  color: #b42318;
+}
+
+.registro-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.login-campo select {
+  background: #ffffff;
+  border: 1px solid #b8dfe3;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font: inherit;
+  min-height: 46px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.login-campo select:focus {
+  border-color: #0b4f9e;
+  outline: 2px solid rgba(11, 79, 158, 0.16);
+}
+
+.registro-nota {
+  color: #4d6269;
+  font-size: 14px;
+  margin: 0 0 18px;
+}
+
+.registro-ayuda,
+.registro-opcional {
+  color: #4d6269;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.registro-ayuda {
+  display: block;
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .registro-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+.perfil-pagina-react {
+  margin: 0 auto;
+  max-width: 850px;
+  padding-top: 28px;
+}
+
+.perfil-hero-react {
+  padding: 8px 10px 28px;
+  text-align: center;
+}
+
+.perfil-hero-react h1 {
+  color: #0b4f9e;
+  font-size: 40px;
+  margin: 12px 0;
+}
+
+.perfil-hero-react p {
+  font-size: 18px;
+  margin: 0;
+}
+
+.perfil-tarjeta-react,
+.perfil-sin-sesion {
+  background: #ffffff;
+  border: 1px solid #cef6f3;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(0, 65, 100, 0.08);
+  margin: 0 auto;
+  max-width: 650px;
+  padding: 28px;
+  text-align: left;
+}
+
+.perfil-datos-react h2,
+.perfil-sin-sesion h2 {
+  color: #0b4f9e;
+  margin: 0 0 18px;
+}
+
+.perfil-datos-react dl {
+  margin: 0;
+}
+
+.perfil-datos-react dl > div {
+  border-bottom: 1px solid #e2f1f2;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(150px, 1fr) 2fr;
+  padding: 13px 0;
+}
+
+.perfil-datos-react dt {
+  font-weight: bold;
+}
+
+.perfil-datos-react dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.perfil-acciones-react {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.perfil-boton {
+  background: #0b4f9e;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font: inherit;
+  font-weight: bold;
+  padding: 12px 18px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.perfil-boton:hover,
+.perfil-boton:focus-visible {
+  background: #093d7a;
+  color: #ffffff;
+}
+
+.perfil-boton-secundario {
+  background: #e9f7f8;
+  color: #0b4f9e;
+}
+
+.perfil-boton-secundario:hover,
+.perfil-boton-secundario:focus-visible {
+  background: #d8f0f2;
+  color: #093d7a;
+}
+
+.perfil-sin-sesion {
+  text-align: center;
+}
+
+.perfil-sin-sesion p {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .perfil-hero-react h1 {
+    font-size: 34px;
+  }
+
+  .perfil-tarjeta-react,
+  .perfil-sin-sesion {
+    padding: 22px 18px;
+  }
+
+  .perfil-datos-react dl > div {
+    gap: 4px;
+    grid-template-columns: 1fr;
+  }
+
+  .perfil-acciones-react {
+    flex-direction: column;
+  }
+}

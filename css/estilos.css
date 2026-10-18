@@ -7,9 +7,12 @@
 
 /* Estilos principales del encabezado (navbar de Bootstrap) */
 .header {
-    background-color: #FFFFFF; /* Blanco puro: transmite limpieza, higiene y claridad */
-    border-bottom: 3px solid #1E3A5F; /* Azul Zafiro: aporta la seriedad y confianza médica */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Sombra muy suave para darle un toque moderno y separarlo del resto de la página */
+    background-color: #FFFFFF;
+    /* Blanco puro: transmite limpieza, higiene y claridad */
+    border-bottom: 3px solid #1E3A5F;
+    /* Azul Zafiro: aporta la seriedad y confianza médica */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    /* Sombra muy suave para darle un toque moderno y separarlo del resto de la página */
 }
 
 /* Barra de navegación */
@@ -55,8 +58,9 @@
     color: #0b4f9e;
     background-color: #E9F8FC;
 }
+
 body {
-    background-color: #E9FBFB !important; 
+    background-color: #E9FBFB !important;
 }
 
 /* Enlace destacado para agendar una hora */
@@ -1098,30 +1102,40 @@ main h1 {
         height: 200px;
     }
 
-    /* El footer pasa de fila a columna y se centra */
+    /* Footer responsive para pantallas pequeñas */
+
     .footer {
         flex-direction: column;
+        justify-content: center;
         text-align: center;
         gap: 8px;
+        padding: 15px 10px;
     }
 
-    /* El formulario de agendamiento usa menos padding en celular */
-    .formulario-agenda {
-        padding: 20px;
-        margin: 20px 15px;
+    .footer p {
+        font-size: 12px;
+        line-height: 1.5;
     }
 
-    /* La ventana emergente (modal) se ajusta al ancho disponible */
-    .contenido-modal {
-        width: 90%;
-        max-width: 400px;
-        padding: 20px;
+    .footer .nombre-clinica {
+        font-size: 16px;
     }
-
-
-
-
 }
+
+/* El formulario de agendamiento usa menos padding en celular */
+.formulario-agenda {
+    padding: 20px;
+    margin: 20px 15px;
+}
+
+/* La ventana emergente (modal) se ajusta al ancho disponible */
+.contenido-modal {
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+
 
 /* =========================================================================
    INTEGRANTE 3 — Contacto, Sucursales, Preguntas frecuentes y Panel admin
@@ -1834,10 +1848,25 @@ main h1 {
     transition: width 0.3s, background-color 0.3s;
 }
 
-.medidor-barra.nivel-1 { width: 25%; background-color: #c62828; }
-.medidor-barra.nivel-2 { width: 50%; background-color: #f9a825; }
-.medidor-barra.nivel-3 { width: 75%; background-color: #7cb342; }
-.medidor-barra.nivel-4 { width: 100%; background-color: #2e7d32; }
+.medidor-barra.nivel-1 {
+    width: 25%;
+    background-color: #c62828;
+}
+
+.medidor-barra.nivel-2 {
+    width: 50%;
+    background-color: #f9a825;
+}
+
+.medidor-barra.nivel-3 {
+    width: 75%;
+    background-color: #7cb342;
+}
+
+.medidor-barra.nivel-4 {
+    width: 100%;
+    background-color: #2e7d32;
+}
 
 .texto-seguridad,
 .texto-ayuda {
@@ -2191,9 +2220,17 @@ html.a11y-guia .guia-lectura {
 /* ---------- Modos de accesibilidad ---------- */
 
 /* Tamaño del texto: amplía encabezado, contenido y pie (no el panel) */
-html[data-a11y-texto="1"] body > :is(header, main, footer) { zoom: 1.15; }
-html[data-a11y-texto="2"] body > :is(header, main, footer) { zoom: 1.3; }
-html[data-a11y-texto="3"] body > :is(header, main, footer) { zoom: 1.5; }
+html[data-a11y-texto="1"] body> :is(header, main, footer) {
+    zoom: 1.15;
+}
+
+html[data-a11y-texto="2"] body> :is(header, main, footer) {
+    zoom: 1.3;
+}
+
+html[data-a11y-texto="3"] body> :is(header, main, footer) {
+    zoom: 1.5;
+}
 
 /* Escala de grises (en <html> para no afectar elementos fijos) */
 html.a11y-grises {
@@ -2553,40 +2590,44 @@ html.a11y-contraste .pagina-medicos::after {
    MEJORAS DE ACCESIBILIDAD (WCAG AAA)
    ========================================================================= */
 
-/* Botones del encabezado: área táctil de 44x44 px */
-.boton-header {
-    width: 44px;
-    height: 44px;
-}
-
-/* Enlaces del menú: altura mínima de 44 px */
-.menu .nav-link {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-}
-
-/* Pie de página: letra y espaciado más legibles, enlaces con contraste alto */
-.footer p {
-    font-size: 1px;
-    line-height: 1.5;
-}
-
-.footer a {
-    color: #093d7a;
-    display: inline-block;
-    padding: 12px 6px; /* deja el área del enlace en 44 px o más */
-}
-
-/* Respeta a quienes tienen activada la opción de reducir movimiento */
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+    /* Botones del encabezado: área táctil de 44x44 px */
+    .boton-header {
+        width: 44px;
+        height: 44px;
     }
-}
+
+    /* Enlaces del menú: altura mínima de 44 px */
+    .menu .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Pie de página: letra y espaciado más legibles, enlaces con contraste alto */
+    .footer p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .footer a {
+        color: #093d7a;
+        display: inline-block;
+        padding: 12px 6px;
+        /* deja el área del enlace en 44 px o más */
+    }
+
+    /* Respeta a quienes tienen activada la opción de reducir movimiento */
+    @media (prefers-reduced-motion: reduce) {
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
 
 
 }
