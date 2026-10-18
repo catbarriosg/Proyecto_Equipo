@@ -1796,3 +1796,581 @@ main > ul:not(.lista-horas) li {
     max-width: calc(100vw - 32px);
   }
 }
+.inicio-react {
+  margin: 0 auto;
+  max-width: 1240px;
+  padding: 42px clamp(18px, 4vw, 48px) 64px;
+  text-align: left;
+}
+
+.inicio-hero {
+  align-items: center;
+  background: linear-gradient(120deg, #ffffff 0%, #f1fcfc 100%);
+  border: 1px solid #d6eeee;
+  border-radius: 22px;
+  display: grid;
+  gap: clamp(24px, 5vw, 64px);
+  grid-template-columns: 1fr 0.9fr;
+  overflow: hidden;
+  padding: clamp(26px, 5vw, 58px);
+}
+
+.inicio-hero-texto h1 {
+  color: #0b4f9e;
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.1;
+  margin: 12px 0 18px;
+}
+
+.inicio-hero-texto p,
+.inicio-titulo-seccion p,
+.inicio-servicio-card p,
+.inicio-opinion-card p {
+  line-height: 1.7;
+  margin: 0;
+}
+
+.inicio-hero-texto > p {
+  font-size: 18px;
+  max-width: 560px;
+}
+
+.inicio-etiqueta {
+  color: #14828d;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.inicio-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.inicio-boton {
+  border: 2px solid #0b4f9e;
+  border-radius: 9px;
+  display: inline-block;
+  font-weight: 700;
+  padding: 12px 18px;
+  text-align: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.inicio-boton-principal {
+  background: #0b4f9e;
+  color: #ffffff;
+}
+
+.inicio-boton-principal:hover,
+.inicio-boton-principal:focus-visible {
+  background: #093d7a;
+  color: #ffffff;
+}
+
+.inicio-boton-secundario {
+  background: #ffffff;
+  color: #0b4f9e;
+}
+
+.inicio-boton-secundario:hover,
+.inicio-boton-secundario:focus-visible {
+  background: #e9f7f8;
+  color: #093d7a;
+}
+
+.inicio-hero-imagen {
+  border-radius: 16px;
+  height: 330px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.inicio-seccion {
+  margin-top: 68px;
+}
+
+.inicio-titulo-seccion {
+  margin: 0 auto 26px;
+  max-width: 760px;
+  text-align: center;
+}
+
+.inicio-titulo-seccion h2 {
+  margin: 8px 0 10px;
+}
+
+.inicio-servicios,
+.inicio-opiniones-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.inicio-servicio-card,
+.inicio-opinion-card {
+  background: #ffffff;
+  border: 1px solid #d6eeee;
+  border-radius: 15px;
+  box-shadow: 0 5px 18px rgba(0, 65, 100, 0.06);
+  padding: 24px;
+}
+
+.inicio-servicio-icono {
+  align-items: center;
+  background: #e9f7f8;
+  border-radius: 12px;
+  display: inline-flex;
+  font-size: 27px;
+  height: 54px;
+  justify-content: center;
+  width: 54px;
+}
+
+.inicio-servicio-card h3,
+.inicio-opinion-card h3 {
+  color: #173d5d;
+  font-size: 20px;
+  margin: 16px 0 8px;
+}
+
+.inicio-carrusel {
+  border: 1px solid #d6eeee;
+  border-radius: 16px;
+  margin: 0 auto;
+  max-width: 900px;
+  overflow: hidden;
+}
+
+.inicio-carrusel .carousel-item img {
+  height: clamp(260px, 48vw, 500px);
+  object-fit: cover;
+  width: 100%;
+}
+
+.inicio-carrusel .carousel-indicators [data-bs-target] {
+  background-color: #ffffff;
+  height: 4px;
+}
+
+.inicio-opiniones {
+  margin-top: 68px;
+}
+
+.inicio-opiniones-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.inicio-opinion-card h3 {
+  margin-top: 0;
+}
+
+.inicio-opinion-card .inicio-estrellas {
+  color: #d69116;
+  font-size: 21px;
+  letter-spacing: 3px;
+  margin: 14px 0 8px;
+}
+
+.inicio-opinion-card strong {
+  color: #4d6269;
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .inicio-react {
+    padding-top: 26px;
+  }
+
+  .inicio-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .inicio-hero-imagen {
+    height: 250px;
+  }
+
+  .inicio-servicios {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 520px) {
+  .inicio-acciones,
+  .inicio-boton {
+    width: 100%;
+  }
+
+  .inicio-opiniones-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.quienes-somos-react {
+  margin: 0 auto;
+  max-width: 1240px;
+  padding: 42px clamp(18px, 4vw, 48px) 64px;
+  text-align: left;
+}
+
+.qs-hero,
+.qs-clinica {
+  align-items: center;
+  display: grid;
+  gap: clamp(24px, 5vw, 60px);
+  grid-template-columns: 1fr 0.9fr;
+}
+
+.qs-hero {
+  background: linear-gradient(120deg, #ffffff, #f1fcfc);
+  border: 1px solid #d6eeee;
+  border-radius: 22px;
+  padding: clamp(26px, 5vw, 58px);
+}
+
+.qs-etiqueta {
+  color: #14828d;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.qs-hero h1 {
+  color: #0b4f9e;
+  font-size: clamp(36px, 5vw, 54px);
+  line-height: 1.1;
+  margin: 12px 0 18px;
+}
+
+.qs-hero p,
+.qs-clinica p,
+.qs-tarjeta-institucional p,
+.qs-valor-card p,
+.qs-equipo p {
+  line-height: 1.75;
+}
+
+.qs-hero img,
+.qs-clinica img {
+  border-radius: 16px;
+  height: 320px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.qs-boton {
+  background: #0b4f9e;
+  border-radius: 9px;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: 700;
+  margin-top: 10px;
+  padding: 12px 20px;
+}
+
+.qs-boton:hover,
+.qs-boton:focus-visible {
+  background: #093d7a;
+  color: #ffffff;
+}
+
+.qs-clinica {
+  margin-top: 68px;
+  padding: 0 clamp(4px, 2vw, 24px);
+}
+
+.qs-clinica h2,
+.qs-seccion-titulo h2,
+.qs-equipo h2 {
+  color: #0b4f9e;
+  margin: 8px 0 14px;
+}
+
+.qs-clinica p:last-child {
+  margin-bottom: 0;
+}
+
+.qs-proposito {
+  background: #f1fbfc;
+  border-radius: 20px;
+  margin-top: 68px;
+  padding: clamp(26px, 4vw, 44px);
+}
+
+.qs-seccion-titulo {
+  margin: 0 auto 26px;
+  max-width: 760px;
+  text-align: center;
+}
+
+.qs-proposito-grid,
+.qs-valores-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.qs-tarjeta-institucional,
+.qs-valor-card {
+  background: #ffffff;
+  border: 1px solid #d6eeee;
+  border-radius: 15px;
+  box-shadow: 0 5px 18px rgba(0, 65, 100, 0.06);
+  padding: 26px;
+}
+
+.qs-tarjeta-institucional > span,
+.qs-valor-card > span {
+  font-size: 30px;
+}
+
+.qs-tarjeta-institucional h3,
+.qs-valor-card h3 {
+  color: #173d5d;
+  margin: 12px 0 8px;
+}
+
+.qs-valores,
+.qs-video {
+  margin-top: 68px;
+}
+
+.qs-valores-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.qs-video-marco {
+  background: #ffffff;
+  border: 1px solid #d6eeee;
+  border-radius: 15px;
+  margin: 0 auto;
+  max-width: 850px;
+  overflow: hidden;
+}
+
+.qs-video-marco iframe {
+  aspect-ratio: 16 / 9;
+  border: 0;
+  display: block;
+  width: 100%;
+}
+
+.qs-video-marco figcaption {
+  line-height: 1.6;
+  padding: 12px 16px;
+}
+
+.qs-video-marco a {
+  color: #0b4f9e;
+  font-weight: 700;
+}
+
+.qs-equipo {
+  background: #ffffff;
+  border: 1px solid #d6eeee;
+  border-radius: 16px;
+  margin: 68px auto 0;
+  max-width: 850px;
+  padding: 28px;
+  text-align: center;
+}
+
+.qs-equipo p {
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+@media (max-width: 760px) {
+  .quienes-somos-react {
+    padding-top: 26px;
+  }
+
+  .qs-hero,
+  .qs-clinica {
+    grid-template-columns: 1fr;
+  }
+
+  .qs-hero img,
+  .qs-clinica img {
+    height: 250px;
+  }
+
+  .qs-valores-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .qs-proposito-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.qs-tarjeta-institucional,
+.qs-valor-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.qs-tarjeta-institucional:hover,
+.qs-valor-card:hover {
+  border-color: #7dd3e8;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.13);
+  transform: translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qs-tarjeta-institucional,
+  .qs-valor-card {
+    transition: none;
+  }
+
+  .qs-tarjeta-institucional:hover,
+  .qs-valor-card:hover {
+    transform: none;
+  }
+}
+.pagina-especialidades {
+  margin: 0 auto;
+  max-width: 1240px;
+  padding: 42px clamp(18px, 4vw, 48px) 64px;
+}
+
+.especialidades-hero-react {
+  margin: 0 auto 38px;
+  max-width: 760px;
+  text-align: center;
+}
+
+.especialidades-etiqueta {
+  color: #14828d;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.especialidades-hero-react h1 {
+  color: #0b4f9e;
+  font-size: clamp(34px, 5vw, 48px);
+  margin: 10px 0 12px;
+}
+
+.especialidades-hero-react p {
+  font-size: 18px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.especialidades-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.especialidad-card-react {
+  background: #ffffff;
+  border: 1px solid #d6eeee;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(0, 65, 100, 0.06);
+  display: flex;
+  flex-direction: column;
+  min-height: 310px;
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.especialidad-card-react:hover {
+  border-color: #7dd3e8;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.13);
+  transform: translateY(-8px);
+}
+
+.especialidad-icono-react {
+  align-items: center;
+  background: #e9f7f8;
+  border-radius: 13px;
+  display: inline-flex;
+  font-size: 28px;
+  height: 56px;
+  justify-content: center;
+  width: 56px;
+}
+
+.especialidad-card-react h2 {
+  color: #0b4f9e;
+  font-size: 22px;
+  margin: 16px 0 8px;
+}
+
+.especialidad-card-react > p {
+  flex: 1;
+  line-height: 1.65;
+  margin: 0 0 20px;
+}
+
+.especialidad-acciones-react {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.especialidad-boton-profesionales {
+  background: #0b4f9e;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 10px 13px;
+  text-align: center;
+}
+
+.especialidad-boton-profesionales:hover,
+.especialidad-boton-profesionales:focus-visible {
+  background: #093d7a;
+  color: #ffffff;
+}
+
+.especialidad-enlace-agenda {
+  color: #0b4f9e;
+  font-weight: 700;
+}
+
+.especialidad-enlace-agenda:hover,
+.especialidad-enlace-agenda:focus-visible {
+  color: #093d7a;
+  text-decoration: underline;
+}
+
+
+
+@media (max-width: 900px) {
+  .especialidades-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .pagina-especialidades {
+    padding-top: 26px;
+  }
+
+  .especialidades-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .especialidad-card-react {
+    min-height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .especialidad-card-react {
+    transition: none;
+  }
+
+  .especialidad-card-react:hover {
+    transform: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { obtenerSesion } from './auth.js'
 
 function AgendarHora({ agregarHora }) {
@@ -9,11 +10,16 @@ function AgendarHora({ agregarHora }) {
     'Pediatría',
     'Cardiología',
     'Dermatología',
-    'Ginecología'
+    'Ginecología',
+    'Traumatología'
   ]
+  const [parametros] = useSearchParams()
+  const especialidadInicial = parametros.get('especialidad')
   const [nombre, setNombre] = useState('')
   const [correo, setCorreo] = useState('')
-  const [especialidad, setEspecialidad] = useState('')
+  const [especialidad, setEspecialidad] = useState(() =>
+    especialidades.includes(especialidadInicial) ? especialidadInicial : ''
+  )
   const [fecha, setFecha] = useState('')
   const [mensaje, setMensaje] = useState('')
 
