@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { obtenerSesion } from './auth.js'
+import medicosDisponibles from './medicos.js'
 
 const pacientesIniciales = [
   { rut: '12.345.678-9', nombre: 'Ana Pérez', activo: true },
@@ -27,6 +28,11 @@ function rutValido(rut) {
   const resto = 11 - (suma % 11)
   const verificador = resto === 11 ? '0' : resto === 10 ? 'K' : String(resto)
   return verificador === partes[2]
+}
+
+function obtenerNombreMedico(hora) {
+  if (hora.medico) return hora.medico
+  return medicosDisponibles.find((medico) => medico.id === hora.medicoId || medico.especialidad === hora.especialidad)?.nombre || 'No asignado'
 }
 
 function PanelContenido({ horas, actualizarHora }) {
@@ -147,8 +153,8 @@ function PanelContenido({ horas, actualizarHora }) {
 
       <section className="panel-admin-seccion">
         <div className="panel-admin-titulo"><h2>Horas médicas</h2><Link className="perfil-boton" to="/agendar-hora">＋ Agendar hora</Link></div>
-        <div className="panel-tabla-wrap"><table className="panel-tabla"><caption>Horas médicas agendadas</caption><thead><tr><th>Fecha</th><th>Especialidad</th><th>Paciente</th><th>Estado</th><th>Acción</th></tr></thead>
-          <tbody>{horas.map((hora) => <tr key={hora.id}><td>{hora.fecha}</td><td>{hora.especialidad}</td><td>{hora.paciente}</td><td><span className={hora.estado === 'Cancelada' ? 'panel-estado panel-inactivo' : 'panel-estado panel-activo'}>{hora.estado}</span></td><td className="panel-acciones">{hora.estado !== 'Cancelada' && <button type="button" onClick={() => cancelarHora(hora)}>Cancelar</button>}</td></tr>)}</tbody>
+        <div className="panel-tabla-wrap"><table className="panel-tabla"><caption>Horas médicas agendadas</caption><thead><tr><th>Fecha</th><th>Médico</th><th>Paciente</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody>{horas.map((hora) => <tr key={hora.id}><td>{hora.fecha}</td><td>{obtenerNombreMedico(hora)}</td><td>{hora.paciente}</td><td><span className={hora.estado === 'Cancelada' ? 'panel-estado panel-inactivo' : 'panel-estado panel-activo'}>{hora.estado}</span></td><td className="panel-acciones">{hora.estado !== 'Cancelada' && <button type="button" onClick={() => cancelarHora(hora)}>Cancelar</button>}</td></tr>)}</tbody>
         </table></div>
       </section>
     </main>
