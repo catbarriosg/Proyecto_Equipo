@@ -55,6 +55,7 @@ function PerfilPaciente() {
           </div>
           <div className="perfil-acciones-react">
             <Link className="perfil-boton" to="/mis-horas">Mis horas médicas</Link>
+            <Link className="perfil-boton perfil-boton-secundario" to="/historial-atenciones">Historial de atenciones</Link>
             <Link className="perfil-boton perfil-boton-secundario" to="/agendar-hora">Agendar una hora</Link>
           </div>
         </section>

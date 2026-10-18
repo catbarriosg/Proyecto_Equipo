@@ -1,12 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
-async function cifrarContrasena(contrasena, correo) {
-  const texto = `${correo.trim().toLowerCase()}:${contrasena}`
-  const bytes = new TextEncoder().encode(texto)
-  const resumen = await window.crypto.subtle.digest('SHA-256', bytes)
-  return Array.from(new Uint8Array(resumen), (byte) => byte.toString(16).padStart(2, '0')).join('')
-}
+import { cifrarContrasena } from './auth.js'
 
 function RegistroPaciente() {
   const navegar = useNavigate()
@@ -67,7 +61,7 @@ function RegistroPaciente() {
         return
       }
       const usuario = {
-        nombre, apellido, correo, fechaNacimiento: datos.fechaNacimiento,
+        nombre, apellido, correo, rol: 'paciente', fechaNacimiento: datos.fechaNacimiento,
         prevision: datos.prevision,
         contrasena: await cifrarContrasena(datos.contrasena, correo),
         fechaRegistro: new Date().toISOString(),
