@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import './App.css'
+import Accesibilidad from './components/Accesibilidad'
 import { Routes, Route } from 'react-router-dom'
 import Header from './Header'
 import Inicio from './Inicio'
@@ -58,6 +59,7 @@ function App() {
 
   return (
     <div className="app-shell">
+      <Accesibilidad />
       <Header />
 
       <Routes>
