@@ -22,35 +22,43 @@ function QuienesSomos() {
   return (
     <main className="quienes-somos-react">
       <section className="qs-hero">
-        <div className="qs-hero-texto">
-          <span className="qs-etiqueta">CLÍNICA AGENDA MÉDICA</span>
-          <h1>Quiénes somos</h1>
-          <p>
-            Trabajamos cada día para entregar una atención médica cercana,
-            profesional y de calidad, poniendo a nuestros pacientes en el centro
-            de cada experiencia.
-          </p>
-          <Link className="qs-boton" to="/agendar-hora">Agenda tu hora</Link>
+        <div className="row g-5 align-items-center">
+          <div className="col-12 col-md-6 qs-hero-texto">
+            <span className="qs-etiqueta">CLÍNICA AGENDA MÉDICA</span>
+            <h1>Quiénes somos</h1>
+            <p>
+              Trabajamos cada día para entregar una atención médica cercana,
+              profesional y de calidad, poniendo a nuestros pacientes en el centro
+              de cada experiencia.
+            </p>
+            <Link className="qs-boton" to="/agendar-hora">Agenda tu hora</Link>
+          </div>
+          <div className="col-12 col-md-6">
+            <img src="/box-clinica.png" alt="Espacio de atención en Clínica Agenda Médica" />
+          </div>
         </div>
-        <img src="/box-clinica.png" alt="Espacio de atención en Clínica Agenda Médica" />
       </section>
 
       <section className="qs-clinica">
-        <div>
-          <span className="qs-etiqueta">SOBRE NOSOTROS</span>
-          <h2>Nuestra clínica</h2>
-          <p>
-            En Clínica Agenda Médica contamos con profesionales de distintas
-            especialidades, comprometidos con entregar una atención oportuna y
-            personalizada.
-          </p>
-          <p>
-            Nuestro sistema de agenda médica busca facilitar el acceso a la
-            atención, permitiendo encontrar profesionales, revisar horas
-            disponibles y gestionar reservas de manera sencilla.
-          </p>
+        <div className="row g-5 align-items-center">
+          <div className="col-12 col-md-6">
+            <span className="qs-etiqueta">SOBRE NOSOTROS</span>
+            <h2>Nuestra clínica</h2>
+            <p>
+              En Clínica Agenda Médica contamos con profesionales de distintas
+              especialidades, comprometidos con entregar una atención oportuna y
+              personalizada.
+            </p>
+            <p>
+              Nuestro sistema de agenda médica busca facilitar el acceso a la
+              atención, permitiendo encontrar profesionales, revisar horas
+              disponibles y gestionar reservas de manera sencilla.
+            </p>
+          </div>
+          <div className="col-12 col-md-6">
+            <img src="/recepcion-clinica.png" alt="Recepción de Clínica Agenda Médica" loading="lazy" />
+          </div>
         </div>
-        <img src="/recepcion-clinica.png" alt="Recepción de Clínica Agenda Médica" loading="lazy" />
       </section>
 
       <section className="qs-proposito">
@@ -58,25 +66,29 @@ function QuienesSomos() {
           <span className="qs-etiqueta">NUESTRO PROPÓSITO</span>
           <h2>Misión y visión</h2>
         </div>
-        <div className="qs-proposito-grid">
-          <article className="qs-tarjeta-institucional">
-            <span aria-hidden="true">🎯</span>
-            <h3>Nuestra misión</h3>
-            <p>
-              Entregar atención médica cercana, oportuna y de calidad,
-              facilitando el acceso de nuestros pacientes a profesionales de
-              distintas especialidades.
-            </p>
-          </article>
-          <article className="qs-tarjeta-institucional">
-            <span aria-hidden="true">🌟</span>
-            <h3>Nuestra visión</h3>
-            <p>
-              Ser una clínica reconocida por la calidad de su atención, el
-              compromiso de sus profesionales y el uso de herramientas digitales
-              que mejoren la experiencia de nuestros pacientes.
-            </p>
-          </article>
+        <div className="row g-4">
+          <div className="col-12 col-sm-6">
+            <article className="qs-tarjeta-institucional h-100">
+              <span aria-hidden="true">🎯</span>
+              <h3>Nuestra misión</h3>
+              <p>
+                Entregar atención médica cercana, oportuna y de calidad,
+                facilitando el acceso de nuestros pacientes a profesionales de
+                distintas especialidades.
+              </p>
+            </article>
+          </div>
+          <div className="col-12 col-sm-6">
+            <article className="qs-tarjeta-institucional h-100">
+              <span aria-hidden="true">🌟</span>
+              <h3>Nuestra visión</h3>
+              <p>
+                Ser una clínica reconocida por la calidad de su atención, el
+                compromiso de sus profesionales y el uso de herramientas digitales
+                que mejoren la experiencia de nuestros pacientes.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -85,13 +97,15 @@ function QuienesSomos() {
           <span className="qs-etiqueta">LO QUE NOS REPRESENTA</span>
           <h2>Nuestros valores</h2>
         </div>
-        <div className="qs-valores-grid">
+        <div className="row g-4">
           {valores.map((valor) => (
-            <article className="qs-valor-card" key={valor.titulo}>
-              <span aria-hidden="true">{valor.icono}</span>
-              <h3>{valor.titulo}</h3>
-              <p>{valor.descripcion}</p>
-            </article>
+            <div className="col-12 col-md-4" key={valor.titulo}>
+              <article className="qs-valor-card h-100">
+                <span aria-hidden="true">{valor.icono}</span>
+                <h3>{valor.titulo}</h3>
+                <p>{valor.descripcion}</p>
+              </article>
+            </div>
           ))}
         </div>
       </section>

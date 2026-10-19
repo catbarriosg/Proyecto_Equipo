@@ -139,9 +139,9 @@ function AgendarHora() {
           {esMedico && !medicoPropio && (
             <p className="login-mensaje login-error" role="alert">Tu cuenta no está asociada a un médico activo. Comunícate con la administración.</p>
           )}
-          <div className="agenda-campos-grid">
+          <div className="row gx-4 gy-3">
             {!esPaciente && (
-              <div className="agenda-campo">
+              <div className="col-12 col-sm-6 agenda-campo">
                 <label htmlFor="rut-paciente">RUT del paciente</label>
                 <input id="rut-paciente" type="text" value={rutPaciente} maxLength={12}
                   onChange={(event) => setRutPaciente(formatearRut(event.target.value))}
@@ -149,14 +149,14 @@ function AgendarHora() {
                 <small className="agenda-ayuda">El paciente debe estar registrado en la clínica.</small>
               </div>
             )}
-            <div className="agenda-campo">
+            <div className="col-12 col-sm-6 agenda-campo">
               <label htmlFor="especialidad">Especialidad</label>
               <select id="especialidad" value={especialidadActual} onChange={cambiarEspecialidad} disabled={esMedico} required>
                 <option value="">Selecciona una especialidad</option>
                 {especialidades.map((opcion) => <option key={opcion.id} value={opcion.nombre}>{opcion.nombre}</option>)}
               </select>
             </div>
-            <div className="agenda-campo">
+            <div className="col-12 col-sm-6 agenda-campo">
               <label htmlFor="medico">Médico</label>
               <select id="medico" value={medicoElegido?.id || ''} onChange={cambiarMedico} disabled={!especialidadActual || esMedico} required>
                 <option value="">Selecciona un médico</option>
@@ -166,7 +166,7 @@ function AgendarHora() {
                 <small className="agenda-ayuda">No hay médicos disponibles para esta especialidad.</small>
               )}
             </div>
-            <div className="agenda-campo">
+            <div className="col-12 col-sm-6 agenda-campo">
               <label htmlFor="motivo">Motivo de la consulta <span className="registro-opcional">(opcional)</span></label>
               <input id="motivo" type="text" value={motivo} maxLength={300}
                 onChange={(event) => setMotivo(event.target.value)} placeholder="Ej: control anual" />

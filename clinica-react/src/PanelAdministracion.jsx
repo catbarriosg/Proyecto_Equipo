@@ -212,9 +212,11 @@ function PanelAdministracion() {
       {datos && (
         <>
           <section className="panel-admin-resumen" aria-label="Resumen de registros">
-            <article><strong>{datos.pacientes.filter((paciente) => paciente.activo).length}</strong><span>Pacientes activos</span></article>
-            <article><strong>{medicos.filter((medico) => medico.activo).length}</strong><span>Médicos activos</span></article>
-            <article><strong>{datos.citas.filter((cita) => cita.estado === 'CONFIRMADA').length}</strong><span>Horas confirmadas</span></article>
+            <div className="row g-2 g-sm-3">
+              <div className="col-4"><article className="h-100"><strong>{datos.pacientes.filter((paciente) => paciente.activo).length}</strong><span>Pacientes activos</span></article></div>
+              <div className="col-4"><article className="h-100"><strong>{medicos.filter((medico) => medico.activo).length}</strong><span>Médicos activos</span></article></div>
+              <div className="col-4"><article className="h-100"><strong>{datos.citas.filter((cita) => cita.estado === 'CONFIRMADA').length}</strong><span>Horas confirmadas</span></article></div>
+            </div>
           </section>
           {aviso && <p className="panel-admin-aviso" role="status">{aviso}</p>}
 

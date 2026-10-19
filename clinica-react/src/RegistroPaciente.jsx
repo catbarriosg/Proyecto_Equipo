@@ -103,28 +103,28 @@ function RegistroPaciente() {
               : <small className="registro-ayuda">Se usa para identificarte en la clínica.</small>}
           </div>
 
-          <div className="registro-grid">
-            <div className="login-campo">
+          <div className="row gx-3">
+            <div className="col-12 col-sm-6 login-campo">
               <label htmlFor="registro-nombre">Nombre <span aria-hidden="true">*</span></label>
               <input id="registro-nombre" autoComplete="given-name" maxLength={30}
                 value={datos.nombre} onChange={(e) => cambiar('nombre', e.target.value)} required />
             </div>
-            <div className="login-campo">
+            <div className="col-12 col-sm-6 login-campo">
               <label htmlFor="registro-apellido">Apellido <span aria-hidden="true">*</span></label>
               <input id="registro-apellido" autoComplete="family-name" maxLength={30}
                 value={datos.apellido} onChange={(e) => cambiar('apellido', e.target.value)} required />
             </div>
           </div>
 
-          <div className="registro-grid">
-            <div className="login-campo">
+          <div className="row gx-3">
+            <div className="col-12 col-sm-6 login-campo">
               <label htmlFor="registro-correo">Correo electrónico <span aria-hidden="true">*</span></label>
               <input id="registro-correo" type="email" autoComplete="email" maxLength={80}
                 placeholder="Ej: ana.perez@gmail.com" value={datos.correo}
                 onChange={(e) => cambiar('correo', e.target.value)} required />
               <small className="registro-ayuda">Se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</small>
             </div>
-            <div className="login-campo">
+            <div className="col-12 col-sm-6 login-campo">
               <label htmlFor="registro-telefono">Teléfono <span className="registro-opcional">(opcional)</span></label>
               <input id="registro-telefono" type="tel" autoComplete="tel" maxLength={16}
                 placeholder="Ej: +56912345678" value={datos.telefono}
@@ -132,13 +132,13 @@ function RegistroPaciente() {
             </div>
           </div>
 
-          <div className="registro-grid">
-            <div className="login-campo">
+          <div className="row gx-3">
+            <div className="col-12 col-sm-6 login-campo">
               <label htmlFor="registro-fecha">Fecha de nacimiento <span aria-hidden="true">*</span></label>
               <input id="registro-fecha" type="date" autoComplete="bday" min={fechaMinima} max={hoy}
                 value={datos.fechaNacimiento} onChange={(e) => cambiar('fechaNacimiento', e.target.value)} required />
             </div>
-            <div className="login-campo">
+            <div className="col-12 col-sm-6 login-campo">
               <label htmlFor="registro-prevision">Previsión médica <span className="registro-opcional">(opcional)</span></label>
               <select id="registro-prevision" value={datos.prevision}
                 onChange={(e) => cambiar('prevision', e.target.value)}>

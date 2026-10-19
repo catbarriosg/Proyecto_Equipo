@@ -20,31 +20,33 @@ function Especialidades() {
       <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} />
 
       {especialidades && (
-        <section className="especialidades-grid" aria-label="Especialidades disponibles">
+        <section className="row g-4" aria-label="Especialidades disponibles">
           {especialidades.map((especialidad) => (
-            <article className="especialidad-card-react" key={especialidad.slug}>
-              <span className="especialidad-icono-react" aria-hidden="true">
-                {especialidad.icono}
-              </span>
-              <h2>{especialidad.nombre}</h2>
-              <p>{especialidad.descripcion}</p>
-              <div className="especialidad-acciones-react">
-                <Link
-                  className="especialidad-boton-profesionales"
-                  to={`/medicos?especialidad=${especialidad.slug}`}
-                  aria-label={`Ver profesionales de ${especialidad.nombre}`}
-                >
-                  Ver profesionales
-                </Link>
-                <Link
-                  className="especialidad-enlace-agenda"
-                  to={`/agendar-hora?especialidad=${especialidad.slug}`}
-                  aria-label={`Agendar hora en ${especialidad.nombre}`}
-                >
-                  Agendar hora <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </article>
+            <div className="col-12 col-sm-6 col-lg-4" key={especialidad.slug}>
+              <article className="especialidad-card-react h-100">
+                <span className="especialidad-icono-react" aria-hidden="true">
+                  {especialidad.icono}
+                </span>
+                <h2>{especialidad.nombre}</h2>
+                <p>{especialidad.descripcion}</p>
+                <div className="especialidad-acciones-react">
+                  <Link
+                    className="especialidad-boton-profesionales"
+                    to={`/medicos?especialidad=${especialidad.slug}`}
+                    aria-label={`Ver profesionales de ${especialidad.nombre}`}
+                  >
+                    Ver profesionales
+                  </Link>
+                  <Link
+                    className="especialidad-enlace-agenda"
+                    to={`/agendar-hora?especialidad=${especialidad.slug}`}
+                    aria-label={`Agendar hora en ${especialidad.nombre}`}
+                  >
+                    Agendar hora <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
+              </article>
+            </div>
           ))}
         </section>
       )}

@@ -29,27 +29,31 @@ function Inicio() {
   return (
     <main className="inicio-react">
       <section className="inicio-hero">
-        <div className="inicio-hero-texto">
-          <span className="inicio-etiqueta">CLÍNICA AGENDA MÉDICA</span>
-          <h1>Tu salud, nuestra prioridad</h1>
-          <p>
-            En Clínica Agenda Médica nos preocupamos por entregarte una atención
-            cercana, profesional y de calidad.
-          </p>
-          <div className="inicio-acciones">
-            <Link className="inicio-boton inicio-boton-principal" to="/agendar-hora">
-              Agendar hora médica
-            </Link>
-            <Link className="inicio-boton inicio-boton-secundario" to="/especialidades">
-              Conocer especialidades
-            </Link>
+        <div className="row g-5 align-items-center">
+          <div className="col-12 col-md-6 inicio-hero-texto">
+            <span className="inicio-etiqueta">CLÍNICA AGENDA MÉDICA</span>
+            <h1>Tu salud, nuestra prioridad</h1>
+            <p>
+              En Clínica Agenda Médica nos preocupamos por entregarte una atención
+              cercana, profesional y de calidad.
+            </p>
+            <div className="inicio-acciones">
+              <Link className="inicio-boton inicio-boton-principal" to="/agendar-hora">
+                Agendar hora médica
+              </Link>
+              <Link className="inicio-boton inicio-boton-secundario" to="/especialidades">
+                Conocer especialidades
+              </Link>
+            </div>
+          </div>
+          <div className="col-12 col-md-6">
+            <img
+              className="inicio-hero-imagen"
+              src="/fachada-clinica.png"
+              alt="Fachada de Clínica Agenda Médica"
+            />
           </div>
         </div>
-        <img
-          className="inicio-hero-imagen"
-          src="/fachada-clinica.png"
-          alt="Fachada de Clínica Agenda Médica"
-        />
       </section>
 
       <section className="inicio-seccion" aria-labelledby="inicio-servicios-titulo">
@@ -58,13 +62,15 @@ function Inicio() {
           <h2 id="inicio-servicios-titulo">Nuestros servicios</h2>
           <p>Te acompañamos para que acceder a tu atención médica sea más simple.</p>
         </div>
-        <div className="inicio-servicios">
+        <div className="row g-4">
           {servicios.map((servicio) => (
-            <article className="inicio-servicio-card" key={servicio.titulo}>
-              <span className="inicio-servicio-icono" aria-hidden="true">{servicio.icono}</span>
-              <h3>{servicio.titulo}</h3>
-              <p>{servicio.descripcion}</p>
-            </article>
+            <div className="col-12 col-md-4" key={servicio.titulo}>
+              <article className="inicio-servicio-card h-100">
+                <span className="inicio-servicio-icono" aria-hidden="true">{servicio.icono}</span>
+                <h3>{servicio.titulo}</h3>
+                <p>{servicio.descripcion}</p>
+              </article>
+            </div>
           ))}
         </div>
       </section>
@@ -109,19 +115,23 @@ function Inicio() {
           <span className="inicio-etiqueta">EXPERIENCIAS</span>
           <h2 id="inicio-opiniones-titulo">Opiniones de nuestros pacientes</h2>
         </div>
-        <div className="inicio-opiniones-grid">
-          <article className="inicio-opinion-card">
-            <h3>Excelente atención</h3>
-            <p>“La atención fue muy buena y el proceso para agendar mi hora fue rápido y sencillo.”</p>
-            <p className="inicio-estrellas" aria-label="Calificación: 5 de 5">★★★★★</p>
-            <strong>Paciente de Clínica Agenda Médica</strong>
-          </article>
-          <article className="inicio-opinion-card">
-            <h3>Muy buenos profesionales</h3>
-            <p>“El médico explicó todo con claridad y recibí una atención muy cercana y profesional.”</p>
-            <p className="inicio-estrellas" aria-label="Calificación: 5 de 5">★★★★★</p>
-            <strong>Paciente de Clínica Agenda Médica</strong>
-          </article>
+        <div className="row g-4">
+          <div className="col-12 col-sm-6">
+            <article className="inicio-opinion-card h-100">
+              <h3>Excelente atención</h3>
+              <p>“La atención fue muy buena y el proceso para agendar mi hora fue rápido y sencillo.”</p>
+              <p className="inicio-estrellas" aria-label="Calificación: 5 de 5">★★★★★</p>
+              <strong>Paciente de Clínica Agenda Médica</strong>
+            </article>
+          </div>
+          <div className="col-12 col-sm-6">
+            <article className="inicio-opinion-card h-100">
+              <h3>Muy buenos profesionales</h3>
+              <p>“El médico explicó todo con claridad y recibí una atención muy cercana y profesional.”</p>
+              <p className="inicio-estrellas" aria-label="Calificación: 5 de 5">★★★★★</p>
+              <strong>Paciente de Clínica Agenda Médica</strong>
+            </article>
+          </div>
         </div>
       </section>
     </main>

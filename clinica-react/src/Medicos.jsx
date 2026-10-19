@@ -60,9 +60,9 @@ function Medicos() {
           {medicos.length === 0 ? (
             <p className="estado-vacio">No encontramos médicos con esos filtros.</p>
           ) : (
-            <ul className="lista-medicos">
+            <ul className="lista-medicos row g-4">
               {medicos.map((medico) => (
-                <li key={medico.id}>
+                <li className="col-12 col-sm-6 col-lg-4" key={medico.id}>
                   <article className="medico-card">
                     <div className="foto-medico">
                       <img src={medico.imagenUrl || '/logo.png'} alt={`Ilustración de ${medico.nombre}`} />

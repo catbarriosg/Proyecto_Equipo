@@ -437,11 +437,8 @@ main > ul:not(.lista-horas) li {
 }
 
 .lista-medicos {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   list-style: none;
-  margin: 0;
+  margin-bottom: 0;
   padding: 0;
 }
 
@@ -524,19 +521,9 @@ main > ul:not(.lista-horas) li {
   color: #ffffff;
 }
 
-@media (max-width: 900px) {
-  .lista-medicos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 600px) {
   .medicos-hero h1 {
     font-size: 34px;
-  }
-
-  .lista-medicos {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -562,10 +549,6 @@ main > ul:not(.lista-horas) li {
 }
 
 .contacto-contenido {
-  align-items: start;
-  display: grid;
-  gap: 32px;
-  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
   text-align: left;
 }
 
@@ -646,10 +629,6 @@ main > ul:not(.lista-horas) li {
 }
 
 @media (max-width: 750px) {
-  .contacto-contenido {
-    grid-template-columns: 1fr;
-  }
-
   .contacto-hero h1 {
     font-size: 34px;
   }
@@ -677,9 +656,6 @@ main > ul:not(.lista-horas) li {
 }
 
 .sucursales-lista {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   text-align: left;
 }
 
@@ -760,10 +736,6 @@ main > ul:not(.lista-horas) li {
 }
 
 @media (max-width: 700px) {
-  .sucursales-lista {
-    grid-template-columns: 1fr;
-  }
-
   .sucursales-hero h1 {
     font-size: 34px;
   }
@@ -1092,12 +1064,6 @@ main > ul:not(.lista-horas) li {
   color: #b42318;
 }
 
-.registro-grid {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .login-campo select {
   background: #ffffff;
   border: 1px solid #b8dfe3;
@@ -1132,12 +1098,7 @@ main > ul:not(.lista-horas) li {
   margin-top: 6px;
 }
 
-@media (max-width: 600px) {
-  .registro-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-}
+
 .perfil-pagina-react {
   margin: 0 auto;
   max-width: 850px;
@@ -1594,9 +1555,6 @@ main > ul:not(.lista-horas) li {
 }
 
 .panel-admin-resumen {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: 0 auto 28px;
   max-width: 850px;
 }
@@ -1745,10 +1703,6 @@ main > ul:not(.lista-horas) li {
     font-size: 34px;
   }
 
-  .panel-admin-resumen {
-    gap: 8px;
-  }
-
   .panel-admin-resumen article {
     padding: 13px 8px;
     text-align: center;
@@ -1892,13 +1846,9 @@ main > ul:not(.lista-horas) li {
 }
 
 .inicio-hero {
-  align-items: center;
   background: linear-gradient(120deg, #ffffff 0%, #f1fcfc 100%);
   border: 1px solid #d6eeee;
   border-radius: 22px;
-  display: grid;
-  gap: clamp(24px, 5vw, 64px);
-  grid-template-columns: 1fr 0.9fr;
   overflow: hidden;
   padding: clamp(26px, 5vw, 58px);
 }
@@ -1991,13 +1941,6 @@ main > ul:not(.lista-horas) li {
   margin: 8px 0 10px;
 }
 
-.inicio-servicios,
-.inicio-opiniones-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 .inicio-servicio-card,
 .inicio-opinion-card {
   background: #ffffff;
@@ -2048,10 +1991,6 @@ main > ul:not(.lista-horas) li {
   margin-top: 68px;
 }
 
-.inicio-opiniones-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .inicio-opinion-card h3 {
   margin-top: 0;
 }
@@ -2073,16 +2012,8 @@ main > ul:not(.lista-horas) li {
     padding-top: 26px;
   }
 
-  .inicio-hero {
-    grid-template-columns: 1fr;
-  }
-
   .inicio-hero-imagen {
     height: 250px;
-  }
-
-  .inicio-servicios {
-    grid-template-columns: 1fr;
   }
 
 }
@@ -2092,24 +2023,12 @@ main > ul:not(.lista-horas) li {
   .inicio-boton {
     width: 100%;
   }
-
-  .inicio-opiniones-grid {
-    grid-template-columns: 1fr;
-  }
 }
 .quienes-somos-react {
   margin: 0 auto;
   max-width: 1240px;
   padding: 42px clamp(18px, 4vw, 48px) 64px;
   text-align: left;
-}
-
-.qs-hero,
-.qs-clinica {
-  align-items: center;
-  display: grid;
-  gap: clamp(24px, 5vw, 60px);
-  grid-template-columns: 1fr 0.9fr;
 }
 
 .qs-hero {
@@ -2195,13 +2114,6 @@ main > ul:not(.lista-horas) li {
   text-align: center;
 }
 
-.qs-proposito-grid,
-.qs-valores-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .qs-tarjeta-institucional,
 .qs-valor-card {
   background: #ffffff;
@@ -2225,10 +2137,6 @@ main > ul:not(.lista-horas) li {
 .qs-valores,
 .qs-video {
   margin-top: 68px;
-}
-
-.qs-valores-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .qs-video-marco {
@@ -2277,26 +2185,13 @@ main > ul:not(.lista-horas) li {
     padding-top: 26px;
   }
 
-  .qs-hero,
-  .qs-clinica {
-    grid-template-columns: 1fr;
-  }
-
   .qs-hero img,
   .qs-clinica img {
     height: 250px;
   }
-
-  .qs-valores-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
-@media (max-width: 560px) {
-  .qs-proposito-grid {
-    grid-template-columns: 1fr;
-  }
-}
+
 .qs-tarjeta-institucional,
 .qs-valor-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -2349,12 +2244,6 @@ main > ul:not(.lista-horas) li {
   font-size: 18px;
   line-height: 1.7;
   margin: 0;
-}
-
-.especialidades-grid {
-  display: grid;
-  gap: 22px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .especialidad-card-react {
@@ -2433,19 +2322,9 @@ main > ul:not(.lista-horas) li {
 
 
 
-@media (max-width: 900px) {
-  .especialidades-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 600px) {
   .pagina-especialidades {
     padding-top: 26px;
-  }
-
-  .especialidades-grid {
-    grid-template-columns: 1fr;
   }
 
   .especialidad-card-react {
@@ -2530,12 +2409,6 @@ main > ul:not(.lista-horas) li {
 .formulario-agenda-react {
   max-width: 960px;
   padding: clamp(20px, 4vw, 36px);
-}
-
-.agenda-campos-grid {
-  display: grid;
-  gap: 18px 22px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .agenda-campo {
@@ -2777,10 +2650,6 @@ main > ul:not(.lista-horas) li {
 }
 
 @media (max-width: 650px) {
-  .agenda-campos-grid {
-    grid-template-columns: 1fr;
-  }
-
   .calendario-react-dias {
     gap: 3px;
   }

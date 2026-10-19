@@ -18,20 +18,22 @@ function Sucursales() {
       <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} />
 
       {sucursales && (
-        <section className="sucursales-lista" aria-label="Sucursales disponibles">
+        <section className="sucursales-lista row g-4" aria-label="Sucursales disponibles">
           {sucursales.map((sucursal) => (
-            <article className="sucursal-card-react" key={sucursal.id}>
-              <figure>
-                <img src={sucursal.imagenUrl || '/fachada-clinica.png'} alt={sucursal.descripcionImagen || `Sucursal ${sucursal.nombre}`} />
-              </figure>
-              <section className="sucursal-info-react">
-                <h2>{sucursal.nombre}</h2>
-                <address>📍 {sucursal.direccion}</address>
-                <p>📞 <a href={`tel:${sucursal.telefono}`}>{formatearTelefono(sucursal.telefono)}</a></p>
-                <p className="sucursal-horario-react">🕒 {sucursal.horario.map((linea, indice) => ( <span key={linea}>{linea}{indice < sucursal.horario.length - 1 && <br />}</span> ))}</p>
-                <Link to="/agendar-hora" className="boton-sucursal">Agendar hora</Link>
-              </section>
-            </article>
+            <div className="col-12 col-md-6" key={sucursal.id}>
+              <article className="sucursal-card-react h-100">
+                <figure>
+                  <img src={sucursal.imagenUrl || '/fachada-clinica.png'} alt={sucursal.descripcionImagen || `Sucursal ${sucursal.nombre}`} />
+                </figure>
+                <section className="sucursal-info-react">
+                  <h2>{sucursal.nombre}</h2>
+                  <address>📍 {sucursal.direccion}</address>
+                  <p>📞 <a href={`tel:${sucursal.telefono}`}>{formatearTelefono(sucursal.telefono)}</a></p>
+                  <p className="sucursal-horario-react">🕒 {sucursal.horario.map((linea, indice) => ( <span key={linea}>{linea}{indice < sucursal.horario.length - 1 && <br />}</span> ))}</p>
+                  <Link to="/agendar-hora" className="boton-sucursal">Agendar hora</Link>
+                </section>
+              </article>
+            </div>
           ))}
         </section>
       )}
