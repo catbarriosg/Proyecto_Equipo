@@ -65,6 +65,14 @@ public class PersonalDTO {
     @Schema(description = "Identificador del hospital donde trabaja", example = "1")
     private Long hospitalId;
 
+    @Size(max = 500, message = "La descripción no puede exceder 500 caracteres")
+    @Schema(description = "Presentación del profesional para la página de médicos")
+    private String descripcion;
+
+    @Size(max = 255, message = "La ruta de la imagen no puede exceder 255 caracteres")
+    @Schema(description = "Ruta de la foto del profesional", example = "/logo-hombre.png")
+    private String imagenUrl;
+
     @Schema(description = "Fecha y hora de ingreso del personal", example = "2020-01-15T10:30:00")
     private LocalDateTime fechaIngreso;
 

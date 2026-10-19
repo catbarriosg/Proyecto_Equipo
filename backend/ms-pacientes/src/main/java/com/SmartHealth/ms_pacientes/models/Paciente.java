@@ -31,6 +31,15 @@ public class Paciente {
     @Past(message = "La fecha de nacimiento no puede ser en el futuro")
     private LocalDate fechaNacimiento;
 
+    // Fonasa, Isapre o Particular (opcional)
+    @Size(max = 40, message = "La previsión no puede superar 40 caracteres")
+    @Column(length = 40)
+    private String prevision;
+
+    @Pattern(regexp = "^$|^[+]?[0-9]{8,15}$", message = "El teléfono debe tener entre 8 y 15 dígitos")
+    @Column(length = 20)
+    private String telefono;
+
     @Column(name = "creado_en", updatable = false)
     private java.time.LocalDateTime creadoEn;
 
@@ -42,7 +51,7 @@ public class Paciente {
     // Campo para marcar si el paciente está activo o inactivo (soft delete). No es un delete real, así mantenemos el historial clínico aunque el paciente ya no esté activo.
     @Column(nullable = false)
     private Boolean activo = true;
-    
+
     @Column(name = "id_historial_clinico")
     private Long idHistorialClinico;
 }

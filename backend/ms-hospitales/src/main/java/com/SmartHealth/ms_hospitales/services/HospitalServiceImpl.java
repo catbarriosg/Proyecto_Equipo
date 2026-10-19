@@ -3,6 +3,7 @@ package com.SmartHealth.ms_hospitales.services;
 import com.SmartHealth.ms_hospitales.models.Hospital;
 import com.SmartHealth.ms_hospitales.repositories.HospitalRepository;
 import com.SmartHealth.ms_hospitales.enums.RegionChile;
+import com.SmartHealth.ms_hospitales.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class HospitalServiceImpl implements HospitalService {
         Hospital hospital = repository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("[HospitalService] Hospital con ID {} no encontrado", id);
-                    return new RuntimeException("Hospital con ID " + id + " no encontrado en el sistema.");
+                    return ApiException.noEncontrado("No encontramos la sucursal con ID " + id + ".");
                 });
         log.info("[HospitalService] Hospital encontrado: {}", hospital.getNombre());
         return hospital;
@@ -47,7 +48,7 @@ public class HospitalServiceImpl implements HospitalService {
             String regionesValidas = RegionChile.getRegionesValidas();
             String mensaje = "Región inválida: '" + region + "'. Regiones válidas: " + regionesValidas;
             log.warn("[HospitalService] {}", mensaje);
-            throw new RuntimeException(mensaje);
+            throw ApiException.solicitudInvalida(mensaje);
         }
         
         log.debug("[HospitalService] Buscando hospitales en región: {}", region);
@@ -64,7 +65,7 @@ public class HospitalServiceImpl implements HospitalService {
         if (!nivelComplejidad.matches("^(BAJA|MEDIANA|ALTA)$")) {
             String mensaje = "Nivel de complejidad inválido: '" + nivelComplejidad + "'. Niveles válidos: BAJA, MEDIANA, ALTA";
             log.warn("[HospitalService] {}", mensaje);
-            throw new RuntimeException(mensaje);
+            throw ApiException.solicitudInvalida(mensaje);
         }
         
         log.debug("[HospitalService] Buscando hospitales con complejidad: {}", nivelComplejidad);
@@ -79,11 +80,11 @@ public class HospitalServiceImpl implements HospitalService {
 
         if (repository.existsByTelefono(hospital.getTelefono())) {
             log.warn("[HospitalService] Ya existe un hospital con el teléfono: {}", hospital.getTelefono());
-            throw new RuntimeException("Ya existe un hospital registrado con ese número de teléfono.");
+            throw ApiException.conflicto("Ya existe una sucursal registrada con ese número de teléfono.");
         }
         if (repository.existsByCorreoInstitucional(hospital.getCorreoInstitucional())) {
             log.warn("[HospitalService] Ya existe un hospital con el correo: {}", hospital.getCorreoInstitucional());
-            throw new RuntimeException("Ya existe un hospital registrado con ese correo institucional.");
+            throw ApiException.conflicto("Ya existe una sucursal registrada con ese correo institucional.");
         }
 
         Hospital guardado = repository.save(hospital);
@@ -103,12 +104,15 @@ public class HospitalServiceImpl implements HospitalService {
             h.setCorreoInstitucional(datosNuevos.getCorreoInstitucional());
             h.setNivelComplejidad(datosNuevos.getNivelComplejidad());
             h.setCapacidadTotalCamas(datosNuevos.getCapacidadTotalCamas());
+            h.setHorario(datosNuevos.getHorario());
+            h.setImagenUrl(datosNuevos.getImagenUrl());
+            h.setDescripcionImagen(datosNuevos.getDescripcionImagen());
             Hospital actualizado = repository.save(h);
             log.info("[HospitalService] Hospital ID {} actualizado correctamente", id);
             return actualizado;
         }).orElseThrow(() -> {
             log.error("[HospitalService] No se pudo actualizar: hospital con ID {} no existe", id);
-            return new RuntimeException("Hospital con ID " + id + " no encontrado para actualizar.");
+            return ApiException.noEncontrado("No encontramos la sucursal con ID " + id + ".");
         });
     }
 
@@ -118,7 +122,7 @@ public class HospitalServiceImpl implements HospitalService {
         Hospital hospital = repository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("[HospitalService] No se puede desactivar: hospital con ID {} no existe", id);
-                    return new RuntimeException("No se puede desactivar: Hospital con ID " + id + " no existe.");
+                    return ApiException.noEncontrado("No encontramos la sucursal con ID " + id + ".");
                 });
         hospital.setActivo(false);
         Hospital desactivado = repository.save(hospital);

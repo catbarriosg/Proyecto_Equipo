@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 
 import com.SmartHealth.ms_historial.dtos.HistorialDTO;
-import com.SmartHealth.ms_historial.models.HistorialClinico;
+
 import com.SmartHealth.ms_historial.services.HistorialService;
 
 import java.time.LocalDateTime;

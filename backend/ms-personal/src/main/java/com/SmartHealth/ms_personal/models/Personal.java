@@ -60,6 +60,16 @@ public class Personal {
     @Column(nullable = false)
     private Long hospitalId;
 
+    // Presentación del profesional que se muestra en la página "Nuestros médicos"
+    @Size(max = 500, message = "La descripción no puede exceder 500 caracteres")
+    @Column(length = 500)
+    private String descripcion;
+
+    // Ruta de la foto o ilustración del profesional (por ejemplo /logo-mujer.png)
+    @Size(max = 255, message = "La ruta de la imagen no puede exceder 255 caracteres")
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+
     @Column(name = "fecha_ingreso", updatable = false)
     private LocalDateTime fechaIngreso;
 

@@ -43,6 +43,8 @@ public class PersonalServiceImpl implements IPersonalService {
             personal.setNumeroColegiatura(personalDTO.getNumeroColegiatura());
             personal.setDepartamento(personalDTO.getDepartamento());
             personal.setHospitalId(personalDTO.getHospitalId());
+            personal.setDescripcion(personalDTO.getDescripcion());
+            personal.setImagenUrl(personalDTO.getImagenUrl());
 
             Personal guardado = personalRepository.save(personal);
             logger.info("Personal creado exitosamente con ID: {}", guardado.getId());
@@ -222,6 +224,8 @@ public class PersonalServiceImpl implements IPersonalService {
                 personal.setNumeroColegiatura(personalDTO.getNumeroColegiatura());
                 personal.setDepartamento(personalDTO.getDepartamento());
                 personal.setHospitalId(personalDTO.getHospitalId());
+                personal.setDescripcion(personalDTO.getDescripcion());
+                personal.setImagenUrl(personalDTO.getImagenUrl());
 
                 Personal actualizado = personalRepository.save(personal);
                 logger.info("Personal actualizado exitosamente con ID: {}", id);
@@ -313,6 +317,21 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    @Override
+    public List<PersonalDTO> obtenerTodosIncluyendoInactivos() {
+        logger.info("Obteniendo todo el personal, incluidos los inactivos");
+        return personalRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public PersonalDTO cambiarEstado(Long id, boolean activo) {
+        logger.info("Cambiando estado del personal ID {} a activo={}", id, activo);
+        Personal personal = personalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Personal con ID " + id + " no encontrado"));
+        personal.setActivo(activo);
+        return convertToDTO(personalRepository.save(personal));
+    }
+
     private PersonalDTO convertToDTO(Personal personal) {
         PersonalDTO dto = new PersonalDTO();
         dto.setId(personal.getId());
@@ -325,6 +344,8 @@ public class PersonalServiceImpl implements IPersonalService {
         dto.setNumeroColegiatura(personal.getNumeroColegiatura());
         dto.setDepartamento(personal.getDepartamento());
         dto.setHospitalId(personal.getHospitalId());
+        dto.setDescripcion(personal.getDescripcion());
+        dto.setImagenUrl(personal.getImagenUrl());
         dto.setFechaIngreso(personal.getFechaIngreso());
         dto.setActivo(personal.getActivo());
         return dto;

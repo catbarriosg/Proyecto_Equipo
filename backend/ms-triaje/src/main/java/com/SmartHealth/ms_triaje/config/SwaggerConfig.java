@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
     servers = {
-        @Server(url = "http://localhost:8080/ms-triaje", description = "Servidor Gateway (Correcto)")
+        @Server(url = "http://localhost:8080", description = "Gateway")
     }
 )
 public class SwaggerConfig {

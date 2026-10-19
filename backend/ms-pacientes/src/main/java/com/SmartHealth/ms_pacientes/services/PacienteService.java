@@ -1,13 +1,14 @@
 package com.SmartHealth.ms_pacientes.services;
 
-import com.SmartHealth.ms_pacientes.models.Paciente;
+import com.SmartHealth.ms_pacientes.dtos.PacienteDTO;
+
 import java.util.List;
 
 public interface PacienteService {
-    List<Paciente> obtenerTodos();
-    Paciente guardarPaciente(Paciente paciente);
-    Paciente obtenerPorRut(String rut);
-    Paciente obtenerPorId(Long id);
-    Paciente eliminarPaciente(Long id);
-    Paciente actualizarPaciente(Long id, Paciente datosNuevos);
+    List<PacienteDTO> obtenerTodos(boolean incluirInactivos);
+    PacienteDTO crear(PacienteDTO datos);
+    PacienteDTO obtenerPorRut(String rut);
+    PacienteDTO obtenerPorId(Long id);
+    PacienteDTO actualizar(Long id, PacienteDTO datos);
+    PacienteDTO cambiarEstado(Long id, boolean activo);
 }

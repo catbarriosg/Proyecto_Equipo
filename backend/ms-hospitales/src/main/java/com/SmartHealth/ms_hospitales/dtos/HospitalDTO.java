@@ -58,6 +58,18 @@ public class HospitalDTO {
     @Schema(description = "Capacidad total de camas del hospital", example = "500")
     private int capacidadTotalCamas;
 
+    @Size(max = 500, message = "El horario no puede superar 500 caracteres")
+    @Schema(description = "Horario de atención, una línea por tramo", example = "Lunes a viernes: 08:00 a 20:00")
+    private String horario;
+
+    @Size(max = 255, message = "La ruta de la imagen no puede superar 255 caracteres")
+    @Schema(description = "Ruta de la imagen de la sucursal", example = "/fachada-clinica.png")
+    private String imagenUrl;
+
+    @Size(max = 150, message = "La descripción de la imagen no puede superar 150 caracteres")
+    @Schema(description = "Texto alternativo de la imagen", example = "Fachada de la sucursal Santiago Centro")
+    private String descripcionImagen;
+
     @Schema(description = "Fecha y hora de creación del registro", example = "2025-01-15T10:30:00")
     private LocalDateTime creadoEn;
 

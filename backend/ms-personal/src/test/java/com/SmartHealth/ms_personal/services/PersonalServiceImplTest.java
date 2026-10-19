@@ -2,7 +2,6 @@ package com.SmartHealth.ms_personal.services;
 
 import com.SmartHealth.ms_personal.clients.HospitalClient;
 import com.SmartHealth.ms_personal.dtos.PersonalDTO;
-import com.SmartHealth.ms_personal.exceptions.PersonalException;
 import com.SmartHealth.ms_personal.models.HospitalDTO;
 import com.SmartHealth.ms_personal.models.Personal;
 import com.SmartHealth.ms_personal.repositories.PersonalRepository;

@@ -1,86 +1,135 @@
 server:
-  port: 8080 # La puerta principal
+  port: 8080 # La puerta principal: el frontend solo conversa con este puerto
 
 spring:
   application:
     name: ms-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true # Permite que el gateway use Eureka para encontrar los microservicios
-      routes:
-        # --- RUTA 1: Microservicio de Pacientes 
-        - id: ms-pacientes
-          uri: lb://ms-pacientes
-          predicates:
-            - Path=/api/pacientes/**, /ms-pacientes/**
-          filters:
-            - StripPrefix=1
+      server:
+        webflux:
+          # CORS global: permite que el frontend React (Vite o nginx) llame a la API
+          globalcors:
+            add-to-simple-url-handler-mapping: true
+            cors-configurations:
+              '[/**]':
+                allowed-origin-patterns: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+                allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+                allowed-headers: "*"
+                max-age: 3600
+          # Algunos controladores antiguos agregan @CrossOrigin; se evita duplicar la cabecera
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+          routes:
+            # ---------------- Servicios de la clínica ----------------
+            - id: ms-auth
+              uri: lb://ms-auth
+              predicates:
+                - Path=/api/auth/**
 
-        # --- RUTA 2: Microservicio de Equipamiento
-        - id: ms-equipamiento
-          uri: lb://ms-equipamiento
-          predicates:
-            - Path=/api/equipamiento/**, /ms-equipamiento/**
-          filters:
-            - StripPrefix=1
+            - id: ms-citas
+              uri: lb://ms-citas
+              predicates:
+                - Path=/api/citas/**
 
-        # --- RUTA 3: Microservicio de Historial
-        - id: ms-historial
-          uri: lb://ms-historial
-          predicates:
-            - Path=/api/historial/**, /ms-historial/**
-          filters:
-            - StripPrefix=1
+            - id: ms-pacientes
+              uri: lb://ms-pacientes
+              predicates:
+                - Path=/api/pacientes/**
 
-        # --- RUTA 4: Microservicio de Hospitales
-        - id: ms-hospitales
-          uri: lb://ms-hospitales
-          predicates:
-            - Path=/api/hospitales/**, /ms-hospitales/**
-          filters:
-            - StripPrefix=1
+            # ms-personal atiende médicos, especialidades y la gestión de personal
+            - id: ms-personal
+              uri: lb://ms-personal
+              predicates:
+                - Path=/api/personal/**, /api/medicos/**, /api/especialidades/**
 
-        # --- RUTA 5: Microservicio de insumos
-        - id: ms-insumos
-          uri: lb://ms-insumos
-          predicates:
-            - Path=/api/insumos/**, /ms-insumos/**
-          filters:
-            - StripPrefix=1
+            # ms-hospitales atiende las sucursales de la clínica
+            - id: ms-hospitales
+              uri: lb://ms-hospitales
+              predicates:
+                - Path=/api/sucursales/**, /api/hospitales/**
 
-        # --- RUTA 6: Microservicio de listas de espera
-        - id: ms-listas-de-espera
-          uri: lb://ms-listas-de-espera
-          predicates:
-            - Path=/api/listas-de-espera/**, /ms-listas-de-espera/**
-          filters:
-            - StripPrefix=1
+            - id: ms-historial
+              uri: lb://ms-historial
+              predicates:
+                - Path=/api/historial/**
 
-        # --- RUTA 7: Microservicio de personal
-        - id: ms-personal
-          uri: lb://ms-personal
-          predicates:
-            - Path=/api/personal/**, /ms-personal/**
-          filters:
-            - StripPrefix=1
+            # ---------------- Servicios internos (sin vistas en el frontend) ----------------
+            - id: ms-equipamiento
+              uri: lb://ms-equipamiento
+              predicates:
+                - Path=/api/equipamiento/**
 
-        # --- RUTA 8: Microservicio de camas
-        - id: ms-camas
-          uri: lb://ms-camas
-          predicates:
-            - Path=/api/camas/**, /ms-camas/**
-          filters:
-            - StripPrefix=1
+            - id: ms-insumos
+              uri: lb://ms-insumos
+              predicates:
+                - Path=/api/insumos/**
 
-        # --- RUTA 9: Microservicio de triaje
-        - id: ms-triaje
-          uri: lb://ms-triaje
-          predicates:
-            - Path=/api/triaje/**, /ms-triaje/**
-          filters:
-            - StripPrefix=1
+            - id: ms-listas-de-espera
+              uri: lb://ms-listas-de-espera
+              predicates:
+                - Path=/api/listas-espera/**
+
+            - id: ms-camas
+              uri: lb://ms-camas
+              predicates:
+                - Path=/api/camas/**
+
+            - id: ms-triaje
+              uri: lb://ms-triaje
+              predicates:
+                - Path=/api/triaje/**
+
+            # ---------------- Documentación OpenAPI de cada servicio ----------------
+            # /ms-pacientes/v3/api-docs -> ms-pacientes /v3/api-docs (lo usa el Swagger del gateway)
+            - id: docs-ms-auth
+              uri: lb://ms-auth
+              predicates: [ Path=/ms-auth/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-citas
+              uri: lb://ms-citas
+              predicates: [ Path=/ms-citas/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-pacientes
+              uri: lb://ms-pacientes
+              predicates: [ Path=/ms-pacientes/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-personal
+              uri: lb://ms-personal
+              predicates: [ Path=/ms-personal/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-hospitales
+              uri: lb://ms-hospitales
+              predicates: [ Path=/ms-hospitales/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-historial
+              uri: lb://ms-historial
+              predicates: [ Path=/ms-historial/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-equipamiento
+              uri: lb://ms-equipamiento
+              predicates: [ Path=/ms-equipamiento/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-insumos
+              uri: lb://ms-insumos
+              predicates: [ Path=/ms-insumos/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-listas-de-espera
+              uri: lb://ms-listas-de-espera
+              predicates: [ Path=/ms-listas-de-espera/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-camas
+              uri: lb://ms-camas
+              predicates: [ Path=/ms-camas/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+            - id: docs-ms-triaje
+              uri: lb://ms-triaje
+              predicates: [ Path=/ms-triaje/v3/api-docs/** ]
+              filters: [ StripPrefix=1 ]
+
+# Clave compartida con ms-auth para validar los tokens JWT
+jwt:
+  secret: ${JWT_SECRET:clinica-agenda-medica-clave-de-desarrollo-cambiar-en-produccion}
 
 eureka:
   client:
@@ -93,21 +142,25 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     urls:
-      - name: 01. API Pacientes
+      - name: 01. API Autenticación
+        url: /ms-auth/v3/api-docs
+      - name: 02. API Citas
+        url: /ms-citas/v3/api-docs
+      - name: 03. API Pacientes
         url: /ms-pacientes/v3/api-docs
-      - name: 02. API Equipamiento
-        url: /ms-equipamiento/v3/api-docs
-      - name: 03. API Historial
-        url: /ms-historial/v3/api-docs
-      - name: 04. API Hospitales
-        url: /ms-hospitales/v3/api-docs
-      - name: 05. API Insumos
-        url: /ms-insumos/v3/api-docs
-      - name: 06. API Listas de Espera
-        url: /ms-listas-de-espera/v3/api-docs
-      - name: 07. API Personal
+      - name: 04. API Personal, médicos y especialidades
         url: /ms-personal/v3/api-docs
-      - name: 08. API Camas
+      - name: 05. API Sucursales
+        url: /ms-hospitales/v3/api-docs
+      - name: 06. API Historial
+        url: /ms-historial/v3/api-docs
+      - name: 07. API Equipamiento
+        url: /ms-equipamiento/v3/api-docs
+      - name: 08. API Insumos
+        url: /ms-insumos/v3/api-docs
+      - name: 09. API Listas de Espera
+        url: /ms-listas-de-espera/v3/api-docs
+      - name: 10. API Camas
         url: /ms-camas/v3/api-docs
-      - name: 09. API Triaje
+      - name: 11. API Triaje
         url: /ms-triaje/v3/api-docs

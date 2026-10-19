@@ -1,14 +1,33 @@
-# ====================================
-# DOCKER COMPOSE - SmartHealth Completo
-# ====================================
-# Levanta: 11 microservicios + MySQL + Eureka
+# ====================================================================
+# BACKEND - Clínica Agenda Médica (microservicios SmartHealth)
+# ====================================================================
+# Levanta MySQL, Eureka, el gateway y los microservicios.
+# Para levantar también el frontend, usa el docker-compose.yml de la raíz del proyecto.
+#
+# Solo el gateway (8080) queda expuesto: el frontend nunca llama directo a un microservicio.
+# Si cambias init-scripts, recrea la base con:  docker compose down -v
 
-version: '3.9'
+# Variables comunes a todos los microservicios
+x-entorno-base: &entorno-base
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-discovery-server:8761/eureka/
+  # Registra la IP del contenedor en Eureka (el nombre de host del contenedor no es resoluble)
+  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+  SPRING_DATASOURCE_USERNAME: smarthealth_user
+  SPRING_DATASOURCE_PASSWORD: smarthealth_pass
+  TZ: America/Santiago
+
+x-microservicio: &microservicio
+  depends_on:
+    mysql:
+      condition: service_healthy
+    ms-discovery-server:
+      condition: service_healthy
+  networks:
+    - smarthealth-network
+  restart: unless-stopped
 
 services:
-  # ====================================
-  # DATABASE - MySQL 8.0
-  # ====================================
+  # ------------------------------------------------------------------ Base de datos
   mysql:
     image: mysql:8.0
     container_name: smarthealth-mysql
@@ -17,321 +36,168 @@ services:
       MYSQL_DATABASE: smarthealth_db
       MYSQL_USER: smarthealth_user
       MYSQL_PASSWORD: smarthealth_pass
+      TZ: America/Santiago
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init-scripts:/docker-entrypoint-initdb.d  # Scripts SQL ejecutados automáticamente al iniciar
+      - ./init-scripts:/docker-entrypoint-initdb.d  # Scripts SQL ejecutados al crear el volumen
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      # Por TCP: durante la carga inicial MySQL no acepta conexiones de red, así se espera a que termine
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot123"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
     networks:
       - smarthealth-network
 
-  # ====================================
-  # EUREKA SERVICE REGISTRY
-  # ====================================
+  # ------------------------------------------------------------------ Registro de servicios
   ms-discovery-server:
-    build:
-      context: ./ms-discovery-server
-      dockerfile: Dockerfile
-    container_name: ms-discovery-8761
+    build: ./ms-discovery-server
+    container_name: ms-discovery-server
     ports:
       - "8761:8761"
     environment:
-      - SERVER_PORT=8761
-      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
-      - EUREKA_CLIENT_FETCH_REGISTRY=false
-    networks:
-      - smarthealth-network
+      SERVER_PORT: 8761
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
       interval: 15s
       timeout: 5s
-      retries: 5
+      retries: 10
+    networks:
+      - smarthealth-network
+    restart: unless-stopped
 
-  # ====================================
-  # API GATEWAY
-  # ====================================
+  # ------------------------------------------------------------------ Puerta de entrada
   ms-gateway:
-    build:
-      context: ./ms-gateway
-      dockerfile: Dockerfile
-    container_name: ms-gateway-8080
+    build: ./ms-gateway
+    container_name: ms-gateway
     ports:
       - "8080:8080"
     depends_on:
       ms-discovery-server:
         condition: service_healthy
     environment:
-      - SERVER_PORT=8080
-      - SPRING_APPLICATION_NAME=ms-gateway
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
+      SERVER_PORT: 8080
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-discovery-server:8761/eureka/
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      JWT_SECRET: ${JWT_SECRET:-clinica-agenda-medica-clave-de-desarrollo-cambiar-en-produccion}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 15s
       timeout: 5s
-      retries: 5
+      retries: 10
+    networks:
+      - smarthealth-network
+    restart: unless-stopped
 
-  # ====================================
-  # MICROSERVICIO: PACIENTES (8081)
-  # ====================================
+  # ------------------------------------------------------------------ Servicios de la clínica
+  ms-auth:
+    <<: *microservicio
+    build: ./ms-auth
+    container_name: ms-auth
+    environment:
+      <<: *entorno-base
+      SERVER_PORT: 8090
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_auth
+      JWT_SECRET: ${JWT_SECRET:-clinica-agenda-medica-clave-de-desarrollo-cambiar-en-produccion}
+
+  ms-citas:
+    <<: *microservicio
+    build: ./ms-citas
+    container_name: ms-citas
+    environment:
+      <<: *entorno-base
+      SERVER_PORT: 8091
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_citas
+
   ms-pacientes:
-    build:
-      context: ./ms-pacientes
-      dockerfile: Dockerfile
-    container_name: ms-pacientes-8081
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
+    <<: *microservicio
+    build: ./ms-pacientes
+    container_name: ms-pacientes
     environment:
-      - SERVER_PORT=8081
-      - SPRING_APPLICATION_NAME=ms-pacientes
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_pacientes
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      <<: *entorno-base
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_pacientes
 
-  # ====================================
-  # MICROSERVICIO: CAMAS (8082)
-  # ====================================
-  ms-camas:
-    build:
-      context: ./ms-camas
-      dockerfile: Dockerfile
-    container_name: ms-camas-8082
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
-    environment:
-      - SERVER_PORT=8082
-      - SPRING_APPLICATION_NAME=ms-camas
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_camas
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-
-  # ====================================
-  # MICROSERVICIO: HOSPITALES (8083)
-  # ====================================
-  ms-hospitales:
-    build:
-      context: ./ms-hospitales
-      dockerfile: Dockerfile
-    container_name: ms-hospitales-8083
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
-    environment:
-      - SERVER_PORT=8083
-      - SPRING_APPLICATION_NAME=ms-hospitales
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_hospitales
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-
-  # ====================================
-  # MICROSERVICIO: EQUIPAMIENTO (8084)
-  # ====================================
-  ms-equipamiento:
-    build:
-      context: ./ms-equipamiento
-      dockerfile: Dockerfile
-    container_name: ms-equipamiento-8084
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
-    environment:
-      - SERVER_PORT=8084
-      - SPRING_APPLICATION_NAME=ms-equipamiento
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_equipamiento
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-
-  # ====================================
-  # MICROSERVICIO: INSUMOS (8085)
-  # ====================================
-  ms-insumos:
-    build:
-      context: ./ms-insumos
-      dockerfile: Dockerfile
-    container_name: ms-insumos-8085
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
-    environment:
-      - SERVER_PORT=8085
-      - SPRING_APPLICATION_NAME=ms-insumos
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_insumos
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-
-  # ====================================
-  # MICROSERVICIO: PERSONAL (8086)
-  # ====================================
   ms-personal:
-    build:
-      context: ./ms-personal
-      dockerfile: Dockerfile
-    container_name: ms-personal-8086
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
+    <<: *microservicio
+    build: ./ms-personal
+    container_name: ms-personal
     environment:
-      - SERVER_PORT=8086
-      - SPRING_APPLICATION_NAME=ms-personal
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_personal
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      <<: *entorno-base
+      SERVER_PORT: 8086
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_personal
 
-  # ====================================
-  # MICROSERVICIO: LISTAS DE ESPERA (8087)
-  # ====================================
-  ms-listas-de-espera:
-    build:
-      context: ./ms-listas-de-espera
-      dockerfile: Dockerfile
-    container_name: ms-listas-de-espera-8087
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
+  ms-hospitales:
+    <<: *microservicio
+    build: ./ms-hospitales
+    container_name: ms-hospitales
     environment:
-      - SERVER_PORT=8087
-      - SPRING_APPLICATION_NAME=ms-listas-de-espera
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_listas_de_espera
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8087/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      <<: *entorno-base
+      SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_hospitales
 
-  # ====================================
-  # MICROSERVICIO: HISTORIAL (8088)
-  # ====================================
   ms-historial:
-    build:
-      context: ./ms-historial
-      dockerfile: Dockerfile
-    container_name: ms-historial-8088
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
+    <<: *microservicio
+    build: ./ms-historial
+    container_name: ms-historial
     environment:
-      - SERVER_PORT=8088
-      - SPRING_APPLICATION_NAME=ms-historial
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_historial
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8088/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      <<: *entorno-base
+      SERVER_PORT: 8088
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_historial
 
-  # ====================================
-  # MICROSERVICIO: TRIAJE (8089)
-  # ====================================
+  # ------------------------------------------------------------------ Servicios internos (sin vistas en el frontend)
+  ms-camas:
+    <<: *microservicio
+    build: ./ms-camas
+    container_name: ms-camas
+    environment:
+      <<: *entorno-base
+      SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_camas
+
+  ms-equipamiento:
+    <<: *microservicio
+    build: ./ms-equipamiento
+    container_name: ms-equipamiento
+    environment:
+      <<: *entorno-base
+      SERVER_PORT: 8084
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_equipamiento
+
+  ms-insumos:
+    <<: *microservicio
+    build: ./ms-insumos
+    container_name: ms-insumos
+    environment:
+      <<: *entorno-base
+      SERVER_PORT: 8085
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_insumos
+
+  ms-listas-de-espera:
+    <<: *microservicio
+    build: ./ms-listas-de-espera
+    container_name: ms-listas-de-espera
+    environment:
+      <<: *entorno-base
+      SERVER_PORT: 8087
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_listas_de_espera
+
   ms-triaje:
-    build:
-      context: ./ms-triaje
-      dockerfile: Dockerfile
-    container_name: ms-triaje-8089
-    depends_on:
-      mysql:
-        condition: service_healthy
-      ms-discovery-server:
-        condition: service_healthy
+    <<: *microservicio
+    build: ./ms-triaje
+    container_name: ms-triaje
     environment:
-      - SERVER_PORT=8089
-      - SPRING_APPLICATION_NAME=ms-triaje
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/db_smarthealth_triaje
-      - SPRING_DATASOURCE_USERNAME=smarthealth_user
-      - SPRING_DATASOURCE_PASSWORD=smarthealth_pass
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ms-discovery-server:8761/eureka/
-    networks:
-      - smarthealth-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      <<: *entorno-base
+      SERVER_PORT: 8089
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_triaje
 
-# ====================================
-# NETWORKS & VOLUMES
-# ====================================
 networks:
   smarthealth-network:
     driver: bridge

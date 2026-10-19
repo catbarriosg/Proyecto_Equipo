@@ -48,6 +48,19 @@ public class Hospital {
     @Min(value = 0, message = "La capacidad total de camas no puede ser negativa")
     private int capacidadTotalCamas;
 
+    // Horario de atención para la página de sucursales: una línea por tramo, separadas por salto de línea
+    @Size(max = 500, message = "El horario no puede superar 500 caracteres")
+    @Column(length = 500)
+    private String horario;
+
+    @Size(max = 255, message = "La ruta de la imagen no puede superar 255 caracteres")
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+
+    @Size(max = 150, message = "La descripción de la imagen no puede superar 150 caracteres")
+    @Column(name = "descripcion_imagen", length = 150)
+    private String descripcionImagen;
+
     @Column(name = "creado_en", updatable = false)
     private LocalDateTime creadoEn;
 

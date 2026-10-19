@@ -1,19 +1,17 @@
 package com.SmartHealth.ms_pacientes.controllers;
 
-import com.SmartHealth.ms_pacientes.models.Paciente;
 import com.SmartHealth.ms_pacientes.dtos.PacienteDTO;
+import com.SmartHealth.ms_pacientes.exceptions.ApiException;
 import com.SmartHealth.ms_pacientes.services.PacienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -26,23 +24,25 @@ public class PacienteController {
     private PacienteService service;
 
     @GetMapping
-    @Operation(summary = "Listar todos los pacientes activos")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de pacientes obtenida correctamente"),
-        @ApiResponse(responseCode = "500", description = "Error del servidor")
-    })
-    public ResponseEntity<List<Paciente>> listar() {
-        return ResponseEntity.ok(service.obtenerTodos());
+    @Operation(summary = "Listar pacientes (con incluirInactivos=true también muestra los desactivados)")
+    public List<PacienteDTO> listar(@RequestParam(defaultValue = "false") boolean incluirInactivos) {
+        return service.obtenerTodos(incluirInactivos);
     }
 
-    @GetMapping("/{rut}")
+    @GetMapping("/rut/{rut}")
     @Operation(summary = "Buscar paciente por RUT")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Paciente encontrado"),
         @ApiResponse(responseCode = "404", description = "Paciente no encontrado")
     })
-    public ResponseEntity<Paciente> buscarPorRut(@PathVariable String rut) {
-        return ResponseEntity.ok(service.obtenerPorRut(rut));
+    public PacienteDTO buscarPorRut(@PathVariable String rut) {
+        return service.obtenerPorRut(rut);
+    }
+
+    @GetMapping("/{rut}")
+    @Operation(summary = "Buscar paciente por RUT (ruta anterior, usada por ms-camas y ms-triaje)")
+    public PacienteDTO buscarPorRutAnterior(@PathVariable String rut) {
+        return service.obtenerPorRut(rut);
     }
 
     @GetMapping("/id/{id}")
@@ -51,8 +51,8 @@ public class PacienteController {
         @ApiResponse(responseCode = "200", description = "Paciente encontrado"),
         @ApiResponse(responseCode = "404", description = "Paciente no encontrado")
     })
-    public ResponseEntity<Paciente> obtenerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.obtenerPorId(id));
+    public PacienteDTO obtenerPorId(@PathVariable Long id) {
+        return service.obtenerPorId(id);
     }
 
     @PostMapping
@@ -62,39 +62,30 @@ public class PacienteController {
         @ApiResponse(responseCode = "400", description = "Validación fallida"),
         @ApiResponse(responseCode = "409", description = "RUT ya existe")
     })
-    public ResponseEntity<Paciente> crear(@Valid @RequestBody PacienteDTO pacienteDTO) {
-        Paciente paciente = new Paciente();
-        BeanUtils.copyProperties(pacienteDTO, paciente, "id");
-        paciente.setActivo(pacienteDTO.getActivo() != null ? pacienteDTO.getActivo() : true);
-        
-        Paciente nuevoPaciente = service.guardarPaciente(paciente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPaciente);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar paciente (soft-delete)")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Paciente eliminado"),
-        @ApiResponse(responseCode = "404", description = "Paciente no encontrado")
-    })
-    public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
-        Paciente p = service.eliminarPaciente(id);
-        Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("mensaje", "El paciente con id " + p.getId() + " y nombre " + p.getNombreCompleto()
-                + " ha sido \"borrado\" exitosamente");
-        return ResponseEntity.ok(respuesta);
+    public ResponseEntity<PacienteDTO> crear(@Valid @RequestBody PacienteDTO pacienteDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(pacienteDTO));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar paciente")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Paciente actualizado"),
-        @ApiResponse(responseCode = "400", description = "Validación fallida"),
-        @ApiResponse(responseCode = "404", description = "Paciente no encontrado")
-    })
-    public ResponseEntity<Paciente> actualizar(@PathVariable Long id, @Valid @RequestBody Paciente paciente) {
-        Paciente pacienteActualizado = service.actualizarPaciente(id, paciente);
-        return ResponseEntity.ok(pacienteActualizado);
+    @Operation(summary = "Actualizar datos del paciente (el RUT no se modifica)")
+    public PacienteDTO actualizar(@PathVariable Long id, @Valid @RequestBody PacienteDTO datos) {
+        return service.actualizar(id, datos);
     }
 
+    @PatchMapping("/{id}/estado")
+    @Operation(summary = "Activar o desactivar un paciente")
+    public PacienteDTO cambiarEstado(@PathVariable Long id, @RequestBody Map<String, Boolean> cuerpo) {
+        Boolean activo = cuerpo.get("activo");
+        if (activo == null) {
+            throw ApiException.solicitudInvalida("Indica si el paciente queda activo (activo: true o false).");
+        }
+        return service.cambiarEstado(id, activo);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Desactivar paciente (soft-delete: se conserva su historial)")
+    public Map<String, String> eliminar(@PathVariable Long id) {
+        PacienteDTO paciente = service.cambiarEstado(id, false);
+        return Map.of("mensaje", "El paciente " + paciente.getNombreCompleto() + " quedó desactivado.");
+    }
 }

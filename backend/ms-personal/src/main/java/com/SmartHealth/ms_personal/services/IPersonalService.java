@@ -33,4 +33,8 @@ public interface IPersonalService {
     PersonalDTO obtenerPorRut(String rut);
 
     PersonalDTO obtenerPorEmail(String email);
+
+    List<PersonalDTO> obtenerTodosIncluyendoInactivos();
+
+    PersonalDTO cambiarEstado(Long id, boolean activo);
 }

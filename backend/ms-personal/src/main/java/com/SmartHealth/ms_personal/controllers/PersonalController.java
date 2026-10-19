@@ -17,13 +17,37 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/personal")
-@CrossOrigin(origins = "*")
 public class PersonalController {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonalController.class);
 
     @Autowired
     private IPersonalService personalService;
+
+    // ---- Endpoints REST estándar usados por el panel de administración ----
+    // (/crear y /todos se mantienen como alias por compatibilidad)
+
+    @Operation(summary = "Listar personal (con incluirInactivos=true también muestra los desactivados)")
+    @GetMapping
+    public List<PersonalDTO> listar(@RequestParam(defaultValue = "false") boolean incluirInactivos) {
+        return incluirInactivos ? personalService.obtenerTodosIncluyendoInactivos() : personalService.obtenerTodos();
+    }
+
+    @Operation(summary = "Crear nuevo personal")
+    @PostMapping
+    public ResponseEntity<PersonalDTO> crear(@Valid @RequestBody PersonalDTO personalDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(personalService.crearPersonal(personalDTO));
+    }
+
+    @Operation(summary = "Activar o desactivar personal")
+    @PatchMapping("/{id}/estado")
+    public PersonalDTO cambiarEstado(@PathVariable Long id, @RequestBody Map<String, Boolean> cuerpo) {
+        Boolean activo = cuerpo.get("activo");
+        if (activo == null) {
+            throw new IllegalArgumentException("Indica si el registro queda activo (activo: true o false).");
+        }
+        return personalService.cambiarEstado(id, activo);
+    }
 
     @Operation(summary = "Crear nuevo personal en el sistema")
     @PostMapping("/crear")

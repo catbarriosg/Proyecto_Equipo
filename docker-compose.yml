@@ -1,7 +1,23 @@
+# ====================================================================
+# Clínica Agenda Médica - sistema completo (frontend + backend)
+# ====================================================================
+# docker compose up --build
+#   Frontend:  http://localhost:3000
+#   API:       http://localhost:8080  (Swagger en /swagger-ui.html)
+#   Eureka:    http://localhost:8761
+
+include:
+  - backend/docker-compose.yml
+
 services:
-  web:
-    build: .
-    container_name: clinica-web
+  frontend:
+    build: ./clinica-react
+    container_name: clinica-frontend
     ports:
-      - "8080:80"
+      - "3000:80"
+    depends_on:
+      ms-gateway:
+        condition: service_healthy
+    networks:
+      - smarthealth-network
     restart: unless-stopped
