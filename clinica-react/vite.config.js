@@ -17,5 +17,16 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    // Pruebas unitarias (npm test): DOM simulado con jsdom y matchers de jest-dom
+    test: {
+      environment: 'jsdom',
+      setupFiles: './src/pruebas/configuracion.js',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'html'],
+        include: ['src/**/*.{js,jsx}'],
+        exclude: ['src/**/*.test.{js,jsx}', 'src/pruebas/**', 'src/main.jsx'],
+      },
+    },
   }
 })
