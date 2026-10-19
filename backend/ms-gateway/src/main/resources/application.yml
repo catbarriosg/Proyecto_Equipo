@@ -1,0 +1,113 @@
+server:
+  port: 8080 # La puerta principal
+
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Permite que el gateway use Eureka para encontrar los microservicios
+      routes:
+        # --- RUTA 1: Microservicio de Pacientes 
+        - id: ms-pacientes
+          uri: lb://ms-pacientes
+          predicates:
+            - Path=/api/pacientes/**, /ms-pacientes/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 2: Microservicio de Equipamiento
+        - id: ms-equipamiento
+          uri: lb://ms-equipamiento
+          predicates:
+            - Path=/api/equipamiento/**, /ms-equipamiento/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 3: Microservicio de Historial
+        - id: ms-historial
+          uri: lb://ms-historial
+          predicates:
+            - Path=/api/historial/**, /ms-historial/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 4: Microservicio de Hospitales
+        - id: ms-hospitales
+          uri: lb://ms-hospitales
+          predicates:
+            - Path=/api/hospitales/**, /ms-hospitales/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 5: Microservicio de insumos
+        - id: ms-insumos
+          uri: lb://ms-insumos
+          predicates:
+            - Path=/api/insumos/**, /ms-insumos/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 6: Microservicio de listas de espera
+        - id: ms-listas-de-espera
+          uri: lb://ms-listas-de-espera
+          predicates:
+            - Path=/api/listas-de-espera/**, /ms-listas-de-espera/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 7: Microservicio de personal
+        - id: ms-personal
+          uri: lb://ms-personal
+          predicates:
+            - Path=/api/personal/**, /ms-personal/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 8: Microservicio de camas
+        - id: ms-camas
+          uri: lb://ms-camas
+          predicates:
+            - Path=/api/camas/**, /ms-camas/**
+          filters:
+            - StripPrefix=1
+
+        # --- RUTA 9: Microservicio de triaje
+        - id: ms-triaje
+          uri: lb://ms-triaje
+          predicates:
+            - Path=/api/triaje/**, /ms-triaje/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: 01. API Pacientes
+        url: /ms-pacientes/v3/api-docs
+      - name: 02. API Equipamiento
+        url: /ms-equipamiento/v3/api-docs
+      - name: 03. API Historial
+        url: /ms-historial/v3/api-docs
+      - name: 04. API Hospitales
+        url: /ms-hospitales/v3/api-docs
+      - name: 05. API Insumos
+        url: /ms-insumos/v3/api-docs
+      - name: 06. API Listas de Espera
+        url: /ms-listas-de-espera/v3/api-docs
+      - name: 07. API Personal
+        url: /ms-personal/v3/api-docs
+      - name: 08. API Camas
+        url: /ms-camas/v3/api-docs
+      - name: 09. API Triaje
+        url: /ms-triaje/v3/api-docs

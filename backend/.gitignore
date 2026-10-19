@@ -1,0 +1,163 @@
+# ========================================
+# MAVEN & BUILD
+# ========================================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+.m2/
+
+# ========================================
+# IDE & EDITORS
+# ========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.iws
+*.ipr
+*.sublime-project
+*.sublime-workspace
+.classpath
+.project
+.c9/
+*.launch
+.settings/
+*.sublime-settings
+.factorypath
+
+# ========================================
+# LOGS & RUNTIME
+# ========================================
+startup_*.log
+startup-error*.log
+startup.log
+startup-error.log
+*.log
+logs/
+.logs/
+
+# ========================================
+# DATABASES & PERSISTENCE
+# ========================================
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+data/
+
+# ========================================
+# PYTHON & VIRTUAL ENVIRONMENTS
+# ========================================
+.venv/
+venv/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ========================================
+# OPERATING SYSTEM
+# ========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ========================================
+# ENVIRONMENT VARIABLES & SECRETS
+# ========================================
+.env
+.env.local
+.env.*.local
+application-local.properties
+application-dev.properties
+secrets.properties
+credentials.json
+*.key
+*.pem
+
+# ========================================
+# NODE (si se usa frontend)
+# ========================================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# ========================================
+# TEMPORALES & CACHÉS
+# ========================================
+.cache/
+tmp/
+temp/
+*.tmp
+*.temp
+.gradle/
+.gradle
+.checkstyle
+.stylelintcache
+
+# ========================================
+# DOCKER (si se configura)
+# ========================================
+.dockerignore
+docker-compose.override.yml
+
+# ========================================
+# SCRIPTS DE EJECUCIÓN 
+# ========================================
+# NOTA: Los scripts PowerShell SÍ se incluyen
+# startup-all-services-fixed.ps1  ← INCLUIR
+# stop-all-services.ps1           ← INCLUIR
+# SETUP_INITIAL.ps1               ← INCLUIR
+# check-services.py               ← INCLUIR
+# Pero los archivos generados NO:
+*.pid
+*.lock
+
+# ========================================
+# BASES DE DATOS (No incluir datos locales)
+# ========================================
+*.sql.backup
+database_exports/
+

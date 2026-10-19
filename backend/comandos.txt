@@ -1,0 +1,45 @@
+DEMO TRIAJE
+
+paciente prueba 1 -> Triaje azul:
+
+{
+  "rutPaciente": "12345678-1",
+  "personalId": 1,
+  "presionArterial": "120/80",
+  "temperatura": 37.5,
+  "frecuenciaCardiaca": 72,
+  "saturacionOxigeno": 98,
+  "sintomas": "Dolor de cabeza, fiebre",
+  "nivelUrgencia": "URGENTE"
+}
+
+
+Paciente prueba 2 -> triaje rojo:
+{
+  "rutPaciente": "12345678-1",
+  "personalId": 1,
+  "presionArterial": "80/50",
+  "temperatura": 40.0,
+  "frecuenciaCardiaca": 130,
+  "saturacionOxigeno": 88,
+  "sintomas": "disnea severa y dolor torácico",
+  "nivelUrgencia": "URGENTE"
+}
+
+DEMO EQUIPAMIENTO
+POST/API/EQUIPAMIENTO
+
+// SIN ID PORQUE ASIGNA AUTOMATICAMENTE Y AUTOINCREMENTABLE
+// MODIFICAR NUMEROS SERIE Y HOSPITAL UBICACION ID PARA PRUEBAS
+  {
+    "numeroSerie": "RX-2024-00111",
+    "nombre": "Maquina de Rayos X Diagnostico",
+    "marca": "GE Healthcare",
+    "estado": "Disponible",
+    "hospitalUbicacionId": 1,
+    "fechaAdquisicion": "2020-06-15",
+    "proximoMantenimiento": "2026-06-15",
+    "costoUnitario": 250000,
+    "vidaUtilMeses": 72,
+    "activo": true
+  },
