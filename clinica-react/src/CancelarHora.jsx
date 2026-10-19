@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
-
-function obtenerCodigo(hora) {
-  return hora.codigo || `AM-${String(hora.id).padStart(4, '0')}`
-}
+import { api, mensajeDeError } from './api/index.js'
+import { estadoLegible, formatearFecha } from './utils/formato.js'
 
 const estiloAlerta = {
   customClass: {
@@ -15,26 +13,29 @@ const estiloAlerta = {
   buttonsStyling: false
 }
 
-function CancelarHora({ horas, actualizarHora }) {
+function CancelarHora() {
   const [parametros] = useSearchParams()
   const [codigo, setCodigo] = useState(parametros.get('codigo') || '')
   const [reserva, setReserva] = useState(null)
   const [error, setError] = useState('')
+  const [procesando, setProcesando] = useState(false)
 
-  function buscarReserva(evento) {
+  async function buscarReserva(evento) {
     evento.preventDefault()
     setError('')
-    const buscada = codigo.trim().toUpperCase()
-    const encontrada = horas.find((hora) => {
-      const codigoAnterior = !hora.codigo ? `AM-${hora.id}`.toUpperCase() : ''
-      return obtenerCodigo(hora).toUpperCase() === buscada || codigoAnterior === buscada
-    })
-    if (!buscada || !encontrada) {
-      setReserva(null)
-      setError('No encontramos una reserva con ese código. Revisa el comprobante o el código en Mis horas médicas.')
+    setReserva(null)
+    if (!codigo.trim()) {
+      setError('Ingresa el código de tu reserva, por ejemplo AM-000001.')
       return
     }
-    setReserva(encontrada)
+    setProcesando(true)
+    try {
+      setReserva(await api.citas.obtenerPorCodigo(codigo))
+    } catch (errorBusqueda) {
+      setError(mensajeDeError(errorBusqueda))
+    } finally {
+      setProcesando(false)
+    }
   }
 
   async function cancelarReserva() {
@@ -50,17 +51,24 @@ function CancelarHora({ horas, actualizarHora }) {
     })
     if (!resultado.isConfirmed) return
 
-    const reservaCancelada = { ...reserva, estado: 'Cancelada' }
-    actualizarHora(reservaCancelada)
-    setReserva(reservaCancelada)
-    await Swal.fire({
-      ...estiloAlerta,
-      icon: 'success',
-      title: 'Hora cancelada',
-      text: 'La hora médica ha sido cancelada correctamente.',
-      confirmButtonText: 'Entendido'
-    })
+    setProcesando(true)
+    try {
+      setReserva(await api.citas.cancelar(reserva.id))
+      await Swal.fire({
+        ...estiloAlerta,
+        icon: 'success',
+        title: 'Hora cancelada',
+        text: 'La hora médica ha sido cancelada correctamente.',
+        confirmButtonText: 'Entendido'
+      })
+    } catch (errorCancelar) {
+      await Swal.fire({ ...estiloAlerta, icon: 'error', title: 'No se pudo cancelar', text: mensajeDeError(errorCancelar), confirmButtonText: 'Entendido' })
+    } finally {
+      setProcesando(false)
+    }
   }
+
+  const activa = reserva && (reserva.estado === 'CONFIRMADA' || reserva.estado === 'SOLICITADA')
 
   return (
     <main className="pagina-cancelar">
@@ -75,28 +83,30 @@ function CancelarHora({ horas, actualizarHora }) {
             <label htmlFor="codigo-reserva">Código de reserva</label>
             <input id="codigo-reserva" type="text" value={codigo}
               onChange={(evento) => { setCodigo(evento.target.value); setError('') }}
-              placeholder="Ej: AM-1695420000" autoComplete="off" required />
+              placeholder="Ej: AM-000001" autoComplete="off" required />
             <small className="registro-ayuda">Puedes encontrarlo en Mis horas médicas.</small>
           </div>
           {error && <p className="login-mensaje login-error" role="alert">{error}</p>}
-          <button className="login-enviar" type="submit">Buscar reserva</button>
+          <button className="login-enviar" type="submit" disabled={procesando}>Buscar reserva</button>
         </form>
 
         {reserva && (
           <section className="cancelar-resultado" aria-live="polite">
             <h2>Detalles de la cita</h2>
             <dl>
-              <div><dt>Código</dt><dd>{obtenerCodigo(reserva)}</dd></div>
+              <div><dt>Código</dt><dd>{reserva.codigo}</dd></div>
               <div><dt>Especialidad</dt><dd>{reserva.especialidad}</dd></div>
-              <div><dt>Médico</dt><dd>{reserva.medico || 'Por asignar'}</dd></div>
-              <div><dt>Fecha</dt><dd>{reserva.fecha}</dd></div>
-              <div><dt>Hora</dt><dd>{reserva.hora || 'Por confirmar'}</dd></div>
-              <div><dt>Estado</dt><dd>{reserva.estado}</dd></div>
+              <div><dt>Médico</dt><dd>{reserva.medicoNombre}</dd></div>
+              <div><dt>Fecha</dt><dd>{formatearFecha(reserva.fecha)}</dd></div>
+              <div><dt>Hora</dt><dd>{reserva.hora}</dd></div>
+              <div><dt>Estado</dt><dd>{estadoLegible(reserva.estado)}</dd></div>
             </dl>
-            {reserva.estado === 'Cancelada' ? (
-              <p className="login-mensaje login-aviso">Esta reserva ya está cancelada.</p>
+            {!activa ? (
+              <p className="login-mensaje login-aviso">Esta reserva está {estadoLegible(reserva.estado).toLowerCase()}.</p>
+            ) : reserva.gestionable ? (
+              <button className="cancelar-boton-rojo" type="button" onClick={cancelarReserva} disabled={procesando}>Cancelar esta hora</button>
             ) : (
-              <button className="cancelar-boton-rojo" type="button" onClick={cancelarReserva}>Cancelar esta hora</button>
+              <p className="login-mensaje login-aviso">Faltan menos de 24 horas para la atención: para cancelarla, comunícate con la clínica.</p>
             )}
           </section>
         )}

@@ -1,60 +1,17 @@
 import { useState } from 'react'
+import { api } from './api/index.js'
+import EstadoCarga from './components/EstadoCarga.jsx'
+import { useCarga } from './hooks/useCarga.js'
+import { DIAS_ANTICIPACION, fechaLocal, sumarDias } from './utils/agenda.js'
+import { formatearFechaLarga } from './utils/formato.js'
 
-const DIAS_ANTICIPACION = 90
 const NOMBRES_DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
-function fechaLocal(fecha) {
-  const anio = fecha.getFullYear()
-  const mes = String(fecha.getMonth() + 1).padStart(2, '0')
-  const dia = String(fecha.getDate()).padStart(2, '0')
-  return `${anio}-${mes}-${dia}`
-}
-
-function sumarDias(fecha, cantidad) {
-  const resultado = new Date(fecha)
-  resultado.setDate(resultado.getDate() + cantidad)
-  return resultado
-}
-
-function obtenerHorarios(fecha) {
-  if (fecha.getDay() === 0) return []
-
-  const inicio = fecha.getDay() === 6 ? 9 * 60 : 8 * 60
-  const fin = fecha.getDay() === 6 ? 13 * 60 + 30 : 19 * 60 + 30
-  const ahora = new Date()
-  const esHoy = fechaLocal(fecha) === fechaLocal(ahora)
-  const horarios = []
-
-  for (let minutos = inicio; minutos <= fin; minutos += 30) {
-    if (esHoy && minutos <= ahora.getHours() * 60 + ahora.getMinutes()) continue
-    const hora = String(Math.floor(minutos / 60)).padStart(2, '0')
-    const minuto = String(minutos % 60).padStart(2, '0')
-    horarios.push(`${hora}:${minuto}`)
-  }
-
-  return horarios
-}
-
-function fechaLarga(fecha) {
-  return fecha.toLocaleDateString('es-CL', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  })
-}
-
-function horaOcupada(horas, medico, fecha, hora, idReservaIgnorada) {
-  return horas.some((reserva) => {
-    if (reserva.id === idReservaIgnorada) return false
-    const mismoMedico = reserva.medicoId
-      ? reserva.medicoId === medico.id
-      : reserva.medico === medico.nombre || (!reserva.medico && reserva.especialidad === medico.especialidad)
-    return mismoMedico && reserva.fecha === fecha && reserva.hora === hora && reserva.estado !== 'Cancelada'
-  })
-}
-
-function CalendarioHoras({ medico, especialidad, horasReservadas, alCambiarSeleccion, idReservaIgnorada }) {
+/**
+ * Calendario semanal con las horas libres del médico, consultadas a /api/citas/disponibilidad.
+ * "version" permite recargar la disponibilidad desde el padre (por ejemplo, si alguien tomó la hora antes).
+ */
+function CalendarioHoras({ medico, sucursalNombre, excluirCitaId, alCambiarSeleccion, version = 0 }) {
   const hoy = new Date()
   hoy.setHours(0, 0, 0, 0)
   const limite = sumarDias(hoy, DIAS_ANTICIPACION)
@@ -63,29 +20,20 @@ function CalendarioHoras({ medico, especialidad, horasReservadas, alCambiarSelec
   const [horaSeleccionada, setHoraSeleccionada] = useState('')
 
   const diasSemana = Array.from({ length: 7 }, (_, indice) => sumarDias(inicioSemana, indice))
-  const fechaFinSemana = diasSemana[diasSemana.length - 1]
-  const textoRango = `${inicioSemana.toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })} al ${fechaFinSemana.toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}`
-  const fechaElegida = fechaSeleccionada
-    ? new Date(`${fechaSeleccionada}T12:00:00`)
-    : null
-  const horariosDia = fechaElegida ? obtenerHorarios(fechaElegida) : []
-  const horariosDisponibles = horariosDia.filter(
-    (hora) => !horaOcupada(horasReservadas, medico, fechaSeleccionada, hora, idReservaIgnorada)
+  const desde = fechaLocal(inicioSemana)
+  const hasta = fechaLocal(diasSemana[6])
+  const { datos: disponibilidad, cargando, error, recargar } = useCarga(
+    () => api.citas.disponibilidad({ medicoId: medico.id, desde, hasta, excluirCitaId }),
+    `${medico.id}|${desde}|${excluirCitaId || ''}|${version}`,
   )
-
-  function diaTieneHoras(fecha) {
-    if (fecha > limite) return false
-    const valor = fechaLocal(fecha)
-    return obtenerHorarios(fecha).some(
-      (hora) => !horaOcupada(horasReservadas, medico, valor, hora, idReservaIgnorada)
-    )
-  }
+  const horasPorDia = Object.fromEntries((disponibilidad || []).map((dia) => [dia.fecha, dia.horas]))
+  const horariosDisponibles = horasPorDia[fechaSeleccionada] || []
+  const textoRango = `${inicioSemana.toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })} al ${diasSemana[6].toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}`
 
   function elegirFecha(fecha) {
-    const valor = fechaLocal(fecha)
-    setFechaSeleccionada(valor)
+    setFechaSeleccionada(fecha)
     setHoraSeleccionada('')
-    alCambiarSeleccion({ fecha: valor, hora: '' })
+    alCambiarSeleccion({ fecha, hora: '' })
   }
 
   function elegirHora(hora) {
@@ -97,6 +45,9 @@ function CalendarioHoras({ medico, especialidad, horasReservadas, alCambiarSelec
     const nuevaSemana = sumarDias(inicioSemana, cantidad * 7)
     if (nuevaSemana < hoy || nuevaSemana > limite) return
     setInicioSemana(nuevaSemana)
+    setFechaSeleccionada('')
+    setHoraSeleccionada('')
+    alCambiarSeleccion({ fecha: '', hora: '' })
   }
 
   return (
@@ -112,19 +63,21 @@ function CalendarioHoras({ medico, especialidad, horasReservadas, alCambiarSelec
         </button>
       </header>
 
+      <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} texto="Consultando horas disponibles…" />
+
       <div className="calendario-react-dias" role="group" aria-label="Días disponibles">
         {diasSemana.map((dia) => {
           const valor = fechaLocal(dia)
-          const disponible = diaTieneHoras(dia)
+          const disponible = (horasPorDia[valor] || []).length > 0
           return (
             <button
               className={`calendario-react-dia${valor === fechaSeleccionada ? ' activo' : ''}`}
               type="button"
               key={valor}
-              onClick={() => elegirFecha(dia)}
+              onClick={() => elegirFecha(valor)}
               disabled={!disponible}
               aria-pressed={valor === fechaSeleccionada}
-              aria-label={`${fechaLarga(dia)}${disponible ? '' : ', sin horas disponibles'}`}
+              aria-label={`${formatearFechaLarga(valor)}${disponible ? '' : ', sin horas disponibles'}`}
             >
               <span>{NOMBRES_DIAS[dia.getDay()]}</span>
               <strong>{dia.getDate()}</strong>
@@ -134,23 +87,21 @@ function CalendarioHoras({ medico, especialidad, horasReservadas, alCambiarSelec
       </div>
 
       <h3 className="calendario-react-fecha" aria-live="polite">
-        {fechaElegida
-          ? fechaLarga(fechaElegida).replace(/^./, (letra) => letra.toUpperCase())
-          : 'Selecciona un día'}
+        {fechaSeleccionada ? formatearFechaLarga(fechaSeleccionada) : 'Selecciona un día'}
       </h3>
 
       <article className="calendario-react-medico">
         <div className="calendario-react-clinica">
           <span aria-hidden="true">🏥</span>
-          <div><strong>Clínica Agenda Médica</strong><small>Sede Principal - Región Metropolitana</small></div>
+          <div><strong>Clínica Agenda Médica</strong><small>{sucursalNombre ? `Sucursal ${sucursalNombre}` : 'Región Metropolitana'}</small></div>
         </div>
         <div className="calendario-react-info-medico">
           <span aria-hidden="true">👨‍⚕️</span>
-          <div><strong>{medico.nombre}</strong><small>{especialidad}</small></div>
+          <div><strong>{medico.nombre}</strong><small>{medico.especialidad}</small></div>
           <span className="calendario-react-modalidad">Presencial</span>
         </div>
         <p>Selecciona un horario disponible:</p>
-        {fechaElegida ? (
+        {fechaSeleccionada ? (
           horariosDisponibles.length > 0 ? (
             <div className="calendario-react-horas" role="group" aria-label="Horarios disponibles">
               {horariosDisponibles.map((hora) => (

@@ -1,120 +1,123 @@
 import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { obtenerSesion } from './auth.js'
+import { api, mensajeDeError } from './api/index.js'
 import CalendarioHoras from './CalendarioHoras.jsx'
-import medicos from './medicos.js'
+import EstadoCarga from './components/EstadoCarga.jsx'
+import { useSesion } from './context/useSesion.js'
+import { useCarga } from './hooks/useCarga.js'
+import { formatearFecha } from './utils/formato.js'
+import { formatearRut, normalizarRut, rutValido } from './utils/rut.js'
 
-const especialidades = ['Medicina General', 'Pediatría', 'Cardiología', 'Dermatología', 'Ginecología', 'Traumatología']
 const estiloAlerta = {
   customClass: { popup: 'clinica-swal-popup', confirmButton: 'clinica-swal-confirm' },
   buttonsStyling: false
 }
 
-function slugEspecialidad(valor) {
-  return valor?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '-')
+// Especialidades, médicos y sucursales que necesita el formulario
+function cargarCatalogos() {
+  return Promise.all([api.especialidades.listar(), api.medicos.listar(), api.sucursales.listar()])
+    .then(([especialidades, medicos, sucursales]) => ({ especialidades, medicos, sucursales }))
 }
 
-function AgendarHora({ horas, agregarHora }) {
-  const sesion = obtenerSesion()
-  const esMedico = sesion?.rol === 'medico'
+function AgendarHora() {
+  const { usuario } = useSesion()
+  const esPaciente = usuario.rol === 'PACIENTE'
+  const esMedico = usuario.rol === 'MEDICO'
   const [parametros] = useSearchParams()
-  const medicoEnSesion = esMedico
-    ? medicos.find((medico) => medico.nombre.replace(/^(Dr\.|Dra\.)\s*/, '') === `${sesion.nombre} ${sesion.apellido}`)
-    : null
-  const medicoEnlace = medicos.find((medico) => medico.id === parametros.get('medico'))
-  const especialidadEnlace = especialidades.find(
-    (nombre) => slugEspecialidad(nombre) === slugEspecialidad(parametros.get('especialidad'))
-  )
-  const especialidadInicial = sesion?.especialidad || medicoEnlace?.especialidad || especialidadEnlace || ''
-  const medicosIniciales = medicos.filter((medico) =>
-    medico.especialidad === especialidadInicial && (!esMedico || medico.id === medicoEnSesion?.id)
-  )
-  const [nombre, setNombre] = useState('')
-  const [correo, setCorreo] = useState('')
-  const [especialidad, setEspecialidad] = useState(especialidadInicial)
-  const [medicoId, setMedicoId] = useState(() =>
-    medicoEnSesion?.id || medicoEnlace?.id || (medicosIniciales.length === 1 ? medicosIniciales[0].id : '')
-  )
+  const { datos: catalogos, cargando, error, recargar } = useCarga(cargarCatalogos, 'catalogos')
+
+  // La especialidad y el médico pueden venir en el enlace (?especialidad=pediatria&medico=2)
+  const [seleccion, setSeleccion] = useState({
+    especialidad: parametros.get('especialidad') || '',
+    medicoId: parametros.get('medico') || '',
+  })
+  const [rutPaciente, setRutPaciente] = useState('')
+  const [motivo, setMotivo] = useState('')
   const [fecha, setFecha] = useState('')
   const [hora, setHora] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [versionAgenda, setVersionAgenda] = useState(0)
 
-  const medicosDisponibles = medicos.filter((medico) =>
-    medico.especialidad === especialidad && (!esMedico || medico.id === medicoEnSesion?.id)
-  )
-  const medicoElegido = medicos.find((medico) => medico.id === medicoId)
+  const especialidades = catalogos?.especialidades || []
+  const medicos = catalogos?.medicos || []
+  const medicoPropio = esMedico ? medicos.find((medico) => medico.id === usuario.personalId) : null
+  const medicoDelEnlace = medicos.find((medico) => String(medico.id) === String(seleccion.medicoId))
+  const especialidadActual = esMedico
+    ? medicoPropio?.especialidad || ''
+    : especialidades.find((item) => item.slug === seleccion.especialidad || item.nombre === seleccion.especialidad)?.nombre
+      || medicoDelEnlace?.especialidad || ''
+  const medicosDisponibles = esMedico ? (medicoPropio ? [medicoPropio] : []) : medicos.filter((medico) => medico.especialidad === especialidadActual)
+  const medicoElegido = medicosDisponibles.find((medico) => String(medico.id) === String(seleccion.medicoId))
+    || (medicosDisponibles.length === 1 ? medicosDisponibles[0] : null)
+  const sucursalNombre = catalogos?.sucursales.find((sucursal) => sucursal.id === medicoElegido?.sucursalId)?.nombre
 
-  function cambiarEspecialidad(event) {
-    const nuevaEspecialidad = event.target.value
-    const disponibles = medicos.filter((medico) =>
-      medico.especialidad === nuevaEspecialidad && (!esMedico || medico.id === medicoEnSesion?.id)
-    )
-    setEspecialidad(nuevaEspecialidad)
-    setMedicoId(disponibles.length === 1 ? disponibles[0].id : '')
+  function reiniciarHorario() {
     setFecha('')
     setHora('')
   }
 
+  function cambiarEspecialidad(event) {
+    setSeleccion({ especialidad: event.target.value, medicoId: '' })
+    reiniciarHorario()
+  }
+
   function cambiarMedico(event) {
-    setMedicoId(event.target.value)
-    setFecha('')
-    setHora('')
+    setSeleccion((actual) => ({ ...actual, medicoId: event.target.value }))
+    reiniciarHorario()
+  }
+
+  async function avisar(icon, title, text) {
+    await Swal.fire({ ...estiloAlerta, icon, title, text, confirmButtonText: 'Entendido' })
   }
 
   async function manejarEnvio(event) {
     event.preventDefault()
+    if (!esPaciente && !rutValido(rutPaciente)) {
+      await avisar('warning', 'Ingresa el RUT del paciente', 'Revisa el formato y el dígito verificador, por ejemplo 12.345.678-5.')
+      return
+    }
     if (!medicoElegido) {
-      await Swal.fire({ ...estiloAlerta, icon: 'warning', title: 'Selecciona un médico', confirmButtonText: 'Entendido' })
+      await avisar('warning', 'Selecciona un médico')
       return
     }
     if (!fecha || !hora) {
-      await Swal.fire({ ...estiloAlerta, icon: 'warning', title: 'Selecciona fecha y hora', text: 'Elige un día y un horario disponible en el calendario.', confirmButtonText: 'Entendido' })
-      return
-    }
-    const yaReservada = horas.some((reserva) => {
-      const mismoMedico = reserva.medicoId
-        ? reserva.medicoId === medicoElegido.id
-        : reserva.medico === medicoElegido.nombre
-      return mismoMedico && reserva.fecha === fecha && reserva.hora === hora && reserva.estado !== 'Cancelada'
-    })
-    if (yaReservada) {
-      setFecha('')
-      setHora('')
-      await Swal.fire({ ...estiloAlerta, icon: 'warning', title: 'Ese horario ya no está disponible', text: 'Elige otro horario para continuar.', confirmButtonText: 'Entendido' })
+      await avisar('warning', 'Selecciona fecha y hora', 'Elige un día y un horario disponible en el calendario.')
       return
     }
 
-    const id = Date.now()
-    const codigo = `AM-${id}`
-    agregarHora({
-      id,
-      codigo,
-      paciente: nombre,
-      correo,
-      medico: medicoElegido.nombre,
-      medicoId: medicoElegido.id,
-      creadoPor: sesion?.correo || correo,
-      rolCreador: sesion?.rol || 'paciente',
-      especialidad: medicoElegido.especialidad,
-      fecha,
-      hora,
-      estado: 'Confirmada'
-    })
-    setNombre('')
-    setCorreo('')
-    if (!esMedico) {
-      setEspecialidad('')
-      setMedicoId('')
+    setEnviando(true)
+    try {
+      const cita = await api.citas.crear({
+        medicoId: medicoElegido.id,
+        fecha,
+        hora,
+        motivo: motivo.trim() || null,
+        rutPaciente: esPaciente ? null : normalizarRut(rutPaciente),
+      })
+      reiniciarHorario()
+      setMotivo('')
+      setRutPaciente('')
+      setVersionAgenda((actual) => actual + 1)
+      await Swal.fire({
+        ...estiloAlerta,
+        icon: 'success',
+        title: '¡Hora médica agendada!',
+        html: `<p><strong>Paciente:</strong> ${cita.pacienteNombre}</p><p><strong>Médico:</strong> ${cita.medicoNombre}</p>`
+          + `<p><strong>Fecha:</strong> ${formatearFecha(cita.fecha)}</p><p><strong>Hora:</strong> ${cita.hora}</p>`
+          + `<p><strong>Código:</strong> ${cita.codigo}</p>`,
+        confirmButtonText: 'Entendido'
+      })
+    } catch (errorReserva) {
+      // Si otra persona tomó el horario, se vuelve a consultar la disponibilidad
+      if (errorReserva.estado === 409) {
+        reiniciarHorario()
+        setVersionAgenda((actual) => actual + 1)
+      }
+      await avisar('warning', 'No se pudo agendar la hora', mensajeDeError(errorReserva))
+    } finally {
+      setEnviando(false)
     }
-    setFecha('')
-    setHora('')
-    await Swal.fire({
-      ...estiloAlerta,
-      icon: 'success',
-      title: '¡Hora médica agendada!',
-      html: `<p><strong>Médico:</strong> ${medicoElegido.nombre}</p><p><strong>Fecha:</strong> ${fecha}</p><p><strong>Hora:</strong> ${hora}</p><p><strong>Código:</strong> ${codigo}</p>`,
-      confirmButtonText: 'Entendido'
-    })
   }
 
   return (
@@ -122,52 +125,73 @@ function AgendarHora({ horas, agregarHora }) {
       <section className="agenda-hero-react">
         <span className="etiqueta-seccion">RESERVA TU ATENCIÓN</span>
         <h1>Agendar hora médica</h1>
-        <p>{esMedico ? `Agenda una hora para un paciente. Médico: ${sesion.nombre} ${sesion.apellido}.` : 'Elige la especialidad, el profesional y el horario que más te acomode.'}</p>
+        <p>{esMedico
+          ? `Agenda una hora para un paciente en tu agenda, ${usuario.nombre}.`
+          : esPaciente ? 'Elige la especialidad, el profesional y el horario que más te acomode.'
+            : 'Agenda una hora a nombre de un paciente registrado.'}</p>
       </section>
 
-      <form className="formulario-agenda formulario-agenda-react" onSubmit={manejarEnvio}>
-        {esMedico && <p className="agenda-aviso-medico">La reserva quedará asociada a tu cuenta de profesional.</p>}
-        <div className="agenda-campos-grid">
-          <div className="agenda-campo">
-            <label htmlFor="nombre">Nombre completo del paciente</label>
-            <input id="nombre" type="text" value={nombre} onChange={(event) => setNombre(event.target.value)} placeholder="Ingresa el nombre del paciente" required />
-          </div>
-          <div className="agenda-campo">
-            <label htmlFor="correo">Correo electrónico del paciente</label>
-            <input id="correo" type="email" value={correo} onChange={(event) => setCorreo(event.target.value)} placeholder="ejemplo@correo.cl" required />
-          </div>
-          <div className="agenda-campo">
-            <label htmlFor="especialidad">Especialidad</label>
-            <select id="especialidad" value={especialidad} onChange={cambiarEspecialidad} disabled={esMedico} required>
-              <option value="">Selecciona una especialidad</option>
-              {especialidades.map((opcion) => <option key={opcion} value={opcion}>{opcion}</option>)}
-            </select>
-          </div>
-          <div className="agenda-campo">
-            <label htmlFor="medico">Médico</label>
-            <select id="medico" value={medicoId} onChange={cambiarMedico} disabled={!especialidad || esMedico} required>
-              <option value="">Selecciona un médico</option>
-              {medicosDisponibles.map((medico) => <option key={medico.id} value={medico.id}>{medico.nombre}</option>)}
-            </select>
-            {esMedico && medicoElegido && <small className="agenda-ayuda">Profesional asociado a la sesión actual.</small>}
-          </div>
-        </div>
+      <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} />
 
-        {medicoElegido && (
-          <CalendarioHoras
-            key={medicoElegido.id}
-            medico={medicoElegido}
-            especialidad={medicoElegido.especialidad}
-            horasReservadas={horas}
-            alCambiarSeleccion={({ fecha: nuevaFecha, hora: nuevaHora }) => {
-              setFecha(nuevaFecha)
-              setHora(nuevaHora)
-            }}
-          />
-        )}
+      {catalogos && (
+        <form className="formulario-agenda formulario-agenda-react" onSubmit={manejarEnvio} noValidate>
+          {esPaciente && <p className="agenda-aviso-medico">La hora quedará a nombre de <strong>{usuario.nombre}</strong>.</p>}
+          {esMedico && !medicoPropio && (
+            <p className="login-mensaje login-error" role="alert">Tu cuenta no está asociada a un médico activo. Comunícate con la administración.</p>
+          )}
+          <div className="agenda-campos-grid">
+            {!esPaciente && (
+              <div className="agenda-campo">
+                <label htmlFor="rut-paciente">RUT del paciente</label>
+                <input id="rut-paciente" type="text" value={rutPaciente} maxLength={12}
+                  onChange={(event) => setRutPaciente(formatearRut(event.target.value))}
+                  placeholder="Ej: 16.543.210-K" required />
+                <small className="agenda-ayuda">El paciente debe estar registrado en la clínica.</small>
+              </div>
+            )}
+            <div className="agenda-campo">
+              <label htmlFor="especialidad">Especialidad</label>
+              <select id="especialidad" value={especialidadActual} onChange={cambiarEspecialidad} disabled={esMedico} required>
+                <option value="">Selecciona una especialidad</option>
+                {especialidades.map((opcion) => <option key={opcion.id} value={opcion.nombre}>{opcion.nombre}</option>)}
+              </select>
+            </div>
+            <div className="agenda-campo">
+              <label htmlFor="medico">Médico</label>
+              <select id="medico" value={medicoElegido?.id || ''} onChange={cambiarMedico} disabled={!especialidadActual || esMedico} required>
+                <option value="">Selecciona un médico</option>
+                {medicosDisponibles.map((medico) => <option key={medico.id} value={medico.id}>{medico.nombre}</option>)}
+              </select>
+              {especialidadActual && medicosDisponibles.length === 0 && (
+                <small className="agenda-ayuda">No hay médicos disponibles para esta especialidad.</small>
+              )}
+            </div>
+            <div className="agenda-campo">
+              <label htmlFor="motivo">Motivo de la consulta <span className="registro-opcional">(opcional)</span></label>
+              <input id="motivo" type="text" value={motivo} maxLength={300}
+                onChange={(event) => setMotivo(event.target.value)} placeholder="Ej: control anual" />
+            </div>
+          </div>
 
-        <button className="agenda-boton-confirmar" type="submit">Confirmar hora</button>
-      </form>
+          {medicoElegido && (
+            <CalendarioHoras
+              key={`${medicoElegido.id}-${versionAgenda}`}
+              medico={medicoElegido}
+              sucursalNombre={sucursalNombre}
+              version={versionAgenda}
+              alCambiarSeleccion={({ fecha: nuevaFecha, hora: nuevaHora }) => {
+                setFecha(nuevaFecha)
+                setHora(nuevaHora)
+              }}
+            />
+          )}
+
+          <button className="agenda-boton-confirmar" type="submit" disabled={enviando}>
+            {enviando ? 'Agendando…' : 'Confirmar hora'}
+          </button>
+          <p className="cancelar-volver"><Link to="/mis-horas">{esMedico ? 'Ver mi agenda' : 'Ver mis horas médicas'}</Link></p>
+        </form>
+      )}
     </main>
   )
 }

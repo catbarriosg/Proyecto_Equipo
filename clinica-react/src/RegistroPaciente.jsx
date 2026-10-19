@@ -1,34 +1,43 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { cifrarContrasena } from './auth.js'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { mensajeDeError } from './api/index.js'
+import { USAR_API } from './api/config.js'
+import { useSesion } from './context/useSesion.js'
+import { formatearRut, normalizarRut, rutValido } from './utils/rut.js'
 
 function RegistroPaciente() {
   const navegar = useNavigate()
+  const [parametros] = useSearchParams()
+  const { registrarPaciente } = useSesion()
   const [datos, setDatos] = useState({
-    nombre: '', apellido: '', correo: '', fechaNacimiento: '', prevision: '', contrasena: '', repetirContrasena: '',
+    rut: '', nombre: '', apellido: '', correo: '', telefono: '', fechaNacimiento: '', prevision: '', contrasena: '', repetirContrasena: '',
   })
   const [mostrarContrasena, setMostrarContrasena] = useState(false)
   const [mostrarRepetida, setMostrarRepetida] = useState(false)
   const [error, setError] = useState('')
-  const [exito, setExito] = useState('')
+  const [procesando, setProcesando] = useState(false)
   const hoy = new Date().toISOString().slice(0, 10)
   const fechaMinima = `${new Date().getFullYear() - 120}${hoy.slice(4)}`
+  const volver = parametros.get('volver')
 
   function cambiar(campo, valor) {
     setDatos((actuales) => ({ ...actuales, [campo]: valor }))
     setError('')
-    setExito('')
   }
 
   async function crearCuenta(evento) {
     evento.preventDefault()
     setError('')
-    setExito('')
 
     const nombre = datos.nombre.trim()
     const apellido = datos.apellido.trim()
     const correo = datos.correo.trim().toLowerCase()
+    const telefono = datos.telefono.replace(/\s/g, '')
     const nombreValido = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]{2,30}$/
+    if (!rutValido(datos.rut)) {
+      setError('Ingresa un RUT válido, por ejemplo 12.345.678-5.')
+      return
+    }
     if (!nombreValido.test(nombre)) {
       setError('El nombre debe tener entre 2 y 30 letras, sin espacios ni números.')
       return
@@ -39,6 +48,10 @@ function RegistroPaciente() {
     }
     if (!/^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/i.test(correo)) {
       setError('Usa un correo válido @duoc.cl, @profesor.duoc.cl o @gmail.com.')
+      return
+    }
+    if (telefono && !/^\+?\d{8,15}$/.test(telefono)) {
+      setError('El teléfono debe tener entre 8 y 15 dígitos, por ejemplo +56912345678.')
       return
     }
     if (!datos.fechaNacimiento || datos.fechaNacimiento > hoy || datos.fechaNacimiento < fechaMinima) {
@@ -54,23 +67,17 @@ function RegistroPaciente() {
       return
     }
 
+    setProcesando(true)
     try {
-      const usuarios = JSON.parse(localStorage.getItem('clinica.usuarios') || '[]')
-      if (usuarios.some((usuario) => usuario.correo === correo)) {
-        setError('Este correo ya está registrado. Inicia sesión o usa otro correo.')
-        return
-      }
-      const usuario = {
-        nombre, apellido, correo, rol: 'paciente', fechaNacimiento: datos.fechaNacimiento,
-        prevision: datos.prevision,
-        contrasena: await cifrarContrasena(datos.contrasena, correo),
-        fechaRegistro: new Date().toISOString(),
-      }
-      localStorage.setItem('clinica.usuarios', JSON.stringify([...usuarios, usuario]))
-      setExito(`¡Cuenta creada, ${nombre}! Puedes iniciar sesión.`)
-      setTimeout(() => navegar(`/login?correo=${encodeURIComponent(correo)}`), 1200)
-    } catch {
-      setError('No se pudo guardar la cuenta. Revisa la configuración de privacidad del navegador.')
+      await registrarPaciente({
+        rut: normalizarRut(datos.rut), nombre, apellido, correo, telefono,
+        fechaNacimiento: datos.fechaNacimiento, prevision: datos.prevision, contrasena: datos.contrasena,
+      })
+      navegar(volver && volver.startsWith('/') ? volver : '/perfil', { replace: true })
+    } catch (errorRegistro) {
+      setError(mensajeDeError(errorRegistro))
+    } finally {
+      setProcesando(false)
     }
   }
 
@@ -85,6 +92,17 @@ function RegistroPaciente() {
       <section className="login-card registro-card" aria-label="Formulario de registro de paciente">
         <form onSubmit={crearCuenta} noValidate>
           <p className="registro-nota"><span aria-hidden="true">*</span> Campos obligatorios</p>
+
+          <div className="login-campo">
+            <label htmlFor="registro-rut">RUT <span aria-hidden="true">*</span></label>
+            <input id="registro-rut" inputMode="text" maxLength={12} placeholder="Ej: 12.345.678-5"
+              value={datos.rut} onChange={(e) => cambiar('rut', formatearRut(e.target.value))}
+              aria-invalid={datos.rut.length > 8 && !rutValido(datos.rut)} required />
+            {datos.rut.length > 8 && !rutValido(datos.rut)
+              ? <small className="contacto-error">El dígito verificador no corresponde a este RUT.</small>
+              : <small className="registro-ayuda">Se usa para identificarte en la clínica.</small>}
+          </div>
+
           <div className="registro-grid">
             <div className="login-campo">
               <label htmlFor="registro-nombre">Nombre <span aria-hidden="true">*</span></label>
@@ -98,12 +116,20 @@ function RegistroPaciente() {
             </div>
           </div>
 
-          <div className="login-campo">
-            <label htmlFor="registro-correo">Correo electrónico <span aria-hidden="true">*</span></label>
-            <input id="registro-correo" type="email" autoComplete="email" maxLength={80}
-              placeholder="Ej: ana.perez@gmail.com" value={datos.correo}
-              onChange={(e) => cambiar('correo', e.target.value)} required />
-            <small className="registro-ayuda">Se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</small>
+          <div className="registro-grid">
+            <div className="login-campo">
+              <label htmlFor="registro-correo">Correo electrónico <span aria-hidden="true">*</span></label>
+              <input id="registro-correo" type="email" autoComplete="email" maxLength={80}
+                placeholder="Ej: ana.perez@gmail.com" value={datos.correo}
+                onChange={(e) => cambiar('correo', e.target.value)} required />
+              <small className="registro-ayuda">Se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</small>
+            </div>
+            <div className="login-campo">
+              <label htmlFor="registro-telefono">Teléfono <span className="registro-opcional">(opcional)</span></label>
+              <input id="registro-telefono" type="tel" autoComplete="tel" maxLength={16}
+                placeholder="Ej: +56912345678" value={datos.telefono}
+                onChange={(e) => cambiar('telefono', e.target.value)} />
+            </div>
           </div>
 
           <div className="registro-grid">
@@ -152,10 +178,11 @@ function RegistroPaciente() {
           </div>
 
           {error && <p className="login-mensaje login-error" role="alert">{error}</p>}
-          {exito && <p className="login-mensaje login-aviso" role="status">{exito}</p>}
-          <button className="login-enviar" type="submit">Crear cuenta</button>
+          <button className="login-enviar" type="submit" disabled={procesando}>
+            {procesando ? 'Creando cuenta…' : 'Crear cuenta'}
+          </button>
         </form>
-        <p className="login-nota">Modo demostración: la cuenta se guarda solo en este navegador. No uses una contraseña real.</p>
+        {!USAR_API && <p className="login-nota">Modo demostración sin servidor: la cuenta se guarda solo en este navegador.</p>}
         <p className="login-ayuda">¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link></p>
       </section>
     </main>

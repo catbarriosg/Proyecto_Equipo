@@ -7,6 +7,9 @@
 # Solo el gateway (8080) queda expuesto: el frontend nunca llama directo a un microservicio.
 # Si cambias init-scripts, recrea la base con:  docker compose down -v
 
+# Opciones de la JVM para que todos los servicios quepan en poca memoria (Docker Desktop con 2-4 GB)
+x-jvm-liviana: &jvm-liviana "-XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k -Xms32m -Xmx192m -XX:ReservedCodeCacheSize=48m"
+
 # Variables comunes a todos los microservicios
 x-entorno-base: &entorno-base
   EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-discovery-server:8761/eureka/
@@ -15,6 +18,7 @@ x-entorno-base: &entorno-base
   SPRING_DATASOURCE_USERNAME: smarthealth_user
   SPRING_DATASOURCE_PASSWORD: smarthealth_pass
   TZ: America/Santiago
+  JAVA_TOOL_OPTIONS: *jvm-liviana
 
 x-microservicio: &microservicio
   depends_on:
@@ -61,13 +65,16 @@ services:
       - "8761:8761"
     environment:
       SERVER_PORT: 8761
+      JAVA_TOOL_OPTIONS: *jvm-liviana
       EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
       EUREKA_CLIENT_FETCH_REGISTRY: "false"
     healthcheck:
+      # Con todos los servicios arrancando a la vez, una JVM puede tardar más de 2 minutos en iniciar
       test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
       interval: 15s
-      timeout: 5s
+      timeout: 10s
       retries: 10
+      start_period: 240s
     networks:
       - smarthealth-network
     restart: unless-stopped
@@ -83,6 +90,7 @@ services:
         condition: service_healthy
     environment:
       SERVER_PORT: 8080
+      JAVA_TOOL_OPTIONS: *jvm-liviana
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://ms-discovery-server:8761/eureka/
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
       JWT_SECRET: ${JWT_SECRET:-clinica-agenda-medica-clave-de-desarrollo-cambiar-en-produccion}
@@ -90,8 +98,9 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 15s
-      timeout: 5s
+      timeout: 10s
       retries: 10
+      start_period: 240s
     networks:
       - smarthealth-network
     restart: unless-stopped
@@ -153,8 +162,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_smarthealth_historial
 
   # ------------------------------------------------------------------ Servicios internos (sin vistas en el frontend)
+  # No se levantan por defecto para ahorrar memoria. Para incluirlos: docker compose --profile internos up
   ms-camas:
     <<: *microservicio
+    profiles: ["internos"]
     build: ./ms-camas
     container_name: ms-camas
     environment:
@@ -164,6 +175,7 @@ services:
 
   ms-equipamiento:
     <<: *microservicio
+    profiles: ["internos"]
     build: ./ms-equipamiento
     container_name: ms-equipamiento
     environment:
@@ -173,6 +185,7 @@ services:
 
   ms-insumos:
     <<: *microservicio
+    profiles: ["internos"]
     build: ./ms-insumos
     container_name: ms-insumos
     environment:
@@ -182,6 +195,7 @@ services:
 
   ms-listas-de-espera:
     <<: *microservicio
+    profiles: ["internos"]
     build: ./ms-listas-de-espera
     container_name: ms-listas-de-espera
     environment:
@@ -191,6 +205,7 @@ services:
 
   ms-triaje:
     <<: *microservicio
+    profiles: ["internos"]
     build: ./ms-triaje
     container_name: ms-triaje
     environment:

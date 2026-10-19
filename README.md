@@ -1,5 +1,10 @@
 # Clínica Agenda Médica
 
+> **Versión actual:** frontend en React (`clinica-react/`) integrado con un backend de microservicios Spring Boot (`backend/`).
+> Para levantar todo: `docker compose up --build` y abrir http://localhost:3000.
+> Arquitectura, cuentas de prueba y reglas de negocio: ver [INTEGRACION.md](INTEGRACION.md).
+> Lo que sigue describe la primera versión del sitio en HTML (carpetas `paginas/`, `css/` y `js/`).
+
 ## Descripción del proyecto
 
 Clínica Agenda Médica es un proyecto frontend desarrollado para representar un sistema web orientado a la gestión de horas médicas.

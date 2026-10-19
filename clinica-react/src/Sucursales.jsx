@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom'
-import sucursales from './sucursales.js'
+import { api } from './api/index.js'
+import EstadoCarga from './components/EstadoCarga.jsx'
+import { useCarga } from './hooks/useCarga.js'
+import { formatearTelefono } from './utils/formato.js'
 
 function Sucursales() {
+  const { datos: sucursales, cargando, error, recargar } = useCarga(() => api.sucursales.listar(), 'sucursales')
+
   return (
     <main className="pagina-sucursales">
       <section className="sucursales-hero">
@@ -10,22 +15,26 @@ function Sucursales() {
         <p>Conoce las sucursales disponibles de Clínica Agenda Médica y elige la más cercana a ti.</p>
       </section>
 
-      <section className="sucursales-lista" aria-label="Sucursales disponibles">
-        {sucursales.map((sucursal) => (
-          <article className="sucursal-card-react" key={sucursal.id}>
-            <figure>
-              <img src={sucursal.imagen} alt={sucursal.descripcionImagen} />
-            </figure>
-            <section className="sucursal-info-react">
-              <h2>{sucursal.nombre}</h2>
-              <address>📍 {sucursal.direccion}</address>
-              <p>📞 <a href={`tel:${sucursal.telefonoEnlace}`}>{sucursal.telefono}</a></p>
-              <p className="sucursal-horario-react">🕒 {sucursal.horario.map((linea, indice) => ( <span key={linea}>{linea}{indice < sucursal.horario.length - 1 && <br />}</span> ))}</p>
-              <Link to="/agendar-hora" className="boton-sucursal">Agendar hora</Link>
-            </section>
-          </article>
-        ))}
-      </section>
+      <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} />
+
+      {sucursales && (
+        <section className="sucursales-lista" aria-label="Sucursales disponibles">
+          {sucursales.map((sucursal) => (
+            <article className="sucursal-card-react" key={sucursal.id}>
+              <figure>
+                <img src={sucursal.imagenUrl || '/fachada-clinica.png'} alt={sucursal.descripcionImagen || `Sucursal ${sucursal.nombre}`} />
+              </figure>
+              <section className="sucursal-info-react">
+                <h2>{sucursal.nombre}</h2>
+                <address>📍 {sucursal.direccion}</address>
+                <p>📞 <a href={`tel:${sucursal.telefono}`}>{formatearTelefono(sucursal.telefono)}</a></p>
+                <p className="sucursal-horario-react">🕒 {sucursal.horario.map((linea, indice) => ( <span key={linea}>{linea}{indice < sucursal.horario.length - 1 && <br />}</span> ))}</p>
+                <Link to="/agendar-hora" className="boton-sucursal">Agendar hora</Link>
+              </section>
+            </article>
+          ))}
+        </section>
+      )}
 
       <section className="sucursal-mapa-react">
         <h2>Cómo llegar a nuestra casa matriz</h2>

@@ -1,36 +1,14 @@
 import { Link } from 'react-router-dom'
-
-const atenciones = [
-  {
-    id: 'control-general',
-    fecha: '15/08/2026',
-    especialidad: 'Medicina General',
-    medico: 'Dr. González',
-    motivo: 'Control médico general',
-    diagnostico: 'Estado de salud general estable',
-    indicaciones: 'Mantener controles médicos periódicos.',
-  },
-  {
-    id: 'control-cardio',
-    fecha: '20/06/2026',
-    especialidad: 'Cardiología',
-    medico: 'Dr. Rojas',
-    motivo: 'Control cardiovascular',
-    diagnostico: 'Control sin observaciones relevantes',
-    indicaciones: 'Continuar controles según indicación médica.',
-  },
-]
-
-function tieneSesion() {
-  try {
-    return Boolean(sessionStorage.getItem('clinica.sesion') || localStorage.getItem('clinica.sesion'))
-  } catch {
-    return false
-  }
-}
+import { api } from './api/index.js'
+import EstadoCarga from './components/EstadoCarga.jsx'
+import { useSesion } from './context/useSesion.js'
+import { useCarga } from './hooks/useCarga.js'
+import { formatearFecha } from './utils/formato.js'
 
 function HistorialAtenciones() {
-  const sesionActiva = tieneSesion()
+  const { usuario } = useSesion()
+  const { datos: atenciones, cargando, error, recargar } = useCarga(
+    () => api.historial.porPaciente(usuario.pacienteId), usuario.pacienteId)
 
   return (
     <main className="historial-pagina-react">
@@ -40,31 +18,32 @@ function HistorialAtenciones() {
         <p>Consulta el historial de atenciones médicas realizadas en la clínica.</p>
       </section>
 
-      {!sesionActiva ? (
+      <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} />
+
+      {atenciones && atenciones.length === 0 && (
         <section className="historial-sin-sesion" role="status">
-          <h2>Inicia sesión para consultar tu historial</h2>
-          <p>El historial está disponible para pacientes con sesión iniciada en este navegador.</p>
-          <Link className="perfil-boton" to="/login">Iniciar sesión</Link>
+          <h2>Aún no tienes atenciones registradas</h2>
+          <p>Cuando un médico registre una atención, aparecerá en esta sección.</p>
+          <Link className="perfil-boton" to="/agendar-hora">Agendar una hora</Link>
         </section>
-      ) : (
-        <>
-          <p className="historial-aviso">Información ficticia de ejemplo para esta demostración.</p>
-          <div className="historial-lista-react">
-            {atenciones.map((atencion) => (
-              <article className="historial-card-react" key={atencion.id}>
-                <h2>Atención médica</h2>
-                <dl>
-                  <div><dt>Fecha</dt><dd>{atencion.fecha}</dd></div>
-                  <div><dt>Especialidad</dt><dd>{atencion.especialidad}</dd></div>
-                  <div><dt>Médico</dt><dd>{atencion.medico}</dd></div>
-                  <div><dt>Motivo de consulta</dt><dd>{atencion.motivo}</dd></div>
-                  <div><dt>Diagnóstico</dt><dd>{atencion.diagnostico}</dd></div>
-                  <div><dt>Indicaciones</dt><dd>{atencion.indicaciones}</dd></div>
-                </dl>
-              </article>
-            ))}
-          </div>
-        </>
+      )}
+
+      {atenciones && atenciones.length > 0 && (
+        <div className="historial-lista-react">
+          {atenciones.map((atencion) => (
+            <article className="historial-card-react" key={atencion.id}>
+              <h2>Atención médica</h2>
+              <dl>
+                <div><dt>Fecha</dt><dd>{formatearFecha(atencion.fecha)}</dd></div>
+                <div><dt>Especialidad</dt><dd>{atencion.especialidad || 'No informada'}</dd></div>
+                <div><dt>Médico</dt><dd>{atencion.medicoNombre || 'No informado'}</dd></div>
+                <div><dt>Motivo de consulta</dt><dd>{atencion.motivo || 'No informado'}</dd></div>
+                <div><dt>Diagnóstico</dt><dd>{atencion.diagnostico}</dd></div>
+                <div><dt>Indicaciones</dt><dd>{atencion.tratamiento || 'Sin indicaciones'}</dd></div>
+              </dl>
+            </article>
+          ))}
+        </div>
       )}
     </main>
   )

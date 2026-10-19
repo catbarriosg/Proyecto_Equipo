@@ -1,103 +1,79 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import { api, mensajeDeError } from './api/index.js'
 import CalendarioHoras from './CalendarioHoras.jsx'
-import medicos from './medicos.js'
-
-function codigoReserva(hora) {
-  return hora.codigo || `AM-${String(hora.id).padStart(4, '0')}`
-}
+import { estadoLegible, formatearFecha } from './utils/formato.js'
 
 const estiloAlerta = {
   customClass: { popup: 'clinica-swal-popup', confirmButton: 'clinica-swal-confirm' },
   buttonsStyling: false
 }
 
-function ModificarHora({ horas, actualizarHora }) {
+function ModificarHora() {
   const [parametros] = useSearchParams()
   const [codigo, setCodigo] = useState(parametros.get('codigo') || '')
   const [reserva, setReserva] = useState(null)
   const [fecha, setFecha] = useState('')
   const [hora, setHora] = useState('')
   const [error, setError] = useState('')
+  const [procesando, setProcesando] = useState(false)
+  const [versionAgenda, setVersionAgenda] = useState(0)
 
-  const medicoElegido = reserva && (
-    medicos.find((medico) => medico.id === reserva.medicoId) ||
-    medicos.find((medico) => medico.nombre === reserva.medico) ||
-    medicos.find((medico) => medico.especialidad === reserva.especialidad)
-  )
-
-  function buscarReserva(evento) {
+  async function buscarReserva(evento) {
     evento.preventDefault()
     setError('')
-    const buscada = codigo.trim().toUpperCase()
-    const encontrada = horas.find((registro) => {
-      const codigoAnterior = !registro.codigo ? `AM-${registro.id}`.toUpperCase() : ''
-      return codigoReserva(registro).toUpperCase() === buscada || codigoAnterior === buscada
-    })
-    if (!buscada || !encontrada) {
-      setReserva(null)
-      setFecha('')
-      setHora('')
-      setError('No encontramos una reserva con ese código. Revisa Mis horas médicas.')
-      return
-    }
-    if (encontrada.estado === 'Cancelada') {
-      setReserva(null)
-      setFecha('')
-      setHora('')
-      setError('Esta reserva está cancelada y no se puede modificar.')
-      return
-    }
-    setReserva(encontrada)
+    setReserva(null)
     setFecha('')
     setHora('')
+    if (!codigo.trim()) {
+      setError('Ingresa el código de tu reserva, por ejemplo AM-000001.')
+      return
+    }
+    setProcesando(true)
+    try {
+      const encontrada = await api.citas.obtenerPorCodigo(codigo)
+      if (!encontrada.gestionable) {
+        setError(encontrada.estado === 'CONFIRMADA' || encontrada.estado === 'SOLICITADA'
+          ? 'Esta reserva ya no se puede modificar en línea (faltan menos de 24 horas). Comunícate con la clínica.'
+          : `Esta reserva está ${estadoLegible(encontrada.estado).toLowerCase()} y no se puede modificar.`)
+        return
+      }
+      setReserva(encontrada)
+    } catch (errorBusqueda) {
+      setError(mensajeDeError(errorBusqueda))
+    } finally {
+      setProcesando(false)
+    }
   }
 
   async function guardarCambios(evento) {
     evento.preventDefault()
-    if (!reserva || !medicoElegido) {
-      setError('No pudimos identificar al médico de esta reserva. Contacta a la clínica para modificarla.')
-      return
-    }
     if (!fecha || !hora) {
       setError('Selecciona una fecha y una hora disponible en el calendario.')
       return
     }
-    if (fecha === reserva.fecha && hora === reserva.hora) {
-      setError('Elegiste la misma fecha y hora de tu reserva actual.')
-      return
+    setProcesando(true)
+    try {
+      const actualizada = await api.citas.reprogramar(reserva.id, { fecha, hora })
+      setReserva(actualizada)
+      setFecha('')
+      setHora('')
+      setError('')
+      setVersionAgenda((actual) => actual + 1)
+      await Swal.fire({
+        ...estiloAlerta,
+        icon: 'success',
+        title: 'Hora modificada',
+        html: `<p>Tu hora con <strong>${actualizada.medicoNombre}</strong> quedó para el <strong>${formatearFecha(actualizada.fecha)}</strong> a las <strong>${actualizada.hora}</strong>.</p>`,
+        confirmButtonText: 'Entendido'
+      })
+    } catch (errorGuardar) {
+      if (errorGuardar.estado === 409) setVersionAgenda((actual) => actual + 1)
+      setError(mensajeDeError(errorGuardar))
+    } finally {
+      setProcesando(false)
     }
-    const conflicto = horas.some((otra) => {
-      if (otra.id === reserva.id || otra.estado === 'Cancelada') return false
-      const mismoMedico = otra.medicoId
-        ? otra.medicoId === medicoElegido.id
-        : otra.medico === medicoElegido.nombre || (!otra.medico && otra.especialidad === medicoElegido.especialidad)
-      return mismoMedico && otra.fecha === fecha && otra.hora === hora
-    })
-    if (conflicto) {
-      setError('Ese horario ya fue reservado. Elige otro horario disponible.')
-      return
-    }
-
-    const reservaActualizada = {
-      ...reserva,
-      medico: reserva.medico || medicoElegido.nombre,
-      medicoId: reserva.medicoId || medicoElegido.id,
-      especialidad: reserva.especialidad || medicoElegido.especialidad,
-      fecha,
-      hora
-    }
-    actualizarHora(reservaActualizada)
-    setReserva(reservaActualizada)
-    setError('')
-    await Swal.fire({
-      ...estiloAlerta,
-      icon: 'success',
-      title: 'Hora modificada',
-      html: `<p>Tu hora con <strong>${medicoElegido.nombre}</strong> quedó para el <strong>${fecha}</strong> a las <strong>${hora}</strong>.</p>`,
-      confirmButtonText: 'Entendido'
-    })
   }
 
   return (
@@ -114,40 +90,36 @@ function ModificarHora({ horas, actualizarHora }) {
             <label htmlFor="codigo-modificar">Código de reserva</label>
             <input id="codigo-modificar" type="text" value={codigo}
               onChange={(evento) => { setCodigo(evento.target.value); setError(''); setReserva(null) }}
-              placeholder="Ej: AM-1695420000" autoComplete="off" required />
+              placeholder="Ej: AM-000001" autoComplete="off" required />
             <small className="registro-ayuda">Puedes encontrarlo en Mis horas médicas.</small>
           </div>
-          {error && <p className="login-mensaje login-error" role="alert">{error}</p>}
-          <button className="login-enviar" type="submit">Buscar reserva</button>
+          {error && !reserva && <p className="login-mensaje login-error" role="alert">{error}</p>}
+          <button className="login-enviar" type="submit" disabled={procesando}>Buscar reserva</button>
         </form>
 
         {reserva && (
           <section className="modificar-detalle">
             <h2>Reserva actual</h2>
-            <p><strong>Código:</strong> {codigoReserva(reserva)}</p>
-            <p><strong>Médico:</strong> {medicoElegido?.nombre || reserva.medico || 'No informado'}</p>
-            <p><strong>Especialidad:</strong> {reserva.especialidad || medicoElegido?.especialidad || 'No informada'}</p>
-            <p><strong>Fecha y hora actual:</strong> {reserva.fecha || 'No informada'}{reserva.hora ? ` a las ${reserva.hora}` : ''}</p>
-            {medicoElegido ? (
-              <form onSubmit={guardarCambios}>
-                <CalendarioHoras
-                  key={reserva.id}
-                  medico={medicoElegido}
-                  especialidad={reserva.especialidad || medicoElegido.especialidad}
-                  horasReservadas={horas}
-                  idReservaIgnorada={reserva.id}
-                  alCambiarSeleccion={({ fecha: nuevaFecha, hora: nuevaHora }) => {
-                    setFecha(nuevaFecha)
-                    setHora(nuevaHora)
-                    setError('')
-                  }}
-                />
-                {error && <p className="login-mensaje login-error" role="alert">{error}</p>}
-                <button className="login-enviar" type="submit">Confirmar modificación</button>
-              </form>
-            ) : (
-              <p className="login-mensaje login-error" role="alert">No pudimos identificar al médico de esta reserva.</p>
-            )}
+            <p><strong>Código:</strong> {reserva.codigo}</p>
+            <p><strong>Médico:</strong> {reserva.medicoNombre}</p>
+            <p><strong>Especialidad:</strong> {reserva.especialidad}</p>
+            <p><strong>Fecha y hora actual:</strong> {formatearFecha(reserva.fecha)} a las {reserva.hora}</p>
+            <form onSubmit={guardarCambios}>
+              <CalendarioHoras
+                key={`${reserva.id}-${versionAgenda}`}
+                medico={{ id: reserva.medicoId, nombre: reserva.medicoNombre, especialidad: reserva.especialidad }}
+                excluirCitaId={reserva.id}
+                alCambiarSeleccion={({ fecha: nuevaFecha, hora: nuevaHora }) => {
+                  setFecha(nuevaFecha)
+                  setHora(nuevaHora)
+                  setError('')
+                }}
+              />
+              {error && <p className="login-mensaje login-error" role="alert">{error}</p>}
+              <button className="login-enviar" type="submit" disabled={procesando}>
+                {procesando ? 'Guardando…' : 'Confirmar modificación'}
+              </button>
+            </form>
           </section>
         )}
         <p className="cancelar-volver"><Link to="/mis-horas">Volver a Mis horas médicas</Link></p>
