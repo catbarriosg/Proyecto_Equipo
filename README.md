@@ -1,88 +1,52 @@
 # Clínica Agenda Médica
 
-> **Versión actual:** frontend en React (`clinica-react/`) integrado con un backend de microservicios Spring Boot (`backend/`).
-> Para levantar todo: `docker compose up --build` y abrir http://localhost:3000.
-> Arquitectura, cuentas de prueba y reglas de negocio: ver [INTEGRACION.md](INTEGRACION.md).
-> Lo que sigue describe la primera versión del sitio en HTML (carpetas `paginas/`, `css/` y `js/`).
+Aplicación web para consultar la clínica y gestionar horas médicas: un frontend en React conectado a un backend de microservicios Spring Boot.
 
-## Descripción del proyecto
-
-Clínica Agenda Médica es un proyecto frontend desarrollado para representar un sistema web orientado a la gestión de horas médicas.
-
-El sitio permite a los usuarios consultar información de la clínica, revisar especialidades y médicos disponibles, registrar sus datos y representar el proceso de agendamiento, modificación y cancelación de horas médicas.
-
-El proyecto fue desarrollado utilizando HTML5, CSS3 y JavaScript, incorporando herramientas y librerías de apoyo para mejorar la presentación y experiencia de usuario.
-
-## Objetivo
-
-Desarrollar una interfaz web funcional y responsive para una clínica médica, aplicando los conocimientos de desarrollo frontend, estructura semántica HTML5, estilos CSS3, JavaScript, validación de formularios y control de versiones mediante Git y GitHub.
-
-## Tecnologías utilizadas
-
-- HTML5
-- CSS3
-- JavaScript
-- Bootstrap
-- Lightbox2
-- Git
-- GitHub
-- Visual Studio Code
-
-## Funcionalidades principales
-
-El proyecto contempla las siguientes funcionalidades:
-
-- Página de inicio.
-- Información de la clínica.
-- Visualización de especialidades médicas.
-- Visualización de médicos.
-- Registro de pacientes.
-- Inicio de sesión.
-- Perfil del paciente.
-- Agendamiento de horas médicas.
-- Selección de especialidad y médico.
-- Selección de fecha y horario disponible.
-- Confirmación de una hora médica.
-- Modificación de horas registradas.
-- Cancelación de horas.
-- Visualización del historial de atenciones.
-- Información de sucursales.
-- Formulario de contacto.
-- Preguntas frecuentes.
-- Panel de administración.
-
-## Estructura del proyecto
+## Estructura
 
 ```text
-clinica_agenda_medica/
-│
-├── index.html
-│
-├── paginas/
-│   ├── quienes-somos.html
-│   ├── especialidades.html
-│   ├── medicos.html
-│   ├── agendar-hora.html
-│   ├── mis-horas-medicas.html
-│   ├── registro-paciente.html
-│   ├── login.html
-│   ├── perfil-paciente.html
-│   ├── modificar-hora.html
-│   ├── cancelar-hora.html
-│   ├── historial-atenciones.html
-│   ├── sucursales.html
-│   ├── contacto.html
-│   ├── preguntas-frecuentes.html
-│   └── panel-administracion.html
-│
-├── css/
-│   └── estilos.css
-│
-├── js/
-│   └── script.js
-│
-├── img/
-│
-├── .gitignore
-│
-└── README.md
+Proyecto_Equipo/
+├── backend/            Microservicios Spring Boot (gateway, auth, citas, pacientes, personal…)
+├── clinica-react/      Frontend en React + Vite (pruebas en src/pruebas/)
+├── Versión-1/          Primera versión del sitio en HTML, CSS y JavaScript (Evaluación Parcial 1)
+├── docker-compose.yml  Levanta el sistema completo
+└── INTEGRACION.md      Arquitectura, cuentas de prueba y reglas de negocio
+```
+
+## Cómo levantarlo
+
+Sistema completo (requiere Docker Desktop):
+
+```bash
+docker compose up --build
+```
+
+Luego abrir http://localhost:3000. Las cuentas de demostración están en [INTEGRACION.md](INTEGRACION.md).
+
+Solo el frontend, sin backend (datos simulados en el navegador):
+
+```bash
+cd clinica-react
+npm install
+echo VITE_USE_API=false > .env.local
+npm run dev
+```
+
+## Pruebas
+
+```bash
+cd clinica-react
+npm test            # ejecuta las pruebas unitarias
+npm run coverage    # genera el reporte de cobertura en coverage/index.html
+```
+
+## Tecnologías
+
+- **Frontend:** React 19, Vite, React Router, Bootstrap 5, SweetAlert2.
+- **Pruebas:** Vitest, React Testing Library, jsdom.
+- **Backend:** Spring Boot, Spring Cloud Gateway, Eureka, MySQL.
+- **Despliegue:** Docker y Docker Compose.
+
+## Integrantes
+
+Constanza Cabrera, Catalina Barrios y Santiago Mendoza — DSY1104 Desarrollo Fullstack II, Duoc UC.
