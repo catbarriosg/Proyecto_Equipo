@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
-import Medicos from '../Medicos.jsx'
+import Medicos from './Medicos.jsx'
 
 // Mock del módulo de la API: la página recibe estos datos sin backend ni localStorage
 vi.mock('../api/index.js', () => ({

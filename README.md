@@ -7,7 +7,7 @@ Aplicación web para consultar la clínica y gestionar horas médicas: un fronte
 ```text
 Proyecto_Equipo/
 ├── backend/            Microservicios Spring Boot (gateway, auth, citas, pacientes, personal…)
-├── frontend/           Frontend en React + Vite (pruebas en src/pruebas/)
+├── frontend/           Frontend en React + Vite (src/pages, src/components; pruebas *.test.jsx junto a cada componente)
 ├── docs/               Integración, ERS, informe de pruebas y ejemplos de peticiones a la API
 ├── legacy/
 │   └── version-1-html/ Primera versión del sitio en HTML, CSS y JavaScript (Evaluación Parcial 1)

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { SesionContext } from '../context/SesionContext.js'
-import Login from '../Login.jsx'
+import Login from './Login.jsx'
 
 // En vez del SesionProvider real (que llama al backend) se entrega un contexto simulado con iniciarSesion como mock
 function renderizarLogin(iniciarSesion) {

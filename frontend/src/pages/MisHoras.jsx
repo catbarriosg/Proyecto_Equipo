@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { api, mensajeDeError } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useSesion } from './context/useSesion.js'
-import { useCarga } from './hooks/useCarga.js'
-import { fechaLocal } from './utils/agenda.js'
-import { estadoLegible, formatearFecha } from './utils/formato.js'
+import { api, mensajeDeError } from '../api/index.js'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useSesion } from '../context/useSesion.js'
+import { useCarga } from '../hooks/useCarga.js'
+import { fechaLocal } from '../utils/agenda.js'
+import { estadoLegible, formatearFecha } from '../utils/formato.js'
 
 const estiloAlerta = {
   customClass: { popup: 'clinica-swal-popup', confirmButton: 'clinica-swal-confirm', cancelButton: 'clinica-swal-cancel' },

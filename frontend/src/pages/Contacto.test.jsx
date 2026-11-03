@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import Contacto from '../Contacto.jsx'
+import Contacto from './Contacto.jsx'
 
 describe('Contacto', () => {
   // Prueba 5 — Estado del formulario: los campos y el contador cambian cuando el usuario escribe

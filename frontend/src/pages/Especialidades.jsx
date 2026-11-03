@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { api } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useCarga } from './hooks/useCarga.js'
+import { api } from '../api/index.js'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useCarga } from '../hooks/useCarga.js'
 
 // Página de especialidades: lista las especialidades activas obtenidas desde la API
 function Especialidades() {

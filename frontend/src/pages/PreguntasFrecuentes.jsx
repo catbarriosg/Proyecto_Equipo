@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import preguntasFrecuentes from './preguntasFrecuentes.js'
+import preguntasFrecuentes from '../data/preguntasFrecuentes.js'
 
-// Página de preguntas frecuentes con buscador. Los datos vienen de preguntasFrecuentes.js.
+// Página de preguntas frecuentes con buscador. Los datos vienen de data/preguntasFrecuentes.js.
 function PreguntasFrecuentes() {
   const [busqueda, setBusqueda] = useState('')
   const termino = busqueda.trim().toLocaleLowerCase('es')

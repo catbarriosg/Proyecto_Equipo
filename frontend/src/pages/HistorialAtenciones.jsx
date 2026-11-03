@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import { api } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useSesion } from './context/useSesion.js'
-import { useCarga } from './hooks/useCarga.js'
-import { formatearFecha } from './utils/formato.js'
+import { api } from '../api/index.js'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useSesion } from '../context/useSesion.js'
+import { useCarga } from '../hooks/useCarga.js'
+import { formatearFecha } from '../utils/formato.js'
 
 // Página que lista las atenciones médicas registradas del paciente conectado (ms-historial)
 function HistorialAtenciones() {

@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { api } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useCarga } from './hooks/useCarga.js'
-import { DIAS_ANTICIPACION, fechaLocal, sumarDias } from './utils/agenda.js'
-import { formatearFechaLarga } from './utils/formato.js'
+import { api } from '../api/index.js'
+import EstadoCarga from './EstadoCarga.jsx'
+import { useCarga } from '../hooks/useCarga.js'
+import { DIAS_ANTICIPACION, fechaLocal, sumarDias } from '../utils/agenda.js'
+import { formatearFechaLarga } from '../utils/formato.js'
 
 // Abreviaturas de los días; el índice coincide con Date.getDay() (0 = domingo)
 const NOMBRES_DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']

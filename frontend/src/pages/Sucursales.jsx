@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { api } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useCarga } from './hooks/useCarga.js'
-import { formatearTelefono } from './utils/formato.js'
+import { api } from '../api/index.js'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useCarga } from '../hooks/useCarga.js'
+import { formatearTelefono } from '../utils/formato.js'
 
 // Página de sucursales: tarjetas con dirección, teléfono y horario de cada sede, más un mapa de Google Maps
 function Sucursales() {

@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import PreguntasFrecuentes from '../PreguntasFrecuentes.jsx'
-import preguntasFrecuentes from '../preguntasFrecuentes.js'
+import PreguntasFrecuentes from './PreguntasFrecuentes.jsx'
+import preguntasFrecuentes from '../data/preguntasFrecuentes.js'
 
 // La página contiene <Link>, por eso necesita estar dentro de un router (MemoryRouter)
 function renderizarPagina() {

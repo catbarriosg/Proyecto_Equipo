@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { mensajeDeError } from './api/index.js'
-import { USAR_API } from './api/config.js'
-import { useSesion } from './context/useSesion.js'
-import { formatearRut, normalizarRut, rutValido } from './utils/rut.js'
+import { mensajeDeError } from '../api/index.js'
+import { USAR_API } from '../api/config.js'
+import { useSesion } from '../context/useSesion.js'
+import { formatearRut, normalizarRut, rutValido } from '../utils/rut.js'
 
 // Formulario de registro de pacientes. Crea la cuenta y la ficha clínica, y deja la sesión iniciada.
 function RegistroPaciente() {

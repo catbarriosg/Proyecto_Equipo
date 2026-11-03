@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api, mensajeDeError } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useSesion } from './context/useSesion.js'
-import { useCarga } from './hooks/useCarga.js'
-import { formatearFecha, formatearTelefono, mostrarRut } from './utils/formato.js'
+import { api, mensajeDeError } from '../api/index.js'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useSesion } from '../context/useSesion.js'
+import { useCarga } from '../hooks/useCarga.js'
+import { formatearFecha, formatearTelefono, mostrarRut } from '../utils/formato.js'
 
 // Opciones de previsión de salud disponibles en Chile
 const PREVISIONES = ['Fonasa', 'Isapre Banmédica', 'Isapre Colmena', 'Isapre Consalud', 'Isapre Cruz Blanca',

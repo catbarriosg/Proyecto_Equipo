@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { api, mensajeDeError } from './api/index.js'
-import CalendarioHoras from './CalendarioHoras.jsx'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useSesion } from './context/useSesion.js'
-import { useCarga } from './hooks/useCarga.js'
-import { formatearFecha } from './utils/formato.js'
-import { formatearRut, normalizarRut, rutValido } from './utils/rut.js'
+import { api, mensajeDeError } from '../api/index.js'
+import CalendarioHoras from '../components/CalendarioHoras.jsx'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useSesion } from '../context/useSesion.js'
+import { useCarga } from '../hooks/useCarga.js'
+import { formatearFecha } from '../utils/formato.js'
+import { formatearRut, normalizarRut, rutValido } from '../utils/rut.js'
 
 // Estilo propio para las alertas de SweetAlert2 (usa las clases CSS de la clínica en vez de las de la librería)
 const estiloAlerta = {

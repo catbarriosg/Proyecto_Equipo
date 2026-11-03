@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import { mensajeDeError } from './api/index.js'
-import { USAR_API } from './api/config.js'
-import { rutaInicial, useSesion } from './context/useSesion.js'
+import { mensajeDeError } from '../api/index.js'
+import { USAR_API } from '../api/config.js'
+import { rutaInicial, useSesion } from '../context/useSesion.js'
 
 // Textos de cada portal de acceso. El mismo componente se reutiliza para pacientes, médicos y administración.
 const configuracionAcceso = {

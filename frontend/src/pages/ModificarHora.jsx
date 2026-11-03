@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { api, mensajeDeError } from './api/index.js'
-import CalendarioHoras from './CalendarioHoras.jsx'
-import { estadoLegible, formatearFecha } from './utils/formato.js'
+import { api, mensajeDeError } from '../api/index.js'
+import CalendarioHoras from '../components/CalendarioHoras.jsx'
+import { estadoLegible, formatearFecha } from '../utils/formato.js'
 
 const estiloAlerta = {
   customClass: { popup: 'clinica-swal-popup', confirmButton: 'clinica-swal-confirm' },

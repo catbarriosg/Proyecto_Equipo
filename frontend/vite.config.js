@@ -22,13 +22,13 @@ export default defineConfig(({ mode }) => {
     // Pruebas unitarias (npm test): DOM simulado con jsdom y matchers de jest-dom
     test: {
       environment: 'jsdom',
-      setupFiles: './src/pruebas/configuracion.js',
+      setupFiles: './src/test/setup.js',
       // Reporte de cobertura (npm run coverage): en consola y en HTML, excluyendo las pruebas y el punto de entrada
       coverage: {
         provider: 'v8',
         reporter: ['text', 'html'],
         include: ['src/**/*.{js,jsx}'],
-        exclude: ['src/**/*.test.{js,jsx}', 'src/pruebas/**', 'src/main.jsx'],
+        exclude: ['src/**/*.test.{js,jsx}', 'src/test/**', 'src/main.jsx'],
       },
     },
   }

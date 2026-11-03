@@ -4,7 +4,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
-import './index.css'
+import './styles/index.css'
 // JavaScript de Bootstrap: necesario para el menú desplegable, el colapso del navbar y los acordeones
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import App from './App.jsx'

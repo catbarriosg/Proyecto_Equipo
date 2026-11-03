@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import EstadoCarga from '../components/EstadoCarga.jsx'
+import EstadoCarga from './EstadoCarga.jsx'
 
 describe('EstadoCarga', () => {
   // Prueba 1 — Renderizado condicional y props: el texto llega por props y solo se muestra mientras carga

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSesion } from './context/useSesion.js'
-import { rolLegible } from './utils/formato.js'
+import { useSesion } from '../../context/useSesion.js'
+import { rolLegible } from '../../utils/formato.js'
 
 // Opciones del menú "Mi cuenta" según el tipo de usuario
 const OPCIONES_POR_ROL = {

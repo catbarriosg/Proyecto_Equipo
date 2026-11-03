@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { api } from './api/index.js'
-import EstadoCarga from './components/EstadoCarga.jsx'
-import { useCarga } from './hooks/useCarga.js'
+import { api } from '../api/index.js'
+import EstadoCarga from '../components/EstadoCarga.jsx'
+import { useCarga } from '../hooks/useCarga.js'
 
 // Pide médicos y especialidades en paralelo (Promise.all) y los devuelve juntos
 function cargarDatos() {
