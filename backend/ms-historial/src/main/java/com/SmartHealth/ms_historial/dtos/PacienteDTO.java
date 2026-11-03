@@ -1,23 +1,18 @@
-package com.SmartHealth.ms_triaje.models;
+package com.SmartHealth.ms_historial.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO que representa la respuesta de ms-personal cuando consultamos
- * un profesional de salud por ID. Solo mapeamos los campos que necesitamos.
- */
+/** Datos del paciente que devuelve ms-pacientes (se usa para validar que exista y esté activo). */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonalSaludDTO {
+public class PacienteDTO {
     private Long id;
     private String rut;
     private String nombreCompleto;
     private String correo;
     private String telefono;
-    private String especialidad;
-    private String rol;
     private Boolean activo;
 }

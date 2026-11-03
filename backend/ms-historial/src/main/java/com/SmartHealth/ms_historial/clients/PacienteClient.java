@@ -1,7 +1,7 @@
 package com.SmartHealth.ms_historial.clients;
 
 import com.SmartHealth.ms_historial.config.FeignConfig;
-import com.SmartHealth.ms_historial.models.PacienteDTO;
+import com.SmartHealth.ms_historial.dtos.PacienteDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

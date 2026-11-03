@@ -147,10 +147,10 @@ docker-compose.override.yml
 # SCRIPTS DE EJECUCIÓN 
 # ========================================
 # NOTA: Los scripts PowerShell SÍ se incluyen
-# startup-all-services-fixed.ps1  ← INCLUIR
-# stop-all-services.ps1           ← INCLUIR
+# scripts/startup-all-services-fixed.ps1  ← INCLUIR
+# scripts/stop-all-services.ps1           ← INCLUIR
 # SETUP_INITIAL.ps1               ← INCLUIR
-# check-services.py               ← INCLUIR
+# scripts/check-services.py               ← INCLUIR
 # Pero los archivos generados NO:
 *.pid
 *.lock

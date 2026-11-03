@@ -1,12 +1,10 @@
-package com.SmartHealth.ms_triaje.models;
+package com.SmartHealth.ms_listas_de_espera.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO para recibir información de pacientes desde ms-pacientes.
- */
+/** Datos del paciente que devuelve ms-pacientes. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +13,5 @@ public class PacienteDTO {
     private String rut;
     private String nombreCompleto;
     private String correo;
-    private Boolean activo;
+    private String telefono;
 }

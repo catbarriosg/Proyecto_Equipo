@@ -1,4 +1,4 @@
-package com.SmartHealth.ms_pacientes.models.dtos;
+package com.SmartHealth.ms_pacientes.dtos;
 
 import lombok.Data;
 

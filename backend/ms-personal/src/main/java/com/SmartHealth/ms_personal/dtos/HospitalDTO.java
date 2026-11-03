@@ -1,4 +1,4 @@
-package com.SmartHealth.ms_personal.models;
+package com.SmartHealth.ms_personal.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

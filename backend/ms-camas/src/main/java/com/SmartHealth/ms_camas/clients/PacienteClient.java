@@ -1,7 +1,7 @@
 package com.SmartHealth.ms_camas.clients;
 
 import com.SmartHealth.ms_camas.config.FeignConfig;
-import com.SmartHealth.ms_camas.models.PacienteDTO;
+import com.SmartHealth.ms_camas.dtos.PacienteDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

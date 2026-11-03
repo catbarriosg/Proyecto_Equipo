@@ -2,8 +2,8 @@ package com.SmartHealth.ms_triaje.services;
 
 import com.SmartHealth.ms_triaje.clients.PacienteClient;
 import com.SmartHealth.ms_triaje.clients.PersonalClient;
-import com.SmartHealth.ms_triaje.models.PacienteDTO;
-import com.SmartHealth.ms_triaje.models.PersonalSaludDTO;
+import com.SmartHealth.ms_triaje.dtos.PacienteDTO;
+import com.SmartHealth.ms_triaje.dtos.PersonalSaludDTO;
 import com.SmartHealth.ms_triaje.models.Triaje;
 import com.SmartHealth.ms_triaje.repositories.TriajeRepository;
 import org.slf4j.Logger;

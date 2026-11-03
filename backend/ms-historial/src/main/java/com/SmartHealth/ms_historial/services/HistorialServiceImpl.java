@@ -4,7 +4,7 @@ import com.SmartHealth.ms_historial.clients.PacienteClient;
 import com.SmartHealth.ms_historial.dtos.HistorialDTO;
 import com.SmartHealth.ms_historial.exceptions.ApiException;
 import com.SmartHealth.ms_historial.models.HistorialClinico;
-import com.SmartHealth.ms_historial.models.PacienteDTO;
+import com.SmartHealth.ms_historial.dtos.PacienteDTO;
 import com.SmartHealth.ms_historial.repositories.HistorialRepository;
 import com.SmartHealth.ms_historial.seguridad.Identidad;
 import feign.FeignException;

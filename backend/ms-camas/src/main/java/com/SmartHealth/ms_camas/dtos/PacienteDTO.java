@@ -1,4 +1,4 @@
-package com.SmartHealth.ms_camas.models;
+package com.SmartHealth.ms_camas.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

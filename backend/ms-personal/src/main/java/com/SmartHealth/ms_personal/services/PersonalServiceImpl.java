@@ -8,7 +8,7 @@ import com.SmartHealth.ms_personal.enums.RolPersonal;
 import com.SmartHealth.ms_personal.enums.EspecialidadMedica;
 import com.SmartHealth.ms_personal.enums.DepartamentoPersonal;
 import com.SmartHealth.ms_personal.exceptions.ResourceNotFoundException;
-import com.SmartHealth.ms_personal.models.HospitalDTO;
+import com.SmartHealth.ms_personal.dtos.HospitalDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

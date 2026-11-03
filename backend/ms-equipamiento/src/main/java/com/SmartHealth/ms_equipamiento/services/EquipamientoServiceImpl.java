@@ -4,7 +4,7 @@ import com.SmartHealth.ms_equipamiento.clients.HospitalClient;
 import com.SmartHealth.ms_equipamiento.dtos.EquipamientoDTO;
 import com.SmartHealth.ms_equipamiento.exceptions.ResourceNotFoundException;
 import com.SmartHealth.ms_equipamiento.models.Equipamiento;
-import com.SmartHealth.ms_equipamiento.models.HospitalDTO;
+import com.SmartHealth.ms_equipamiento.dtos.HospitalDTO;
 import com.SmartHealth.ms_equipamiento.repositories.EquipamientoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

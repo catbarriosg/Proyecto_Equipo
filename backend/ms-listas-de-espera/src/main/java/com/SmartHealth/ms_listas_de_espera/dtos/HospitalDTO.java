@@ -1,4 +1,4 @@
-package com.SmartHealth.ms_listas_de_espera.models;
+package com.SmartHealth.ms_listas_de_espera.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

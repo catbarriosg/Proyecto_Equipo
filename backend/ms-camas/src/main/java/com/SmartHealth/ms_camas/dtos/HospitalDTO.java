@@ -1,4 +1,4 @@
-package com.SmartHealth.ms_camas.models;
+package com.SmartHealth.ms_camas.dtos;
 
 import lombok.Data;
 

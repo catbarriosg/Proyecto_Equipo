@@ -1,7 +1,7 @@
 package com.SmartHealth.ms_camas;
 
 import com.SmartHealth.ms_camas.clients.HospitalClient;
-import com.SmartHealth.ms_camas.models.HospitalDTO;
+import com.SmartHealth.ms_camas.dtos.HospitalDTO;
 import feign.FeignException;
 import feign.Request;
 import org.junit.jupiter.api.Test;

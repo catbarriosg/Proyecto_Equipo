@@ -1,4 +1,4 @@
-package com.SmartHealth.ms_equipamiento.models;
+package com.SmartHealth.ms_equipamiento.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

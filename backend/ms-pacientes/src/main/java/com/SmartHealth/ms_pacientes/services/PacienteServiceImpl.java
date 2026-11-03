@@ -4,7 +4,7 @@ import com.SmartHealth.ms_pacientes.clients.HistorialClient;
 import com.SmartHealth.ms_pacientes.dtos.PacienteDTO;
 import com.SmartHealth.ms_pacientes.exceptions.ApiException;
 import com.SmartHealth.ms_pacientes.models.Paciente;
-import com.SmartHealth.ms_pacientes.models.dtos.HistorialDTO;
+import com.SmartHealth.ms_pacientes.dtos.HistorialDTO;
 import com.SmartHealth.ms_pacientes.repositories.PacienteRepository;
 import com.SmartHealth.ms_pacientes.seguridad.Identidad;
 import org.slf4j.Logger;

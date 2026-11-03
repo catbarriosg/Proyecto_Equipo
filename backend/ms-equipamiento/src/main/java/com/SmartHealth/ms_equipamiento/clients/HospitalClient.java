@@ -1,7 +1,7 @@
 package com.SmartHealth.ms_equipamiento.clients;
 
 import com.SmartHealth.ms_equipamiento.config.FeignConfig;
-import com.SmartHealth.ms_equipamiento.models.HospitalDTO;
+import com.SmartHealth.ms_equipamiento.dtos.HospitalDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,7 +1,7 @@
 package com.SmartHealth.ms_triaje.clients;
 
 import com.SmartHealth.ms_triaje.config.FeignConfig;
-import com.SmartHealth.ms_triaje.models.PersonalSaludDTO;
+import com.SmartHealth.ms_triaje.dtos.PersonalSaludDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
