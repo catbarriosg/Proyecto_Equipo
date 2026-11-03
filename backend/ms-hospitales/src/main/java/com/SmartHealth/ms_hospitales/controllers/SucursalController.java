@@ -25,12 +25,14 @@ public class SucursalController {
         this.servicio = servicio;
     }
 
+    /** GET /api/sucursales — sedes activas en el formato que usa la página "Sucursales". */
     @GetMapping
     @Operation(summary = "Listar sucursales activas")
     public List<SucursalDTO> listar() {
         return servicio.obtenerTodos().stream().map(SucursalDTO::desde).toList();
     }
 
+    /** GET /api/sucursales/{id} — una sede por su ID. */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener una sucursal por ID")
     public SucursalDTO obtener(@PathVariable Long id) {

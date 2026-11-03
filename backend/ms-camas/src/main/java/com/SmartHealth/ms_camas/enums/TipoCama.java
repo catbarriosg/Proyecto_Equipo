@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_camas.enums;
 
+/** Tipos de cama válidos, con su nombre para mostrar. */
 public enum TipoCama {
     BASICA("Básica"),
     UCI("UCI"),
@@ -14,10 +15,12 @@ public enum TipoCama {
         this.nombre = nombre;
     }
 
+    /** Nombre del tipo para mostrar. */
     public String getNombre() {
         return nombre;
     }
 
+    /** true si el texto corresponde a un tipo del enum (sin distinguir mayúsculas). */
     public static boolean isValido(String tipo) {
         if (tipo == null || tipo.trim().isEmpty()) {
             return false;
@@ -30,6 +33,7 @@ public enum TipoCama {
         }
     }
 
+    /** Tipos válidos separados por comas, para el mensaje de error. */
     public static String getTiposValidos() {
         StringBuilder sb = new StringBuilder();
         TipoCama[] valores = TipoCama.values();

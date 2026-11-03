@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Manejo centralizado de errores de ms-listas-de-espera para todos los controladores. */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    /** Fallas de @Valid: devuelve el detalle de cada campo inválido (400). */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         logger.warn("Validacion fallida: {} errores detectados", ex.getBindingResult().getErrorCount());
@@ -38,6 +40,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    /** Errores de negocio lanzados como RuntimeException. */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeExceptions(RuntimeException ex) {
         logger.error("RuntimeException capturada: {}", ex.getMessage(), ex);
@@ -50,6 +53,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /** Argumentos inválidos (400). */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
         logger.error("Argumento invalido: {}", ex.getMessage());
@@ -62,6 +66,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    /** Cualquier otro error (500). */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         logger.error("Excepcion no manejada: {}", ex.getMessage(), ex);

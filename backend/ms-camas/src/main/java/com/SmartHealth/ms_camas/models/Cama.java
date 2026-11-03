@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/** Entidad JPA de la tabla "camas". El código es único. */
 @Data
 @Entity
 @Table(name = "camas")
@@ -53,12 +54,14 @@ public class Cama {
     @Column(nullable = false)
     private Boolean activa = true;
 
+    /** Antes de insertar: fechas de creación y actualización. */
     @PrePersist
     protected void onCreate() {
         creadoEn = LocalDateTime.now();
         actualizadoEn = LocalDateTime.now();
     }
 
+    /** Antes de actualizar: fecha de la última modificación. */
     @PreUpdate
     protected void onUpdate() {
         actualizadoEn = LocalDateTime.now();

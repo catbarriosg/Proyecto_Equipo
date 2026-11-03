@@ -5,6 +5,7 @@ import { USAR_API } from './api/config.js'
 import { useSesion } from './context/useSesion.js'
 import { formatearRut, normalizarRut, rutValido } from './utils/rut.js'
 
+// Formulario de registro de pacientes. Crea la cuenta y la ficha clínica, y deja la sesión iniciada.
 function RegistroPaciente() {
   const navegar = useNavigate()
   const [parametros] = useSearchParams()
@@ -16,15 +17,19 @@ function RegistroPaciente() {
   const [mostrarRepetida, setMostrarRepetida] = useState(false)
   const [error, setError] = useState('')
   const [procesando, setProcesando] = useState(false)
+  // Rango permitido para la fecha de nacimiento: entre hoy y hace 120 años
   const hoy = new Date().toISOString().slice(0, 10)
   const fechaMinima = `${new Date().getFullYear() - 120}${hoy.slice(4)}`
   const volver = parametros.get('volver')
 
+  // Actualiza un solo campo del formulario y borra el mensaje de error anterior
   function cambiar(campo, valor) {
     setDatos((actuales) => ({ ...actuales, [campo]: valor }))
     setError('')
   }
 
+  // Valida todos los campos antes de enviar (RUT, nombre, correo, teléfono, fecha y contraseña).
+  // Ante el primer error muestra el mensaje y detiene el envío.
   async function crearCuenta(evento) {
     evento.preventDefault()
     setError('')
@@ -67,6 +72,7 @@ function RegistroPaciente() {
       return
     }
 
+    // Datos válidos: se envían a la API con el RUT normalizado (sin puntos)
     setProcesando(true)
     try {
       await registrarPaciente({
@@ -95,6 +101,7 @@ function RegistroPaciente() {
 
           <div className="login-campo">
             <label htmlFor="registro-rut">RUT <span aria-hidden="true">*</span></label>
+            {/* El RUT se formatea con puntos mientras se escribe y se valida el dígito verificador */}
             <input id="registro-rut" inputMode="text" maxLength={12} placeholder="Ej: 12.345.678-5"
               value={datos.rut} onChange={(e) => cambiar('rut', formatearRut(e.target.value))}
               aria-invalid={datos.rut.length > 8 && !rutValido(datos.rut)} required />

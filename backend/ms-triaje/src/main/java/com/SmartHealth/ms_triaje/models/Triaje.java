@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/** Entidad JPA de la tabla "triajes": signos vitales, síntomas y resultado de la evaluación. */
 @Data
 @Entity
 @Table(name = "triajes")
@@ -69,6 +70,7 @@ public class Triaje {
     @Column(nullable = false)
     private Integer puntuacionTriaje = 0;
 
+    /** Antes de insertar: la fecha de evaluación es el momento del registro. */
     @PrePersist
     protected void onCreate() {
         fechaEvaluacion = LocalDateTime.now();

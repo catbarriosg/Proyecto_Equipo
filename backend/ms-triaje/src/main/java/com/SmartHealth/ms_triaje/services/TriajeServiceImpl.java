@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+/** Lógica de negocio del triaje: validaciones con otros servicios y cálculo automático de la urgencia. */
 @Service
 public class TriajeServiceImpl implements TriajeService {
 
@@ -101,11 +102,13 @@ public class TriajeServiceImpl implements TriajeService {
         }
     }
 
+    /** Todas las evaluaciones registradas. */
     @Override
     public List<Triaje> obtenerTodos() {
         return repository.findAll();
     }
 
+    /** Evaluaciones de un paciente; lanza error si no tiene ninguna. */
     @Override
     public List<Triaje> obtenerPorRut(String rutPaciente) {
         List<Triaje> triajes = repository.findByRutPacienteOrderByFechaEvaluacionDesc(rutPaciente);
@@ -115,11 +118,13 @@ public class TriajeServiceImpl implements TriajeService {
         return triajes;
     }
 
+    /** Evaluaciones con un nivel de urgencia determinado. */
     @Override
     public List<Triaje> obtenerPorNivelUrgencia(String nivelUrgencia) {
         return repository.findByNivelUrgencia(nivelUrgencia);
     }
 
+    /** Una evaluación por ID, o error si no existe. */
     @Override
     public Triaje obtenerPorId(Long id) {
         return repository.findById(id)

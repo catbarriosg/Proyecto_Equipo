@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/** Lógica de negocio del equipamiento médico. */
 @Service
 public class EquipamientoServiceImpl implements EquipamientoService {
 
@@ -25,17 +26,20 @@ public class EquipamientoServiceImpl implements EquipamientoService {
     @Autowired
     private HospitalClient hospitalClient;
 
+    /** Todos los equipos, también los dados de baja. */
     @Override
     public List<Equipamiento> listarTodos() {
         logger.info("Listando TODOS los equipamientos (incluyendo inactivos)");
         return equipamientoRepository.findAll();
     }
 
+    /** Solo los equipos activos. */
     @Override
     public List<Equipamiento> listarTodosActivos() {
         return equipamientoRepository.findByActivoTrue();
     }
 
+    /** Equipos activos con un estado; primero valida que el estado exista en EstadoEquipamiento. */
     @Override
     public List<Equipamiento> listarPorEstado(String estado) {
         logger.info("Listando equipamiento por estado: {}", estado);
@@ -50,6 +54,7 @@ public class EquipamientoServiceImpl implements EquipamientoService {
         return equipamientoRepository.findByEstadoAndActivoTrue(estado);
     }
 
+    /** Equipos activos de una sede, validando antes la sede. */
     @Override
     public List<Equipamiento> listarPorHospital(Long hospitalId) {
         logger.info("Listando equipamiento por hospital ID: {}", hospitalId);
@@ -60,12 +65,14 @@ public class EquipamientoServiceImpl implements EquipamientoService {
         return equipamientoRepository.findByHospitalUbicacionIdAndActivoTrue(hospitalId);
     }
 
+    /** Un equipo por número de serie, o error si no existe. */
     @Override
     public Equipamiento buscarPorNumeroSerie(String numeroSerie) {
         return equipamientoRepository.findByNumeroSerie(numeroSerie)
                 .orElseThrow(() -> new RuntimeException("Equipo con número de serie " + numeroSerie + " no encontrado"));
     }
 
+    /** Registra un equipo: verifica que el número de serie no exista y que la sede sea válida. */
     @Override
     public Equipamiento guardarEquipamiento(Equipamiento equipamiento) {
         logger.info("Guardando equipamiento con número de serie: {}", equipamiento.getNumeroSerie());
@@ -89,6 +96,7 @@ public class EquipamientoServiceImpl implements EquipamientoService {
         }
     }
 
+    /** Actualiza un equipo: si cambia el número de serie verifica que no esté usado, y valida la sede. */
     @Override
     public Equipamiento actualizarEquipamiento(String numeroSerie, Equipamiento equipamientoActualizado) {
         Equipamiento equipo = buscarPorNumeroSerie(numeroSerie);
@@ -119,6 +127,7 @@ public class EquipamientoServiceImpl implements EquipamientoService {
         return equipamientoRepository.save(equipo);
     }
 
+    /** Cambia solo el estado del equipo. */
     @Override
     public Equipamiento actualizarEstado(String numeroSerie, String nuevoEstado) {
         Equipamiento equipo = buscarPorNumeroSerie(numeroSerie);
@@ -126,6 +135,7 @@ public class EquipamientoServiceImpl implements EquipamientoService {
         return equipamientoRepository.save(equipo);
     }
 
+    /** Soft delete: marca el equipo como inactivo. */
     @Override
     public void eliminarEquipamiento(String numeroSerie) {
         Equipamiento equipo = buscarPorNumeroSerie(numeroSerie);

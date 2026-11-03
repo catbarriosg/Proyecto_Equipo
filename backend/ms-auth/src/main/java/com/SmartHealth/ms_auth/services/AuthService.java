@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/** Lógica de negocio de las cuentas: inicio de sesión, registro de pacientes y administración de cuentas. */
 @Service
 public class AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
+    // Mismo mensaje si falla el correo o la contraseña, para no revelar qué correos están registrados
     private static final String CREDENCIALES_INVALIDAS = "Correo o contraseña incorrectos.";
 
     private final UsuarioRepository repositorio;
@@ -33,6 +35,13 @@ public class AuthService {
         this.pacienteClient = pacienteClient;
     }
 
+    /**
+     * Inicio de sesión:
+     * 1. Busca la cuenta por correo y compara la contraseña con su hash BCrypt.
+     * 2. Rechaza cuentas desactivadas.
+     * 3. Verifica que la cuenta corresponda al portal usado (paciente, médico o administración).
+     * 4. Devuelve el token JWT.
+     */
     public SesionDTO iniciarSesion(LoginRequest datos) {
         Usuario usuario = repositorio.findByCorreo(normalizar(datos.getCorreo()))
                 .orElseThrow(() -> ApiException.noAutorizado(CREDENCIALES_INVALIDAS));
@@ -68,6 +77,7 @@ public class AuthService {
         PacienteDTO paciente = new PacienteDTO(null, rut, nombreCompleto, correo, datos.getFechaNacimiento(),
                 vacioANulo(datos.getPrevision()), vacioANulo(datos.getTelefono()), true);
 
+        // Si ms-pacientes responde 409 (RUT ya registrado) se intenta vincular la cuenta a esa ficha existente
         PacienteDTO guardado;
         try {
             guardado = pacienteClient.crear(paciente);
@@ -87,6 +97,7 @@ public class AuthService {
         return crearSesion(creado);
     }
 
+    /** Solo se vincula si la ficha tiene el mismo correo y todavía no tiene una cuenta asociada. */
     private PacienteDTO vincularPacienteExistente(String rut, String correo) {
         PacienteDTO existente = pacienteClient.buscarPorRut(rut);
         boolean mismoCorreo = existente.getCorreo() != null && existente.getCorreo().equalsIgnoreCase(correo);
@@ -97,12 +108,14 @@ public class AuthService {
         return existente;
     }
 
+    /** Busca una cuenta por ID o lanza 404. */
     public UsuarioDTO obtener(Long id) {
         return repositorio.findById(id)
                 .map(UsuarioDTO::desde)
                 .orElseThrow(() -> ApiException.noEncontrado("No encontramos la cuenta solicitada."));
     }
 
+    /** Lista todas las cuentas registradas. */
     public List<UsuarioDTO> listar() {
         return repositorio.findAll().stream().map(UsuarioDTO::desde).toList();
     }
@@ -113,6 +126,7 @@ public class AuthService {
         if (repositorio.existsByCorreo(correo)) {
             throw ApiException.conflicto("Ya existe una cuenta con ese correo.");
         }
+        // Una cuenta de médico debe apuntar a un profesional y una de paciente a una ficha
         if (datos.getRol() == Rol.MEDICO && datos.getPersonalId() == null) {
             throw ApiException.solicitudInvalida("Una cuenta de médico debe estar asociada a un profesional.");
         }
@@ -133,6 +147,7 @@ public class AuthService {
         return UsuarioDTO.desde(repositorio.save(usuario));
     }
 
+    /** Activa o desactiva una cuenta; una cuenta desactivada no puede iniciar sesión. */
     public UsuarioDTO cambiarEstado(Long id, boolean activo) {
         Usuario usuario = repositorio.findById(id)
                 .orElseThrow(() -> ApiException.noEncontrado("No encontramos la cuenta solicitada."));
@@ -140,15 +155,18 @@ public class AuthService {
         return UsuarioDTO.desde(repositorio.save(usuario));
     }
 
+    /** Arma la respuesta de sesión: token, segundos de vigencia y datos públicos del usuario. */
     private SesionDTO crearSesion(Usuario usuario) {
         return new SesionDTO(jwtService.generarToken(usuario), jwtService.segundosDeVigencia(),
                 UsuarioDTO.desde(usuario));
     }
 
+    /** Correo sin espacios y en minúsculas, para que "Ana@Gmail.com" y "ana@gmail.com" sean la misma cuenta. */
     private static String normalizar(String correo) {
         return correo == null ? null : correo.trim().toLowerCase();
     }
 
+    /** Convierte textos vacíos en null para no guardar campos en blanco. */
     private static String vacioANulo(String valor) {
         return valor == null || valor.isBlank() ? null : valor.trim();
     }

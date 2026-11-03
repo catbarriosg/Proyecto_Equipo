@@ -4,6 +4,7 @@ package com.SmartHealth.ms_triaje.services;
 import com.SmartHealth.ms_triaje.models.Triaje;
 import java.util.List;
 
+/** Operaciones del servicio de triaje. La implementación está en TriajeServiceImpl. */
 public interface TriajeService {
     Triaje registrarTriaje(Triaje triaje);
     List<Triaje> obtenerTodos();

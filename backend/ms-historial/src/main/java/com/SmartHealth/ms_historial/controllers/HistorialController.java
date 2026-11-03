@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Endpoints REST del historial clínico (/api/historial). */
 @RestController
 @RequestMapping("/api/historial") 
 
@@ -34,6 +35,7 @@ public class HistorialController {
     @Autowired
     private HistorialService service;
 
+    /** GET /api/historial — todos los registros, del más reciente al más antiguo. */
     @Operation(summary = "Listar todos los historiales clínicos")
     @GetMapping
     public ResponseEntity<List<HistorialDTO>> obtenerTodos() {
@@ -41,6 +43,7 @@ public class HistorialController {
         return ResponseEntity.ok(service.obtenerTodos());
     }
 
+    /** GET /api/historial/{id} — un registro por su ID. */
     @Operation(summary = "Obtener historial clínico por ID")
     @GetMapping("/{id}")
     public ResponseEntity<HistorialDTO> obtenerPorId(@PathVariable Long id) {
@@ -48,6 +51,7 @@ public class HistorialController {
         return ResponseEntity.ok(service.obtenerPorId(id));
     }
 
+    /** POST /api/historial — registra una atención (médico o administrador); responde 201. */
     @Operation(summary = "Crear nuevo registro en historial clínico")
     @PostMapping
     public ResponseEntity<HistorialDTO> crear(@Valid @RequestBody HistorialDTO historialDTO) {
@@ -56,6 +60,7 @@ public class HistorialController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoHistorial);
     }
 
+    /** GET /api/historial/paciente/{idPaciente} — atenciones de un paciente (página "Historial de atenciones"). */
     @Operation(summary = "Listar historial clínico de un paciente")
     @GetMapping("/paciente/{idPaciente}")
     public ResponseEntity<List<HistorialDTO>> obtenerPorPaciente(@PathVariable Long idPaciente) {
@@ -63,6 +68,7 @@ public class HistorialController {
         return ResponseEntity.ok(service.obtenerPorPaciente(idPaciente));
     }
 
+    /** DELETE /api/historial/{id} — elimina un registro y responde con un mensaje de confirmación. */
     @Operation(summary = "Eliminar registro de historial clínico")
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> eliminar(@PathVariable Long id) {

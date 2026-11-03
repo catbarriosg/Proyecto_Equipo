@@ -13,6 +13,7 @@ const estiloAlerta = {
   buttonsStyling: false
 }
 
+// Página para cancelar una hora: busca la reserva por código, muestra el detalle y pide confirmación
 function CancelarHora() {
   const [parametros] = useSearchParams()
   const [codigo, setCodigo] = useState(parametros.get('codigo') || '')
@@ -20,6 +21,7 @@ function CancelarHora() {
   const [error, setError] = useState('')
   const [procesando, setProcesando] = useState(false)
 
+  // Busca la reserva por su código (la API solo la devuelve si pertenece al usuario o este tiene permiso)
   async function buscarReserva(evento) {
     evento.preventDefault()
     setError('')
@@ -38,6 +40,7 @@ function CancelarHora() {
     }
   }
 
+  // Pide confirmación con SweetAlert2 y, si el usuario acepta, cancela la cita en la API
   async function cancelarReserva() {
     const resultado = await Swal.fire({
       ...estiloAlerta,
@@ -68,6 +71,7 @@ function CancelarHora() {
     }
   }
 
+  // Solo las reservas confirmadas o solicitadas se pueden cancelar
   const activa = reserva && (reserva.estado === 'CONFIRMADA' || reserva.estado === 'SOLICITADA')
 
   return (
@@ -101,6 +105,7 @@ function CancelarHora() {
               <div><dt>Hora</dt><dd>{reserva.hora}</dd></div>
               <div><dt>Estado</dt><dd>{estadoLegible(reserva.estado)}</dd></div>
             </dl>
+            {/* Tres casos: reserva ya no activa, cancelable, o con menos de 24 horas (debe llamar a la clínica) */}
             {!activa ? (
               <p className="login-mensaje login-aviso">Esta reserva está {estadoLegible(reserva.estado).toLowerCase()}.</p>
             ) : reserva.gestionable ? (

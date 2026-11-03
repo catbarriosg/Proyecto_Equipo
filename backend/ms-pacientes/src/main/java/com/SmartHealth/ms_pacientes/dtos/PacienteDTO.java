@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 
+/** Datos del paciente que entran y salen por la API, con sus validaciones y su documentación Swagger (@Schema). */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -58,6 +59,7 @@ public class PacienteDTO {
     @Schema(description = "Indica si el paciente está activo en el sistema", example = "true")
     private Boolean activo;
 
+    /** Convierte la entidad Paciente en DTO. */
     public static PacienteDTO desde(Paciente paciente) {
         return new PacienteDTO(paciente.getId(), paciente.getRut(), paciente.getNombreCompleto(), paciente.getCorreo(),
                 paciente.getFechaNacimiento(), paciente.getPrevision(), paciente.getTelefono(),

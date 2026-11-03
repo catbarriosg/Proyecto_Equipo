@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 
+/** Datos de una atención que entran y salen por la API, con sus validaciones. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

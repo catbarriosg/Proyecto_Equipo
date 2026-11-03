@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** Datos del paciente que devuelve ms-pacientes (se usa para validar que exista y esté activo). */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

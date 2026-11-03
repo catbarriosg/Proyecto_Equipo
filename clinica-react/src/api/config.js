@@ -1,3 +1,5 @@
+// Configuración de la capa de datos. Los valores se leen de las variables de entorno de Vite (.env / .env.local).
+
 // Origen de los datos de la aplicación.
 //   VITE_USE_API=true  (por defecto): usa el backend a través del gateway (/api/...)
 //   VITE_USE_API=false: usa la base de datos simulada en localStorage (sin backend)

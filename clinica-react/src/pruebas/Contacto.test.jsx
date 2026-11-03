@@ -1,3 +1,4 @@
+// Pruebas del formulario de contacto. userEvent simula a un usuario real escribiendo y haciendo clic.
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'

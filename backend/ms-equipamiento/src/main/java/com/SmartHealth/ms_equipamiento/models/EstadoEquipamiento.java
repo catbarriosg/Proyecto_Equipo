@@ -15,6 +15,7 @@ public enum EstadoEquipamiento {
         this.descripcion = descripcion;
     }
 
+    /** Descripción del estado para mostrar. */
     public String getDescripcion() {
         return descripcion;
     }

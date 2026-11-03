@@ -1,3 +1,5 @@
+// Contenido de la página de Preguntas frecuentes, agrupado por categoría.
+// Cada pregunta puede tener un "enlace" opcional que lleva a la sección relacionada del sitio.
 const preguntasFrecuentes = [
   {
     id: 'horas-medicas',
@@ -29,4 +31,5 @@ const preguntasFrecuentes = [
   },
 ]
 
+// Se exporta como datos para que el componente solo se encargue de mostrarlos (y para poder probarlos)
 export default preguntasFrecuentes

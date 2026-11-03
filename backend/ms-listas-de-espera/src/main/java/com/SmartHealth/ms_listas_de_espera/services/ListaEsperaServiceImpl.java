@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/** Lógica de negocio de las listas de espera. */
 @Service
 public class ListaEsperaServiceImpl implements IListaEsperaService {
 
@@ -32,6 +33,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
     @Autowired
     private HospitalClient hospitalClient;
 
+    /** Crea un registro validando antes el paciente (ms-pacientes) y la sede (ms-hospitales). */
     @Override
     public ListaEsperaDTO crearListaEspera(ListaEsperaDTO listaEsperaDTO) {
         logger.info("Creando nueva lista de espera para paciente ID: {} y hospital ID: {}", 
@@ -75,6 +77,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Registro activo por ID, o null si no existe. */
     @Override
     public ListaEsperaDTO obtenerPorId(Long id) {
         logger.info("Obteniendo lista de espera con ID: {}", id);
@@ -93,6 +96,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Todos los registros activos. */
     @Override
     public List<ListaEsperaDTO> obtenerTodas() {
         logger.info("Obteniendo todas las listas de espera");
@@ -106,6 +110,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Registros activos de un paciente. */
     @Override
     public List<ListaEsperaDTO> obtenerPorPaciente(Long idPaciente) {
         logger.info("Obteniendo listas de espera del paciente ID: {}", idPaciente);
@@ -128,6 +133,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Registros activos de una sede. */
     @Override
     public List<ListaEsperaDTO> obtenerPorHospital(Long idHospital) {
         logger.info("Obteniendo listas de espera del hospital ID: {}", idHospital);
@@ -150,6 +156,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Registros activos con un estado determinado. */
     @Override
     public List<ListaEsperaDTO> obtenerPorEstado(String estado) {
         logger.info("Obteniendo listas de espera con estado: {}", estado);
@@ -171,6 +178,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Actualiza los datos de un registro activo. */
     @Override
     public ListaEsperaDTO actualizarListaEspera(Long id, ListaEsperaDTO listaEsperaDTO) {
         logger.info("Actualizando lista de espera con ID: {}", id);
@@ -196,6 +204,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Soft delete: marca el registro como inactivo. */
     @Override
     public void eliminarListaEspera(Long id) {
         logger.info("Eliminando lista de espera con ID: {}", id);
@@ -215,6 +224,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Cuenta los registros PENDIENTES de una sede. */
     @Override
     public Long contarPendientesPorHospital(Long idHospital) {
         logger.info("Contando registros pendientes en hospital ID: {}", idHospital);
@@ -237,6 +247,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Cuenta los registros PENDIENTES de un paciente. */
     @Override
     public Long contarPendientesPorPaciente(Long idPaciente) {
         logger.info("Contando registros pendientes para paciente ID: {}", idPaciente);
@@ -259,6 +270,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Cambia el estado después de validar que exista en EstadoListaEspera. */
     @Override
     public ListaEsperaDTO cambiarEstado(Long id, String nuevoEstado) {
         logger.info("Cambiando estado a '{}' para lista de espera ID: {}", nuevoEstado, id);
@@ -290,6 +302,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Registros activos ordenados por prioridad y fecha de ingreso. */
     @Override
     public List<ListaEsperaDTO> obtenerListasOrdenadas() {
         logger.info("Obteniendo listas de espera ordenadas por prioridad");
@@ -303,6 +316,7 @@ public class ListaEsperaServiceImpl implements IListaEsperaService {
         }
     }
 
+    /** Entidad → DTO. */
     private ListaEsperaDTO convertToDTO(ListaEspera listaEspera) {
         ListaEsperaDTO dto = new ListaEsperaDTO();
         dto.setId(listaEspera.getId());

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
+/** Datos de una evaluación de triaje que se reciben por la API, con sus validaciones de signos vitales. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

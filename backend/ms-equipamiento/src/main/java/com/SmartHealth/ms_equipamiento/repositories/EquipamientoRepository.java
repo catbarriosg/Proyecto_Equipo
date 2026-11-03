@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/** Acceso a la tabla "equipamiento": búsqueda por número de serie, estado y sede. */
 @Repository
 public interface EquipamientoRepository extends JpaRepository<Equipamiento, Long> {
 

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Endpoints de administración de las sedes (/api/hospitales). El gateway los restringe al administrador. */
 @RestController
 @RequestMapping("/api/hospitales")
 @Tag(name = "Hospitales", description = "Gestión de hospitales en el sistema")
@@ -30,6 +31,7 @@ public class HospitalController {
     @Autowired
     private HospitalService service;
 
+    /** GET /api/hospitales — sedes activas. */
     @GetMapping
     @Operation(summary = "Listar todos los hospitales activos")
     public ResponseEntity<List<Hospital>> listar() {
@@ -37,6 +39,7 @@ public class HospitalController {
         return ResponseEntity.ok(service.obtenerTodos());
     }
 
+    /** GET /api/hospitales/{id} — una sede por su ID. */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener hospital por ID")
     public ResponseEntity<Hospital> buscarPorId(@PathVariable Long id) {
@@ -44,6 +47,7 @@ public class HospitalController {
         return ResponseEntity.ok(service.obtenerPorId(id));
     }
 
+    /** GET /api/hospitales/region/{region} — sedes de una región (valida que la región exista en Chile). */
     @GetMapping("/region/{region}")
     @Operation(summary = "Buscar hospitales por región")
     public ResponseEntity<List<Hospital>> buscarPorRegion(@PathVariable String region) {
@@ -51,6 +55,7 @@ public class HospitalController {
         return ResponseEntity.ok(service.obtenerPorRegion(region));
     }
 
+    /** GET /api/hospitales/complejidad/{nivel} — sedes por nivel de complejidad (BAJA, MEDIANA o ALTA). */
     @GetMapping("/complejidad/{nivel}")
     @Operation(summary = "Buscar hospitales por nivel de complejidad")
     public ResponseEntity<List<Hospital>> buscarPorComplejidad(@PathVariable String nivel) {
@@ -58,6 +63,7 @@ public class HospitalController {
         return ResponseEntity.ok(service.obtenerPorComplejidad(nivel));
     }
 
+    /** POST /api/hospitales — crea una sede copiando los datos del DTO a la entidad (sin el id). */
     @PostMapping
     @Operation(summary = "Crear nuevo hospital")
     @ApiResponses(value = {
@@ -75,6 +81,7 @@ public class HospitalController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
     }
 
+    /** PUT /api/hospitales/{id} — actualiza los datos de una sede. */
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar hospital existente")
     public ResponseEntity<Hospital> actualizar(@PathVariable Long id, @Valid @RequestBody Hospital hospital) {
@@ -82,6 +89,7 @@ public class HospitalController {
         return ResponseEntity.ok(service.actualizarHospital(id, hospital));
     }
 
+    /** DELETE /api/hospitales/{id} — desactiva la sede (no se borra de la base de datos). */
     @DeleteMapping("/{id}")
     @Operation(summary = "Desactivar hospital (soft-delete)")
     public ResponseEntity<Map<String, String>> desactivar(@PathVariable Long id) {

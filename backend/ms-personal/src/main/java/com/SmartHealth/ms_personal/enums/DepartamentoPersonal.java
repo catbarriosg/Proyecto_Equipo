@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_personal.enums;
 
+/** Departamentos válidos para el personal, con su nombre para mostrar. */
 public enum DepartamentoPersonal {
     EMERGENCIA("Emergencia"),
     CIRUGIA("Cirugía"),
@@ -24,10 +25,12 @@ public enum DepartamentoPersonal {
         this.nombre = nombre;
     }
 
+    /** Nombre del departamento para mostrar. */
     public String getNombre() {
         return nombre;
     }
 
+    /** true si el texto corresponde a un departamento del enum (sin distinguir mayúsculas; los espacios se leen como "_"). */
     public static boolean isValido(String departamento) {
         if (departamento == null || departamento.trim().isEmpty()) {
             return false;
@@ -40,6 +43,7 @@ public enum DepartamentoPersonal {
         }
     }
 
+    /** Lista de departamentos separada por comas, para el mensaje de error. */
     public static String getDepartamentosValidos() {
         StringBuilder sb = new StringBuilder();
         DepartamentoPersonal[] valores = DepartamentoPersonal.values();

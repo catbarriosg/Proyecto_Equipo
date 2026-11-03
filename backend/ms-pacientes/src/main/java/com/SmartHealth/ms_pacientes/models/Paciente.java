@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
 
+/** Entidad JPA de la tabla "pacientes". El RUT es único y no se puede repetir. */
 @Data
 @Entity
 @Table(name = "pacientes")
@@ -43,6 +44,7 @@ public class Paciente {
     @Column(name = "creado_en", updatable = false)
     private java.time.LocalDateTime creadoEn;
 
+    /** Antes de insertar: guarda la fecha de creación del registro. */
     @PrePersist
     protected void onCreate() {
         creadoEn = java.time.LocalDateTime.now();

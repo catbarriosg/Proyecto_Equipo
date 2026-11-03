@@ -22,12 +22,19 @@ public class JwtService {
     private final SecretKey clave;
     private final Duration duracion;
 
+    /** La clave y la duración (8 horas por defecto) se leen de application.properties. */
     public JwtService(@Value("${jwt.secret}") String secreto,
                       @Value("${jwt.expiracion-horas:8}") long horas) {
         this.clave = Keys.hmacShaKeyFor(secreto.getBytes(StandardCharsets.UTF_8));
         this.duracion = Duration.ofHours(horas);
     }
 
+    /**
+     * Genera el token JWT firmado con HMAC-SHA. Contiene:
+     * subject = id del usuario, correo, nombre, rol, fecha de emisión y de expiración,
+     * y además pacienteId o personalId según el tipo de cuenta.
+     * El gateway lee estos datos para saber quién hace cada petición.
+     */
     public String generarToken(Usuario usuario) {
         Instant ahora = Instant.now();
         JwtBuilder token = Jwts.builder()
@@ -43,6 +50,7 @@ public class JwtService {
         return token.compact();
     }
 
+    /** Duración del token en segundos (el frontend la recibe como expiraEnSegundos). */
     public long segundosDeVigencia() {
         return duracion.toSeconds();
     }

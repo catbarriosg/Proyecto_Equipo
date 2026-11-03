@@ -1,3 +1,5 @@
+// Componente raíz: define la estructura común (accesibilidad, encabezado y pie)
+// y la tabla de rutas que decide qué página se muestra según la URL.
 import { Link, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Accesibilidad from './components/Accesibilidad'
@@ -21,8 +23,10 @@ import RegistroPaciente from './RegistroPaciente.jsx'
 import PerfilPaciente from './PerfilPaciente.jsx'
 import HistorialAtenciones from './HistorialAtenciones.jsx'
 
+// Roles que pueden entrar a las páginas de gestión de horas (agendar, ver, modificar y cancelar)
 const TODOS_LOS_ROLES = ['PACIENTE', 'MEDICO', 'ADMINISTRADOR']
 
+// Página 404: se muestra cuando la URL no coincide con ninguna ruta definida
 function PaginaNoEncontrada() {
   return (
     <main className="panel-admin-denegado">
@@ -35,6 +39,7 @@ function PaginaNoEncontrada() {
   )
 }
 
+// Estructura de la aplicación: barra de accesibilidad + encabezado + página según la ruta + pie de página
 function App() {
   return (
     <div className="app-shell">
@@ -50,12 +55,14 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/sucursales" element={<Sucursales />} />
         <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+        {/* El mismo componente Login sirve para los tres accesos; cambia el rol que exige */}
         <Route path="/login" element={<Login rolRequerido="PACIENTE" />} />
         <Route path="/acceso-medico" element={<Login rolRequerido="MEDICO" />} />
         <Route path="/acceso-administracion" element={<Login rolRequerido="ADMINISTRADOR" />} />
         <Route path="/registro-paciente" element={<RegistroPaciente />} />
 
         {/* Páginas con sesión */}
+        {/* RutaProtegida revisa que haya sesión y que el rol del usuario esté en la lista "roles" */}
         <Route path="/perfil" element={<RutaProtegida roles={['PACIENTE']}><PerfilPaciente /></RutaProtegida>} />
         <Route path="/historial-atenciones" element={<RutaProtegida roles={['PACIENTE']}><HistorialAtenciones /></RutaProtegida>} />
         <Route path="/agendar-hora" element={<RutaProtegida roles={TODOS_LOS_ROLES}><AgendarHora /></RutaProtegida>} />
@@ -64,6 +71,7 @@ function App() {
         <Route path="/cancelar-hora" element={<RutaProtegida roles={TODOS_LOS_ROLES}><CancelarHora /></RutaProtegida>} />
         <Route path="/panel-administracion" element={<RutaProtegida roles={['ADMINISTRADOR']}><PanelAdministracion /></RutaProtegida>} />
 
+        {/* Cualquier otra dirección */}
         <Route path="*" element={<PaginaNoEncontrada />} />
       </Routes>
 

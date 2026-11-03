@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Data
 public class RegistroRequest {
 
+    // RUT sin puntos y con guion (el frontend lo normaliza antes de enviarlo)
     @NotBlank(message = "El RUT es obligatorio.")
     @Pattern(regexp = "^[0-9]{7,8}-[0-9kK]$", message = "El RUT debe tener el formato 12345678-9.")
     private String rut;

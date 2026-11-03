@@ -4,6 +4,7 @@ import { mensajeDeError } from './api/index.js'
 import { USAR_API } from './api/config.js'
 import { rutaInicial, useSesion } from './context/useSesion.js'
 
+// Textos de cada portal de acceso. El mismo componente se reutiliza para pacientes, médicos y administración.
 const configuracionAcceso = {
   PACIENTE: { titulo: 'Iniciar sesión', etiqueta: 'ACCESO DE PACIENTES', descripcion: 'Ingresa a tu cuenta para gestionar tus horas médicas.' },
   MEDICO: { titulo: 'Acceso médico', etiqueta: 'PORTAL MÉDICO', descripcion: 'Ingresa para revisar tu agenda y agendar horas para tus pacientes.' },
@@ -15,10 +16,12 @@ function rutaSegura(valor) {
   return valor && valor.startsWith('/') && !valor.startsWith('//') ? valor : null
 }
 
+// Formulario de inicio de sesión. "rolRequerido" indica qué tipo de cuenta puede ingresar por este portal.
 function Login({ rolRequerido = 'PACIENTE' }) {
   const [parametros] = useSearchParams()
   const navegar = useNavigate()
   const { usuario, iniciarSesion, sesionExpirada } = useSesion()
+  // Campos del formulario (componentes controlados: el valor vive en el estado de React)
   const [correo, setCorreo] = useState(parametros.get('correo') || '')
   const [contrasena, setContrasena] = useState('')
   const [mostrarContrasena, setMostrarContrasena] = useState(false)
@@ -31,10 +34,13 @@ function Login({ rolRequerido = 'PACIENTE' }) {
   // Al cambiar de portal se conserva la página a la que se quería volver
   const sufijoVolver = volver ? `?volver=${encodeURIComponent(volver)}` : ''
 
+  // Si ya hay sesión iniciada no tiene sentido mostrar el login: se redirige
   if (usuario && !procesando) {
     return <Navigate to={volver || rutaInicial(usuario)} replace />
   }
 
+  // Valida el correo y la contraseña, llama a la API y redirige a la página de inicio del rol
+  // (o a la página que el usuario intentaba abrir antes de iniciar sesión)
   async function enviarFormulario(evento) {
     evento.preventDefault()
     setError('')
@@ -68,6 +74,7 @@ function Login({ rolRequerido = 'PACIENTE' }) {
         <p>{config.descripcion}</p>
       </section>
       <section className="login-card" aria-label={config.titulo}>
+        {/* Avisos: sesión vencida o página que pidió iniciar sesión */}
         {sesionExpirada && <p className="login-mensaje login-aviso" role="status">Tu sesión expiró. Vuelve a iniciar sesión.</p>}
         {volver && !sesionExpirada && <p className="login-mensaje login-aviso" role="status">Inicia sesión para continuar.</p>}
         <form onSubmit={enviarFormulario} noValidate>
@@ -102,6 +109,7 @@ function Login({ rolRequerido = 'PACIENTE' }) {
           </button>
         </form>
         {!USAR_API && <p className="login-nota">Modo demostración sin servidor: las cuentas se guardan solo en este navegador.</p>}
+        {/* Enlaces de ayuda: el portal de pacientes muestra los accesos del personal; los otros, el regreso */}
         {esPaciente ? (
           <>
             <p className="login-ayuda">¿No tienes una cuenta? <Link to={`/registro-paciente${sufijoVolver}`}>Crea una aquí</Link></p>

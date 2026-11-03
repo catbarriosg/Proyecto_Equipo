@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/** Datos de un insumo para la documentación de la API, con sus validaciones. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

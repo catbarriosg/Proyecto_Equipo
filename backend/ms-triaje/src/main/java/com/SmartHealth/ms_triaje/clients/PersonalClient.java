@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ms-personal", configuration = FeignConfig.class)
 public interface PersonalClient {
 
+    /** Busca un profesional por ID para validar que exista y esté activo. */
     @GetMapping("/api/personal/{id}")
     PersonalSaludDTO obtenerPersonalPorId(@PathVariable("id") Long id);
 }

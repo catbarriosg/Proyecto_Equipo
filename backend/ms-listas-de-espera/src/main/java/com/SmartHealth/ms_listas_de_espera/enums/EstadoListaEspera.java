@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_listas_de_espera.enums;
 
+/** Estados posibles de un registro de lista de espera. */
 public enum EstadoListaEspera {
     PENDIENTE("En espera de asignación"),
     ASIGNADO("Asignado a fecha específica"),
@@ -12,6 +13,7 @@ public enum EstadoListaEspera {
         this.descripcion = descripcion;
     }
 
+    /** Descripción del estado para mostrar. */
     public String getDescripcion() {
         return descripcion;
     }

@@ -10,6 +10,7 @@ const estiloAlerta = {
   buttonsStyling: false
 }
 
+// Página para reprogramar una hora: primero se busca la reserva por su código y luego se elige un nuevo horario
 function ModificarHora() {
   const [parametros] = useSearchParams()
   const [codigo, setCodigo] = useState(parametros.get('codigo') || '')
@@ -20,6 +21,7 @@ function ModificarHora() {
   const [procesando, setProcesando] = useState(false)
   const [versionAgenda, setVersionAgenda] = useState(0)
 
+  // Busca la reserva por código y verifica que todavía se pueda modificar
   async function buscarReserva(evento) {
     evento.preventDefault()
     setError('')
@@ -47,6 +49,7 @@ function ModificarHora() {
     }
   }
 
+  // Envía la nueva fecha y hora. Si el horario fue tomado por otra persona (409) se recarga el calendario.
   async function guardarCambios(evento) {
     evento.preventDefault()
     if (!fecha || !hora) {
@@ -105,6 +108,7 @@ function ModificarHora() {
             <p><strong>Especialidad:</strong> {reserva.especialidad}</p>
             <p><strong>Fecha y hora actual:</strong> {formatearFecha(reserva.fecha)} a las {reserva.hora}</p>
             <form onSubmit={guardarCambios}>
+              {/* excluirCitaId hace que la hora actual de la reserva aparezca libre en el calendario */}
               <CalendarioHoras
                 key={`${reserva.id}-${versionAgenda}`}
                 medico={{ id: reserva.medicoId, nombre: reserva.medicoNombre, especialidad: reserva.especialidad }}

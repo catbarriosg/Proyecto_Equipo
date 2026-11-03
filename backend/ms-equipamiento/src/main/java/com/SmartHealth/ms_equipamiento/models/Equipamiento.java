@@ -7,6 +7,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
+/** Entidad JPA de la tabla "equipamiento". El número de serie es único. */
 @Data
 @Entity
 @Table(name = "equipamiento")
@@ -49,12 +50,14 @@ public class Equipamiento {
     // Soft delete
     private Boolean activo = true;
 
+    /** true si ya pasó la fecha del próximo mantenimiento (@Transient: se calcula, no se guarda en la tabla). */
     @Transient
     public boolean necesitaMantenimiento() {
         if (proximoMantenimiento == null) return false;
         return LocalDate.now().isAfter(proximoMantenimiento);
     }
 
+    /** true si faltan menos de dos meses para que el equipo cumpla su vida útil. */
     @Transient
     public boolean proximoAFinDeVidaUtil() {
         if (fechaAdquisicion == null || vidaUtilMeses == null) return false;

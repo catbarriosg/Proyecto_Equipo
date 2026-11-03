@@ -90,6 +90,7 @@ $PIDS = @{}
 # FUNCIONES AUXILIARES
 # ========================================
 
+# Escribe un mensaje con fecha y nivel en la consola (con color según el nivel) y en el archivo de log
 function Write-Log {
     param(
         [string]$Message,
@@ -110,6 +111,7 @@ function Write-Log {
     Add-Content -Path $LOG_FILE -Value $logMessage -ErrorAction SilentlyContinue
 }
 
+# Abre una terminal nueva con "mvnw spring-boot:run" para el servicio y espera a que su puerto responda
 function Start-Microservice {
     param(
         [hashtable]$Service,
@@ -200,6 +202,7 @@ Write-Host "Iniciando microservicio..." -ForegroundColor Yellow
     return $false
 }
 
+# Muestra cuántos servicios se iniciaron y cuáles fallaron
 function Show-Status {
     Write-Host ""
     Write-Host "====== ESTADO ACTUAL ======"
@@ -212,6 +215,7 @@ function Show-Status {
     Write-Host ""
 }
 
+# Flujo principal: levanta los servicios en orden (primero Eureka, luego el resto) y muestra el resumen
 function Main {
     Write-Log "======================================" "INFO"
     Write-Log "SmartHealth - Startup All Microservices" "INFO"

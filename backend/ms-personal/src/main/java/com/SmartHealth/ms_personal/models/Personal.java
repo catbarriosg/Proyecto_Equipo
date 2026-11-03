@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/** Entidad JPA de la tabla "personal": médicos y demás funcionarios. RUT, correo y colegiatura son únicos. */
 @Data
 @Entity
 @Table(name = "personal")
@@ -76,6 +77,7 @@ public class Personal {
     @Column(name = "activo")
     private Boolean activo = true;
 
+    /** Antes de insertar: registra la fecha de ingreso. */
     @PrePersist
     protected void onCreate() {
         fechaIngreso = LocalDateTime.now();

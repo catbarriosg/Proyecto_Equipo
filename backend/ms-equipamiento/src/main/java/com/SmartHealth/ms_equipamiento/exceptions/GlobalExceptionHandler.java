@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manejo centralizado de errores de ms-equipamiento: validaciones y JSON inválido (400),
+ * errores de negocio clasificados según su mensaje (400/404/500) y números de serie duplicados (409).
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Tag(name = "Médicos", description = "Médicos de la clínica (información pública)")
 public class MedicoController {
 
+    // En la tabla "personal" los médicos son los registros con rol MEDICO
     private static final String ROL_MEDICO = "MEDICO";
 
     private final PersonalRepository personalRepository;
@@ -33,6 +34,7 @@ public class MedicoController {
         this.especialidadRepository = especialidadRepository;
     }
 
+    /** GET /api/medicos?especialidad=&sucursalId= — médicos activos con filtros opcionales, ordenados por nombre. */
     @GetMapping
     @Operation(summary = "Listar médicos activos, opcionalmente por especialidad (nombre o identificador) y sucursal")
     public List<MedicoDTO> listar(@RequestParam(required = false) String especialidad,
@@ -50,6 +52,7 @@ public class MedicoController {
                 .toList();
     }
 
+    /** GET /api/medicos/{id} — un médico activo; si el registro no es médico responde 404. */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener un médico activo por ID")
     public MedicoDTO obtener(@PathVariable Long id) {
@@ -67,11 +70,13 @@ public class MedicoController {
                 .orElse(valor.trim());
     }
 
+    /** Mapa nombre de especialidad → slug, para agregar el slug a cada médico. */
     private Map<String, String> slugsPorNombre() {
         return especialidadRepository.findAll().stream()
                 .collect(Collectors.toMap(e -> e.getNombre().toLowerCase(), Especialidad::getSlug, (a, b) -> a));
     }
 
+    /** Convierte un registro de personal en el DTO público de médico (sin datos personales). */
     private static MedicoDTO aDTO(Personal medico, Map<String, String> slugs) {
         String especialidad = medico.getEspecialidad();
         String slug = especialidad == null ? null : slugs.get(especialidad.toLowerCase());

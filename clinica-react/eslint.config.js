@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
+// Reglas de ESLint (npm run lint): recomendadas de JavaScript, reglas de los hooks de React y de React Refresh para Vite
 export default defineConfig([
   globalIgnores(['dist']),
   {

@@ -18,6 +18,7 @@ public record SucursalDTO(
         String imagenUrl,
         String descripcionImagen
 ) {
+    /** Convierte la entidad en el DTO público. El horario se guarda en una sola columna y aquí se separa en líneas. */
     public static SucursalDTO desde(Hospital hospital) {
         List<String> horario = hospital.getHorario() == null || hospital.getHorario().isBlank()
                 ? List.of()

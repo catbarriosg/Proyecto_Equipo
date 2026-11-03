@@ -5,6 +5,7 @@ import { useSesion } from './context/useSesion.js'
 import { useCarga } from './hooks/useCarga.js'
 import { formatearFecha } from './utils/formato.js'
 
+// Página que lista las atenciones médicas registradas del paciente conectado (ms-historial)
 function HistorialAtenciones() {
   const { usuario } = useSesion()
   const { datos: atenciones, cargando, error, recargar } = useCarga(
@@ -20,6 +21,7 @@ function HistorialAtenciones() {
 
       <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} />
 
+      {/* Sin atenciones: mensaje e invitación a agendar */}
       {atenciones && atenciones.length === 0 && (
         <section className="historial-sin-sesion" role="status">
           <h2>Aún no tienes atenciones registradas</h2>
@@ -28,6 +30,7 @@ function HistorialAtenciones() {
         </section>
       )}
 
+      {/* Una tarjeta por cada atención con su diagnóstico e indicaciones */}
       {atenciones && atenciones.length > 0 && (
         <div className="historial-lista-react">
           {atenciones.map((atencion) => (

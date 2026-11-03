@@ -1,3 +1,4 @@
+// Pruebas del componente EstadoCarga: qué muestra según las props cargando / error / alReintentar
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -5,6 +6,7 @@ import EstadoCarga from '../components/EstadoCarga.jsx'
 
 describe('EstadoCarga', () => {
   // Prueba 1 — Renderizado condicional y props: el texto llega por props y solo se muestra mientras carga
+  // rerender vuelve a dibujar el mismo componente con otras props, sin montarlo de nuevo
   it('muestra el indicador con el texto recibido mientras carga y no muestra nada al terminar', () => {
     const { rerender, container } = render(<EstadoCarga cargando texto="Buscando médicos…" />)
 

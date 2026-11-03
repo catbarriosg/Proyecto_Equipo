@@ -24,6 +24,7 @@ public record CitaDTO(
         boolean gestionable,
         String creadoEn
 ) {
+    /** Convierte la entidad en el DTO, dando formato de texto a la fecha, la hora y el estado. */
     public static CitaDTO desde(Cita cita, boolean gestionable) {
         return new CitaDTO(
                 cita.getId(),

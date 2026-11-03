@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
+/** Datos de un profesional que entran y salen por la API, con sus validaciones y documentación Swagger. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

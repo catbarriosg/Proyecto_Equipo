@@ -4,11 +4,13 @@ import { api } from './api/index.js'
 import EstadoCarga from './components/EstadoCarga.jsx'
 import { useCarga } from './hooks/useCarga.js'
 
+// Pide médicos y especialidades en paralelo (Promise.all) y los devuelve juntos
 function cargarDatos() {
   return Promise.all([api.medicos.listar(), api.especialidades.listar()])
     .then(([medicos, especialidades]) => ({ medicos, especialidades }))
 }
 
+// Página "Nuestros médicos": lista el equipo médico con búsqueda por nombre y filtro por especialidad
 function Medicos() {
   const [parametros, setParametros] = useSearchParams()
   const [busqueda, setBusqueda] = useState('')
@@ -16,11 +18,13 @@ function Medicos() {
   // La especialidad elegida queda en la URL (/medicos?especialidad=pediatria) para poder compartir el enlace
   const especialidadFiltro = parametros.get('especialidad') || ''
 
+  // Filtrado en el navegador: primero por especialidad (desde la URL) y luego por el texto buscado
   const termino = busqueda.trim().toLowerCase()
   const medicos = (datos?.medicos || [])
     .filter((medico) => !especialidadFiltro || medico.especialidadSlug === especialidadFiltro)
     .filter((medico) => !termino || medico.nombre.toLowerCase().includes(termino))
 
+  // Guarda la especialidad elegida en la URL; replace evita llenar el historial del navegador
   function cambiarEspecialidad(evento) {
     const valor = evento.target.value
     setParametros(valor ? { especialidad: valor } : {}, { replace: true })
@@ -57,6 +61,7 @@ function Medicos() {
             </div>
           </form>
 
+          {/* Si los filtros no dejan resultados se muestra un aviso; si no, la grilla de tarjetas */}
           {medicos.length === 0 ? (
             <p className="estado-vacio">No encontramos médicos con esos filtros.</p>
           ) : (

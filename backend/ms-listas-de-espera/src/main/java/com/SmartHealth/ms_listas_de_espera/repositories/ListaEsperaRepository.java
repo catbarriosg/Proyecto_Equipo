@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Acceso a la tabla "listas_espera". Los métodos findBy... se generan a partir del nombre
+ * y los que tienen @Query usan JPQL (orden por prioridad y conteo de pendientes).
+ */
 @Repository
 public interface ListaEsperaRepository extends JpaRepository<ListaEspera, Long> {
 
@@ -20,15 +24,19 @@ public interface ListaEsperaRepository extends JpaRepository<ListaEspera, Long> 
 
     List<ListaEspera> findByIdPacienteAndEstadoAndActivoTrue(Long idPaciente, String estado);
 
+    /** Registros activos: primero la prioridad más alta y, a igual prioridad, el que lleva más tiempo esperando. */
     @Query("SELECT l FROM ListaEspera l WHERE l.activo = true ORDER BY l.prioridad DESC, l.fechaIngreso ASC")
     List<ListaEspera> findAllActivoOrderedByPriority();
 
+    /** Igual que el anterior, pero solo de una sede. */
     @Query("SELECT l FROM ListaEspera l WHERE l.idHospital = :idHospital AND l.activo = true ORDER BY l.prioridad DESC, l.fechaIngreso ASC")
     List<ListaEspera> findByIdHospitalOrderedByPriority(@Param("idHospital") Long idHospital);
 
+    /** Cantidad de registros PENDIENTES de una sede. */
     @Query("SELECT COUNT(l) FROM ListaEspera l WHERE l.idHospital = :idHospital AND l.estado = 'PENDIENTE' AND l.activo = true")
     Long countPendientesInHospital(@Param("idHospital") Long idHospital);
 
+    /** Cantidad de registros PENDIENTES de un paciente. */
     @Query("SELECT COUNT(l) FROM ListaEspera l WHERE l.idPaciente = :idPaciente AND l.estado = 'PENDIENTE' AND l.activo = true")
     Long countPendientesPaciente(@Param("idPaciente") Long idPaciente);
 

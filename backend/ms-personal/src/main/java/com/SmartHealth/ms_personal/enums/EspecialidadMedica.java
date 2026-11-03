@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_personal.enums;
 
+/** Especialidades médicas válidas para filtrar al personal, con su nombre para mostrar. */
 public enum EspecialidadMedica {
     CARDIOLOGIA("Cardiología"),
     NEUROLOGIA("Neurología"),
@@ -28,10 +29,12 @@ public enum EspecialidadMedica {
         this.nombre = nombre;
     }
 
+    /** Nombre de la especialidad para mostrar. */
     public String getNombre() {
         return nombre;
     }
 
+    /** true si el texto corresponde a una especialidad del enum. */
     public static boolean isValida(String especialidad) {
         if (especialidad == null || especialidad.trim().isEmpty()) {
             return false;
@@ -44,6 +47,7 @@ public enum EspecialidadMedica {
         }
     }
 
+    /** Lista de especialidades separada por comas, para el mensaje de error. */
     public static String getEspecialidadesValidas() {
         StringBuilder sb = new StringBuilder();
         EspecialidadMedica[] valores = EspecialidadMedica.values();

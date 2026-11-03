@@ -26,6 +26,7 @@ public class DatosIniciales implements CommandLineRunner {
         this.cifrador = cifrador;
     }
 
+    /** Se ejecuta automáticamente al arrancar la aplicación (CommandLineRunner) y crea las cuentas de prueba. */
     @Override
     public void run(String... args) {
         crearSiNoExiste("admin@clinica.cl", "Admin123!", Rol.ADMINISTRADOR, "Administración Clínica", null, null);
@@ -34,6 +35,7 @@ public class DatosIniciales implements CommandLineRunner {
         crearSiNoExiste("ana.perez@gmail.com", "Paciente123!", Rol.PACIENTE, "Ana Pérez", 1L, null);
     }
 
+    /** Crea la cuenta solo si el correo no está registrado, para no duplicarla en cada reinicio. */
     private void crearSiNoExiste(String correo, String contrasena, Rol rol, String nombre,
                                  Long pacienteId, Long personalId) {
         if (repositorio.existsByCorreo(correo)) {

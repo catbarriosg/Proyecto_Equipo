@@ -1,3 +1,4 @@
+// Prueba de la página de médicos con la API simulada (vi.mock)
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
@@ -33,6 +34,7 @@ describe('Medicos', () => {
     )
 
     expect(screen.getByRole('status')).toHaveTextContent('Cargando información…')
+    // findBy... espera a que la promesa simulada se resuelva y aparezcan los médicos
     expect(await screen.findByRole('heading', { name: 'Dr. Juan González' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Dra. María Soto' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Agendar hora con Dra. María Soto' })).toHaveAttribute('href', '/agendar-hora?medico=2')

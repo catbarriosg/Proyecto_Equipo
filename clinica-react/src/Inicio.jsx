@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+// Tarjetas de la sección "Nuestros servicios"
 const servicios = [
   {
     icono: '🩺',
@@ -18,6 +19,7 @@ const servicios = [
   }
 ]
 
+// Imágenes del carrusel "Conoce nuestra clínica"
 const imagenesClinica = [
   { src: '/fachada-clinica.png', alt: 'Fachada de Clínica Agenda Médica' },
   { src: '/recepcion-clinica.png', alt: 'Recepción de la clínica' },
@@ -25,9 +27,11 @@ const imagenesClinica = [
   { src: '/box-clinica.png', alt: 'Box de atención médica' }
 ]
 
+// Página de inicio: presentación de la clínica, servicios, galería de fotos y opiniones de pacientes
 function Inicio() {
   return (
     <main className="inicio-react">
+      {/* Portada con los botones principales; la grilla de Bootstrap pone texto e imagen lado a lado en pantallas medianas */}
       <section className="inicio-hero">
         <div className="row g-5 align-items-center">
           <div className="col-12 col-md-6 inicio-hero-texto">
@@ -56,6 +60,7 @@ function Inicio() {
         </div>
       </section>
 
+      {/* Servicios generados recorriendo el arreglo "servicios" con map() */}
       <section className="inicio-seccion" aria-labelledby="inicio-servicios-titulo">
         <div className="inicio-titulo-seccion">
           <span className="inicio-etiqueta">CUIDAMOS DE TI</span>
@@ -75,6 +80,7 @@ function Inicio() {
         </div>
       </section>
 
+      {/* Carrusel de Bootstrap: avanza solo cada 5 segundos (data-bs-ride / data-bs-interval) */}
       <section className="inicio-seccion inicio-galeria" aria-labelledby="inicio-galeria-titulo">
         <div className="inicio-titulo-seccion">
           <span className="inicio-etiqueta">UN ESPACIO PARA TU SALUD</span>
@@ -110,6 +116,7 @@ function Inicio() {
         </div>
       </section>
 
+      {/* Testimonios de pacientes */}
       <section className="inicio-opiniones" aria-labelledby="inicio-opiniones-titulo">
         <div className="inicio-titulo-seccion">
           <span className="inicio-etiqueta">EXPERIENCIAS</span>

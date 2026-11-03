@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+// Pie de página con los datos de contacto de la clínica y el enlace a Preguntas frecuentes
 function Footer() {
   return (
     <footer className="site-footer">

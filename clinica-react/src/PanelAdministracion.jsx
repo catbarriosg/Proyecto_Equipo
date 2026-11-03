@@ -12,12 +12,14 @@ const estiloAlerta = {
   buttonsStyling: false
 }
 
+// Valores iniciales de los formularios de nuevo paciente y nuevo médico
 const pacienteVacio = { rut: '', nombreCompleto: '', correo: '', fechaNacimiento: '', telefono: '', prevision: '' }
 const medicoVacio = {
   nombre: '', rut: '', email: '', telefono: '', especialidad: '', hospitalId: '', descripcion: '', imagenUrl: '/logo-hombre.png',
   crearCuenta: true, contrasena: '',
 }
 
+// Carga en paralelo todo lo que muestra el panel: pacientes, personal, citas, especialidades y sucursales
 function cargarPanel() {
   return Promise.all([
     api.pacientes.listar({ incluirInactivos: true }),
@@ -28,12 +30,15 @@ function cargarPanel() {
   ]).then(([pacientes, personal, citas, especialidades, sucursales]) => ({ pacientes, personal, citas, especialidades, sucursales }))
 }
 
+// Devuelve una nueva lista con el elemento actualizado en lugar del anterior (mismo id), sin mutar la original
 function reemplazar(lista, actualizado) {
   return lista.map((item) => (item.id === actualizado.id ? actualizado : item))
 }
 
 // ------------------------------------------------------------------ Formularios
 
+// Formulario para que la administración ingrese un paciente nuevo.
+// alGuardar recibe el paciente creado; alCancelar cierra el formulario.
 function FormularioPaciente({ alGuardar, alCancelar }) {
   const [datos, setDatos] = useState(pacienteVacio)
   const [error, setError] = useState('')
@@ -48,6 +53,7 @@ function FormularioPaciente({ alGuardar, alCancelar }) {
     if (!datos.fechaNacimiento) return setError('Ingresa la fecha de nacimiento.')
     setGuardando(true)
     try {
+      // Validaciones superadas: se crea la ficha con el RUT normalizado y los campos opcionales en null si están vacíos
       const creado = await api.pacientes.crear({
         ...datos, rut: normalizarRut(datos.rut), telefono: datos.telefono.replace(/\s/g, '') || null, prevision: datos.prevision || null,
       })
@@ -76,6 +82,7 @@ function FormularioPaciente({ alGuardar, alCancelar }) {
   )
 }
 
+// Formulario para agregar un médico a la clínica y, opcionalmente, crearle su cuenta de acceso al portal médico
 function FormularioMedico({ especialidades, sucursales, alGuardar, alCancelar }) {
   const [datos, setDatos] = useState(medicoVacio)
   const [error, setError] = useState('')
@@ -95,12 +102,15 @@ function FormularioMedico({ especialidades, sucursales, alGuardar, alCancelar })
 
     setGuardando(true)
     try {
+      // Paso 1: se registra el profesional en ms-personal
       const creado = await api.personal.crear({
         nombre: datos.nombre.trim(), rut: normalizarRut(datos.rut), email: datos.email.trim().toLowerCase(), telefono,
         rol: 'MEDICO', especialidad: datos.especialidad, departamento: 'Consulta ambulatoria', hospitalId: Number(datos.hospitalId),
         descripcion: datos.descripcion.trim() || null, imagenUrl: datos.imagenUrl,
       })
       let avisoCuenta = ''
+      // Paso 2 (opcional): se crea la cuenta en ms-auth vinculada al profesional (personalId).
+      // Si falla, el médico igual queda creado y se informa el problema en el aviso.
       if (datos.crearCuenta) {
         try {
           await api.auth.crearCuenta({ correo: creado.email, contrasena: datos.contrasena, rol: 'MEDICO', nombre: creado.nombre, personalId: creado.id })
@@ -142,6 +152,7 @@ function FormularioMedico({ especialidades, sucursales, alGuardar, alCancelar })
 
 // ------------------------------------------------------------------ Panel
 
+// Panel exclusivo del administrador: resumen de cifras y tablas de pacientes, médicos y horas médicas
 function PanelAdministracion() {
   const { datos: datosCargados, cargando, error, recargar } = useCarga(cargarPanel, 'panel')
   const [cambios, setCambios] = useState(null)
@@ -151,10 +162,12 @@ function PanelAdministracion() {
   // Las modificaciones se aplican sobre una copia local para no recargar todo el panel
   const datos = cambios || datosCargados
 
+  // Aplica un cambio sobre los datos actuales (por ejemplo, reemplazar un paciente) y lo guarda como copia local
   function actualizar(funcion) {
     setCambios(funcion(datos))
   }
 
+  // Pide confirmación con SweetAlert2; devuelve true si el usuario acepta
   async function confirmar(titulo, texto) {
     const respuesta = await Swal.fire({
       ...estiloAlerta, icon: 'warning', title: titulo, text: texto, showCancelButton: true,
@@ -163,6 +176,7 @@ function PanelAdministracion() {
     return respuesta.isConfirmed
   }
 
+  // Ejecuta una acción de la API y muestra el aviso de éxito, o una alerta con el error
   async function ejecutar(accion, mensajeExito) {
     try {
       await accion()
@@ -172,6 +186,7 @@ function PanelAdministracion() {
     }
   }
 
+  // Activa o desactiva un paciente (para desactivar se pide confirmación)
   async function alternarPaciente(paciente) {
     if (paciente.activo && !await confirmar('¿Desactivar paciente?', `${paciente.nombreCompleto} no podrá agendar nuevas horas. Su historial se conserva.`)) return
     await ejecutar(async () => {
@@ -180,6 +195,7 @@ function PanelAdministracion() {
     }, `${paciente.nombreCompleto} quedó ${paciente.activo ? 'inactivo' : 'activo'}.`)
   }
 
+  // Activa o desactiva un médico; un médico inactivo deja de aparecer para agendar
   async function alternarMedico(medico) {
     if (medico.activo && !await confirmar('¿Desactivar médico?', `${medico.nombre} dejará de aparecer para agendar horas.`)) return
     await ejecutar(async () => {
@@ -188,6 +204,7 @@ function PanelAdministracion() {
     }, `${medico.nombre} quedó ${medico.activo ? 'inactivo' : 'activo'}.`)
   }
 
+  // Cancela una hora desde el panel, previa confirmación
   async function cancelarCita(cita) {
     if (!await confirmar('¿Cancelar la hora?', `${cita.codigo} · ${cita.pacienteNombre} con ${cita.medicoNombre}`)) return
     await ejecutar(async () => {
@@ -196,6 +213,7 @@ function PanelAdministracion() {
     }, `La hora ${cita.codigo} se marcó como cancelada.`)
   }
 
+  // Del personal solo se muestran los médicos; nombreSucursal traduce el id de sucursal a su nombre
   const medicos = datos?.personal.filter((persona) => persona.rol === 'MEDICO') || []
   const nombreSucursal = (id) => datos?.sucursales.find((sucursal) => sucursal.id === id)?.nombre || 'Sin sucursal'
 
@@ -211,6 +229,7 @@ function PanelAdministracion() {
 
       {datos && (
         <>
+          {/* Tarjetas de resumen con los totales calculados a partir de los datos cargados */}
           <section className="panel-admin-resumen" aria-label="Resumen de registros">
             <div className="row g-2 g-sm-3">
               <div className="col-4"><article className="h-100"><strong>{datos.pacientes.filter((paciente) => paciente.activo).length}</strong><span>Pacientes activos</span></article></div>
@@ -222,6 +241,7 @@ function PanelAdministracion() {
 
           <section className="panel-admin-seccion">
             <div className="panel-admin-titulo">
+              {/* Sección de pacientes: botón para agregar y tabla con opción de activar/desactivar */}
               <h2>Pacientes</h2>
               <button className="perfil-boton" type="button" onClick={() => setMostrarPaciente(!mostrarPaciente)}>＋ Agregar paciente</button>
             </div>
@@ -242,6 +262,7 @@ function PanelAdministracion() {
 
           <section className="panel-admin-seccion">
             <div className="panel-admin-titulo">
+              {/* Sección de médicos: mismo esquema que pacientes */}
               <h2>Médicos</h2>
               <button className="perfil-boton" type="button" onClick={() => setMostrarMedico(!mostrarMedico)}>＋ Agregar médico</button>
             </div>
@@ -263,6 +284,7 @@ function PanelAdministracion() {
           </section>
 
           <section className="panel-admin-seccion">
+            {/* Sección de horas médicas: solo las citas gestionables muestran el botón Cancelar */}
             <div className="panel-admin-titulo"><h2>Horas médicas</h2><Link className="perfil-boton" to="/agendar-hora">＋ Agendar hora</Link></div>
             <div className="panel-tabla-wrap"><table className="panel-tabla"><caption>Horas médicas agendadas</caption><thead><tr><th scope="col">Código</th><th scope="col">Fecha</th><th scope="col">Médico</th><th scope="col">Paciente</th><th scope="col">Estado</th><th scope="col">Acción</th></tr></thead>
               <tbody>{datos.citas.map((cita) => <tr key={cita.id}><td>{cita.codigo}</td><td>{formatearFecha(cita.fecha)} {cita.hora}</td><td>{cita.medicoNombre}</td><td>{cita.pacienteNombre}</td><td><span className={cita.estado === 'CANCELADA' ? 'panel-estado panel-inactivo' : 'panel-estado panel-activo'}>{estadoLegible(cita.estado)}</span></td><td className="panel-acciones">{cita.gestionable && <button type="button" onClick={() => cancelarCita(cita)}>Cancelar</button>}</td></tr>)}</tbody>

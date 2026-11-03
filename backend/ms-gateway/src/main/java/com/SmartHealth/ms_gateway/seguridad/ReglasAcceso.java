@@ -19,15 +19,18 @@ import java.util.Set;
 @Component
 public class ReglasAcceso {
 
+    // Roles del sistema (los mismos del enum Rol de ms-auth)
     public static final String PACIENTE = "PACIENTE";
     public static final String MEDICO = "MEDICO";
     public static final String ADMINISTRADOR = "ADMINISTRADOR";
 
+    // Grupos de roles reutilizados en la tabla. Un conjunto vacío significa ruta pública (sin token).
     private static final Set<String> PUBLICO = Set.of();
     private static final Set<String> CUALQUIER_SESION = Set.of(PACIENTE, MEDICO, ADMINISTRADOR);
     private static final Set<String> PERSONAL_CLINICO = Set.of(MEDICO, ADMINISTRADOR);
     private static final Set<String> SOLO_ADMIN = Set.of(ADMINISTRADOR);
 
+    /** Una regla: método HTTP (null = cualquiera), patrón de ruta y roles permitidos. */
     public record Regla(HttpMethod metodo, PathPattern patron, Set<String> roles) {
         boolean esPublica() {
             return roles.isEmpty();
@@ -36,6 +39,7 @@ public class ReglasAcceso {
 
     private final List<Regla> reglas;
 
+    /** Construye la tabla de reglas. El orden importa: las reglas específicas van antes que las generales. */
     public ReglasAcceso() {
         PathPatternParser parser = new PathPatternParser();
         reglas = List.of(
@@ -93,6 +97,7 @@ public class ReglasAcceso {
         );
     }
 
+    /** Atajo para crear una regla compilando el patrón de ruta. */
     private static Regla regla(PathPatternParser parser, HttpMethod metodo, String patron, Set<String> roles) {
         return new Regla(metodo, parser.parse(patron), roles);
     }

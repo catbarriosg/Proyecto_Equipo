@@ -6,6 +6,7 @@ import com.SmartHealth.ms_listas_de_espera.models.ListaEspera;
 import java.util.List;
 import java.util.Optional;
 
+/** Operaciones del servicio de listas de espera. La implementación está en ListaEsperaServiceImpl. */
 public interface IListaEsperaService {
 
     ListaEsperaDTO crearListaEspera(ListaEsperaDTO listaEsperaDTO);

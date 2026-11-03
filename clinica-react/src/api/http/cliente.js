@@ -1,7 +1,9 @@
+// Cliente HTTP base: todas las llamadas al backend pasan por la función solicitar().
 import { URL_API } from '../config.js'
 import { ErrorApi, mensajePorEstado } from '../errores.js'
 import { cerrarSesion, EVENTO_SESION_EXPIRADA, obtenerSesion } from '../sesion.js'
 
+// Convierte el texto de la respuesta en JSON sin lanzar error si el cuerpo no es JSON válido
 function leerJson(texto) {
   try {
     return JSON.parse(texto)
@@ -15,16 +17,19 @@ function leerJson(texto) {
  * Devuelve el JSON de la respuesta o lanza un ErrorApi con el mensaje que envía el backend.
  */
 export async function solicitar(ruta, { metodo = 'GET', cuerpo, parametros } = {}) {
+  // Arma la URL completa y agrega los parámetros de búsqueda (?medicoId=1&desde=...), omitiendo los vacíos
   const url = new URL(`${URL_API}${ruta}`, window.location.origin)
   Object.entries(parametros || {}).forEach(([clave, valor]) => {
     if (valor !== undefined && valor !== null && valor !== '') url.searchParams.set(clave, valor)
   })
 
+  // Cabeceras: JSON y, si hay sesión, el token JWT en "Authorization: Bearer ..."
   const sesion = obtenerSesion()
   const cabeceras = { Accept: 'application/json' }
   if (cuerpo !== undefined) cabeceras['Content-Type'] = 'application/json'
   if (sesion?.token) cabeceras.Authorization = `Bearer ${sesion.token}`
 
+  // Si fetch falla (servidor apagado, sin internet) se transforma en un ErrorApi con estado 0
   let respuesta
   try {
     respuesta = await fetch(url, {
@@ -36,6 +41,7 @@ export async function solicitar(ruta, { metodo = 'GET', cuerpo, parametros } = {
     throw new ErrorApi(0, 'SIN_CONEXION', 'No pudimos conectarnos con la clínica. Revisa tu conexión o intenta más tarde.')
   }
 
+  // Algunas respuestas no traen cuerpo (por ejemplo 204), por eso se lee primero como texto
   const texto = await respuesta.text()
   const datos = texto ? leerJson(texto) : null
 

@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_personal.enums;
 
+/** Roles posibles del personal de la clínica. */
 public enum RolPersonal {
     MEDICO("Médico"),
     ENFERMERO("Enfermero"),
@@ -13,6 +14,7 @@ public enum RolPersonal {
         this.descripcion = descripcion;
     }
 
+    /** Descripción del rol para mostrar. */
     public String getDescripcion() {
         return descripcion;
     }

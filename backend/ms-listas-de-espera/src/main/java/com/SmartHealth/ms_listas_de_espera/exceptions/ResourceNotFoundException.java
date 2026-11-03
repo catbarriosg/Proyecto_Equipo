@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_listas_de_espera.exceptions;
 
+/** Excepción para recursos que no existen; el GlobalExceptionHandler la responde con estado 404. */
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
         super(message);

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Lógica de negocio de las camas: consultas, registro, cambios de estado y resumen de ocupación. */
 @Service
 public class CamaServiceImpl implements CamaService {
 
@@ -30,6 +31,7 @@ public class CamaServiceImpl implements CamaService {
     @Autowired
     private PacienteClient pacienteClient;
 
+    /** Todas las camas activas. */
     @Override
     public List<Cama> obtenerTodas() {
         log.debug("[CamaService] Consultando todas las camas activas");
@@ -38,6 +40,7 @@ public class CamaServiceImpl implements CamaService {
         return camas;
     }
 
+    /** Una cama por ID, o error si no existe. */
     @Override
     public Cama obtenerPorId(Long id) {
         log.debug("[CamaService] Buscando cama con ID: {}", id);
@@ -50,6 +53,7 @@ public class CamaServiceImpl implements CamaService {
         return cama;
     }
 
+    /** Una cama por código, o error si no existe. */
     @Override
     public Cama obtenerPorCodigo(String codigo) {
         log.debug("[CamaService] Buscando cama con código: {}", codigo);
@@ -62,6 +66,7 @@ public class CamaServiceImpl implements CamaService {
         return cama;
     }
 
+    /** Camas de una sede (valida la sede con ms-hospitales). */
     @Override
     public List<Cama> obtenerPorHospital(Long hospitalId) {
         log.debug("[CamaService] Consultando camas del hospital ID: {}", hospitalId);
@@ -71,6 +76,7 @@ public class CamaServiceImpl implements CamaService {
         return camas;
     }
 
+    /** Camas DISPONIBLES de una sede. */
     @Override
     public List<Cama> obtenerDisponiblesPorHospital(Long hospitalId) {
         log.debug("[CamaService] Consultando camas DISPONIBLES del hospital ID: {}", hospitalId);
@@ -80,6 +86,7 @@ public class CamaServiceImpl implements CamaService {
         return disponibles;
     }
 
+    /** Camas con un estado determinado. */
     @Override
     public List<Cama> obtenerPorEstado(String estado) {
         log.debug("[CamaService] Filtrando camas por estado: {}", estado);
@@ -88,6 +95,7 @@ public class CamaServiceImpl implements CamaService {
         return camas;
     }
 
+    /** Camas de un tipo; valida antes que el tipo exista en TipoCama. */
     @Override
     public List<Cama> obtenerPorTipo(String tipo) {
         log.debug("[CamaService] Filtrando camas por tipo: {}", tipo);
@@ -102,6 +110,7 @@ public class CamaServiceImpl implements CamaService {
         return camas;
     }
 
+    /** Resumen de ocupación de una sede: cantidad por estado y porcentaje de camas ocupadas. */
     @Override
     public Map<String, Object> obtenerResumenHospital(Long hospitalId) {
         log.debug("[CamaService] Generando resumen de camas para hospital ID: {}", hospitalId);
@@ -130,6 +139,7 @@ public class CamaServiceImpl implements CamaService {
         return resumen;
     }
 
+    /** Registra una cama: valida la sede y que el código no se repita; si no trae estado queda DISPONIBLE. */
     @Override
     public Cama guardarCama(Cama cama) {
         log.debug("[CamaService] Registrando nueva cama: {} para hospital ID: {}", cama.getCodigo(), cama.getHospitalId());
@@ -154,6 +164,7 @@ public class CamaServiceImpl implements CamaService {
         return guardada;
     }
 
+    /** Cambia el estado: DISPONIBLE libera la cama y OCUPADA exige un paciente válido. */
     @Override
     public Cama actualizarEstado(Long id, String nuevoEstado, String rutPaciente) {
         log.debug("[CamaService] Actualizando estado de cama ID {} a '{}'", id, nuevoEstado);
@@ -180,6 +191,7 @@ public class CamaServiceImpl implements CamaService {
         return actualizada;
     }
 
+    /** Actualiza los datos de una cama existente. */
     @Override
     public Cama actualizarCama(Long id, Cama datosNuevos) {
         log.debug("[CamaService] Actualizando datos de cama ID: {}", id);
@@ -200,6 +212,7 @@ public class CamaServiceImpl implements CamaService {
         });
     }
 
+    /** Desactiva una cama (soft delete). */
     @Override
     public Cama desactivarCama(Long id) {
         log.debug("[CamaService] Desactivando cama ID: {}", id);

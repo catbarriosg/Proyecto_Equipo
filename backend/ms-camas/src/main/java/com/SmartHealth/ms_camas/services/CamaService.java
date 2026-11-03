@@ -5,6 +5,7 @@ import com.SmartHealth.ms_camas.models.Cama;
 import java.util.List;
 import java.util.Map;
 
+/** Operaciones sobre las camas. La implementación está en CamaServiceImpl. */
 public interface CamaService {
     List<Cama> obtenerTodas();
     Cama obtenerPorId(Long id);

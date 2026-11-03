@@ -10,10 +10,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 public record Identidad(Long usuarioId, String rol, Long pacienteId, Long personalId, String correo) {
 
+    // Roles posibles que llegan en la cabecera X-Usuario-Rol
     public static final String PACIENTE = "PACIENTE";
     public static final String MEDICO = "MEDICO";
     public static final String ADMINISTRADOR = "ADMINISTRADOR";
 
+    /** Lee la identidad desde las cabeceras de la petición HTTP que se está atendiendo en este momento. */
     public static Identidad actual() {
         HttpServletRequest peticion =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -25,6 +27,7 @@ public record Identidad(Long usuarioId, String rol, Long pacienteId, Long person
                 peticion.getHeader("X-Usuario-Correo"));
     }
 
+    /** Convierte el valor de una cabecera en número; si viene vacío o no es número devuelve null. */
     private static Long numero(String valor) {
         try {
             return valor == null || valor.isBlank() ? null : Long.valueOf(valor);
@@ -33,10 +36,12 @@ public record Identidad(Long usuarioId, String rol, Long pacienteId, Long person
         }
     }
 
+    /** true si la llamada viene de otro microservicio (Feign) y no de un usuario a través del gateway. */
     public boolean esInterna() {
         return rol == null;
     }
 
+    // Atajos para consultar el rol del usuario
     public boolean esAdministrador() {
         return ADMINISTRADOR.equals(rol);
     }

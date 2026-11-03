@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ms-pacientes", configuration = FeignConfig.class)
 public interface PacienteClient {
 
+    /** Busca un paciente por RUT para validar que exista y esté activo. */
     @GetMapping("/api/pacientes/{rut}")
     PacienteDTO obtenerPacientePorRut(@PathVariable("rut") String rut);
 }

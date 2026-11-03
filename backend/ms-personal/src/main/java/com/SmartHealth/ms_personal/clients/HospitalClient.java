@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "ms-hospitales", configuration = FeignConfig.class)
 public interface HospitalClient {
 
+    /** Consulta una sede en ms-hospitales para validar que exista. */
     @GetMapping("/api/hospitales/{id}")
     HospitalDTO obtenerHospitalPorId(@PathVariable("id") Long id);
 }

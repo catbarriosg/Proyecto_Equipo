@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/** Entidad JPA de la tabla "hospitales" (sedes de la clínica). Teléfono y correo son únicos. */
 @Data
 @Entity
 @Table(name = "hospitales")
@@ -67,6 +68,7 @@ public class Hospital {
     @Column(nullable = false)
     private Boolean activo = true;
 
+    /** Antes de insertar: guarda la fecha de creación. */
     @PrePersist
     protected void onCreate() {
         creadoEn = LocalDateTime.now();

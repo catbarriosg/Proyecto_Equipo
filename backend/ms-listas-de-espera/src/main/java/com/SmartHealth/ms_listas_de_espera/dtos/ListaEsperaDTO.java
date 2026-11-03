@@ -14,6 +14,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.SmartHealth.ms_listas_de_espera.models.Prioridad;
 import java.time.LocalDateTime;
 
+/** Datos de un registro de lista de espera que entran y salen por la API. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

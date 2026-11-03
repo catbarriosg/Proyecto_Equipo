@@ -1,5 +1,9 @@
 package com.SmartHealth.ms_citas.models;
 
+/**
+ * Ciclo de vida de una cita:
+ * SOLICITADA / CONFIRMADA (activas) → ATENDIDA o CANCELADA (finales, ya no se pueden cambiar).
+ */
 public enum EstadoCita {
     SOLICITADA,
     CONFIRMADA,

@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/** Cliente Feign hacia ms-hospitales: obtiene los datos de la sede donde está el insumo. */
 @FeignClient(name = "ms-hospitales", configuration = FeignConfig.class)
 public interface HospitalClient {
     

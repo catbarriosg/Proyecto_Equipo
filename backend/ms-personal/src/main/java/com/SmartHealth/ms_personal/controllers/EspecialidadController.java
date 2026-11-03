@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/** Endpoints de especialidades (/api/especialidades). Leer es público; crear y editar es solo del administrador. */
 @RestController
 @RequestMapping("/api/especialidades")
 @Tag(name = "Especialidades", description = "Especialidades médicas que ofrece la clínica")
@@ -23,12 +24,14 @@ public class EspecialidadController {
         this.repositorio = repositorio;
     }
 
+    /** GET /api/especialidades — especialidades activas ordenadas por nombre. */
     @GetMapping
     @Operation(summary = "Listar especialidades activas (público)")
     public List<Especialidad> listar() {
         return repositorio.findByActivaTrueOrderByNombreAsc();
     }
 
+    /** GET /api/especialidades/{slug} — una especialidad por su identificador de URL. */
     @GetMapping("/{slug}")
     @Operation(summary = "Obtener una especialidad por su identificador, por ejemplo medicina-general (público)")
     public Especialidad obtener(@PathVariable String slug) {
@@ -36,6 +39,7 @@ public class EspecialidadController {
                 .orElseThrow(() -> ApiException.noEncontrado("No encontramos la especialidad solicitada."));
     }
 
+    /** POST /api/especialidades — crea una especialidad si su nombre e identificador no existen. */
     @PostMapping
     @Operation(summary = "Crear una especialidad (administrador)")
     public ResponseEntity<Especialidad> crear(@Valid @RequestBody Especialidad especialidad) {
@@ -48,6 +52,7 @@ public class EspecialidadController {
         return ResponseEntity.status(HttpStatus.CREATED).body(repositorio.save(especialidad));
     }
 
+    /** PUT /api/especialidades/{id} — actualiza los datos de una especialidad. */
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar una especialidad (administrador)")
     public Especialidad actualizar(@PathVariable Long id, @Valid @RequestBody Especialidad datos) {

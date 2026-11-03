@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PacienteDTO {
+    // Lombok (@Data) genera getters, setters, equals, hashCode y toString
     private Long id;
     private String rut;
     private String nombreCompleto;

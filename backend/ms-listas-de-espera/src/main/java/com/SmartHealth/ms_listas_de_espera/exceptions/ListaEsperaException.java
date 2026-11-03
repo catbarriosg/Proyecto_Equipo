@@ -12,6 +12,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** Segundo manejador de errores del servicio (@ControllerAdvice), con respuestas para 404, 400 y 500. */
 @ControllerAdvice
 public class ListaEsperaException {
 

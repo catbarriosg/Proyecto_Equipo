@@ -20,18 +20,22 @@ public class AgendaHorarios {
 
     private final Clock reloj;
 
+    /** Recibe el reloj de la clínica definido en CitasConfig. */
     public AgendaHorarios(Clock reloj) {
         this.reloj = reloj;
     }
 
+    /** Fecha actual en la zona horaria de la clínica. */
     public LocalDate hoy() {
         return LocalDate.now(reloj);
     }
 
+    /** Fecha y hora actual en la zona horaria de la clínica. */
     public LocalDateTime ahora() {
         return LocalDateTime.now(reloj);
     }
 
+    /** Último día que se puede reservar (hoy + 90 días). */
     public LocalDate ultimoDiaReservable() {
         return hoy().plusDays(DIAS_ANTICIPACION);
     }
@@ -55,6 +59,7 @@ public class AgendaHorarios {
         return horarios;
     }
 
+    /** Un horario es reservable si está dentro del rango permitido y corresponde a un bloque de atención futuro. */
     public boolean esReservable(LocalDate fecha, LocalTime hora) {
         return !fecha.isBefore(hoy())
                 && !fecha.isAfter(ultimoDiaReservable())
@@ -66,6 +71,7 @@ public class AgendaHorarios {
         return LocalDateTime.of(fecha, hora).isAfter(ahora().plusHours(HORAS_MINIMAS_PARA_GESTIONAR));
     }
 
+    /** true si la fecha y hora todavía no llegan (regla que se aplica a médicos y administradores). */
     public boolean esFutura(LocalDate fecha, LocalTime hora) {
         return LocalDateTime.of(fecha, hora).isAfter(ahora());
     }

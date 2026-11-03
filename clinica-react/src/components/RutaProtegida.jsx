@@ -1,6 +1,7 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import { useSesion } from '../context/useSesion.js'
 
+// Página de inicio de sesión que corresponde a cada rol
 const LOGIN_POR_ROL = {
   PACIENTE: '/login',
   MEDICO: '/acceso-medico',
@@ -15,12 +16,14 @@ function RutaProtegida({ roles, children }) {
   const { usuario } = useSesion()
   const ubicacion = useLocation()
 
+  // Sin sesión: redirige al login guardando en ?volver= la página que se quería ver
   if (!usuario) {
     const login = roles.length === 1 ? LOGIN_POR_ROL[roles[0]] : '/login'
     const volver = encodeURIComponent(ubicacion.pathname + ubicacion.search)
     return <Navigate to={`${login}?volver=${volver}`} replace />
   }
 
+  // Con sesión pero con un rol no permitido: muestra un aviso de acceso restringido
   if (!roles.includes(usuario.rol)) {
     return (
       <main className="panel-admin-denegado">
@@ -33,6 +36,7 @@ function RutaProtegida({ roles, children }) {
     )
   }
 
+  // Todo en orden: muestra la página protegida
   return children
 }
 

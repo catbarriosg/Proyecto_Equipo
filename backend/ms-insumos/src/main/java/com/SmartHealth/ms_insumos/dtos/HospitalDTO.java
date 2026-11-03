@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** Datos de la sede que devuelve ms-hospitales; el campo "direccion" se recibe como "ubicacion". */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

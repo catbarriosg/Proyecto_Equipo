@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_hospitales.enums;
 
+/** Regiones de Chile con su nombre completo; se usan para validar el filtro por región. */
 public enum RegionChile {
     ARICA_Y_PARINACOTA("Arica y Parinacota"),
     TARAPACA("Tarapacá"),
@@ -23,6 +24,7 @@ public enum RegionChile {
         this.nombreCompleto = nombreCompleto;
     }
 
+    /** Nombre de la región para mostrar (con tildes). */
     public String getNombreCompleto() {
         return nombreCompleto;
     }

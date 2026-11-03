@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
+/** Acceso a la tabla "especialidades": búsquedas por slug o nombre y verificación de duplicados. */
 public interface EspecialidadRepository extends JpaRepository<Especialidad, Long> {
     List<Especialidad> findByActivaTrueOrderByNombreAsc();
     Optional<Especialidad> findBySlug(String slug);

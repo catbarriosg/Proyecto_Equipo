@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+/** Cliente Feign hacia ms-historial: consulta si el paciente tiene historial clínico registrado. */
 @FeignClient(name = "ms-historial", configuration = FeignConfig.class)
 public interface HistorialClient {
     

@@ -1,5 +1,6 @@
 // RUT chileno: el backend lo recibe sin puntos (12345678-5) y en pantalla se muestra con puntos (12.345.678-5).
 
+// Deja solo números y la letra K (quita puntos, guion y espacios)
 export function limpiarRut(valor = '') {
   return valor.replace(/[^0-9kK]/g, '').toUpperCase()
 }
@@ -19,6 +20,8 @@ export function formatearRut(valor = '') {
   return `${cuerpo}-${limpio.slice(-1)}`
 }
 
+// Algoritmo módulo 11: multiplica los dígitos de derecha a izquierda por 2, 3, 4, 5, 6, 7 (y vuelve a 2),
+// suma los resultados y calcula 11 - (suma % 11). Si da 11 el dígito es 0 y si da 10 es K.
 export function calcularDigitoVerificador(cuerpo) {
   let suma = 0
   let factor = 2

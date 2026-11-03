@@ -4,6 +4,7 @@ import com.SmartHealth.ms_citas.models.EstadoCita;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/** Cuerpo de PATCH /api/citas/{id}/estado: { "estado": "ATENDIDA" }. */
 @Data
 public class CambiarEstadoRequest {
 

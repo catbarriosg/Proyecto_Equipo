@@ -3,6 +3,7 @@ package com.SmartHealth.ms_equipamiento.services;
 import com.SmartHealth.ms_equipamiento.models.Equipamiento;
 import java.util.List;
 
+/** Operaciones sobre el equipamiento. La implementación está en EquipamientoServiceImpl. */
 public interface EquipamientoService {
     List<Equipamiento> listarTodos();
     List<Equipamiento> listarTodosActivos();

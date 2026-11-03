@@ -10,6 +10,7 @@ import com.SmartHealth.ms_insumos.dtos.HospitalDTO;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
+/** Entidad JPA de la tabla "insumos". Incluye cálculos de stock y vencimiento que no se guardan (@Transient). */
 @Data
 @Entity
 @Table(name = "insumos")
@@ -49,6 +50,7 @@ public class Insumo {
     @Column(name = "hospital_ubicacion_id")
     private Long hospitalUbicacionId;
 
+    // Datos de la sede obtenidos de ms-hospitales; no se guardan en esta tabla
     @Transient
     private HospitalDTO hospitalData;
 
@@ -56,11 +58,13 @@ public class Insumo {
     @Column(name = "activo")
     private Boolean activo = true;
 
+    /** true si la cantidad disponible es menor que el mínimo definido. */
     @Transient
     public boolean estaBajoStock() {
         return cantidadDisponible < cantidadMinima;
     }
 
+    /** true si vence dentro de los próximos 30 días. */
     @Transient
     public boolean estaProximoAVencer() {
         if (fechaVencimiento == null) return false;
@@ -69,12 +73,14 @@ public class Insumo {
                proximoMes.isAfter(fechaVencimiento);
     }
 
+    /** true si la fecha de vencimiento ya pasó. */
     @Transient
     public boolean estaVencido() {
         if (fechaVencimiento == null) return false;
         return LocalDate.now().isAfter(fechaVencimiento);
     }
 
+    /** Valor total del stock: precio unitario × cantidad disponible. */
     @Transient
     public BigDecimal valorInventario() {
         if (precioUnitario == null) return BigDecimal.ZERO;

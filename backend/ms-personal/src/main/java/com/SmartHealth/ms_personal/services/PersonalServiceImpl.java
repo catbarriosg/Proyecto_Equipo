@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/** Lógica de negocio del personal de la clínica. */
 @Service
 public class PersonalServiceImpl implements IPersonalService {
 
@@ -29,6 +30,7 @@ public class PersonalServiceImpl implements IPersonalService {
     @Autowired
     private HospitalClient hospitalClient;
 
+    /** Copia los datos del DTO a una entidad nueva y la guarda (RUT y correo repetidos los rechaza la base de datos). */
     @Override
     public PersonalDTO crearPersonal(PersonalDTO personalDTO) {
         logger.info("Creando nuevo personal con RUT: {}", personalDTO.getRut());
@@ -55,6 +57,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Profesional activo por ID, o null si no existe (el controlador responde 404). */
     @Override
     public PersonalDTO obtenerPorId(Long id) {
         logger.info("Obteniendo personal con ID: {}", id);
@@ -73,6 +76,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Todo el personal activo. */
     @Override
     public List<PersonalDTO> obtenerTodos() {
         logger.info("Obteniendo todo el personal");
@@ -86,6 +90,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Personal activo de una sede. */
     @Override
     public List<PersonalDTO> obtenerPorHospital(Long hospitalId) {
         logger.info("Obteniendo personal del hospital ID: {}", hospitalId);
@@ -99,6 +104,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Personal por rol; primero valida que el rol exista en RolPersonal. */
     @Override
     public List<PersonalDTO> obtenerPorRol(String rol) {
         logger.info("Obteniendo personal con rol: {}", rol);
@@ -120,6 +126,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Personal por departamento; primero valida que exista en DepartamentoPersonal. */
     @Override
     public List<PersonalDTO> obtenerPorDepartamento(String departamento) {
         logger.info("Obteniendo personal del departamento: {}", departamento);
@@ -139,6 +146,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Médicos de una sede, validando antes la sede con ms-hospitales. */
     @Override
     public List<PersonalDTO> obtenerMedicosPorHospital(Long hospitalId) {
         logger.info("Obteniendo médicos del hospital ID: {}", hospitalId);
@@ -160,6 +168,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Enfermeros de una sede, validando antes la sede con ms-hospitales. */
     @Override
     public List<PersonalDTO> obtenerEnfermerosPorHospital(Long hospitalId) {
         logger.info("Obteniendo enfermeros del hospital ID: {}", hospitalId);
@@ -181,6 +190,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Personal por especialidad; primero valida que exista en EspecialidadMedica. */
     @Override
     public List<PersonalDTO> obtenerPorEspecialidad(String especialidad) {
         logger.info("Obteniendo personal con especialidad: {}", especialidad);
@@ -200,6 +210,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Actualiza un profesional: valida la sede con ms-hospitales y luego copia los datos editables (el RUT no cambia). */
     @Override
     public PersonalDTO actualizarPersonal(Long id, PersonalDTO personalDTO) {
         logger.info("Actualizando personal con ID: {}", id);
@@ -241,6 +252,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Soft delete: marca al profesional como inactivo en lugar de borrarlo. */
     @Override
     public void eliminarPersonal(Long id) {
         logger.info("Eliminando personal con ID: {}", id);
@@ -260,6 +272,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Cuenta el personal activo de una sede, validando antes que exista. */
     @Override
     public Long contarPersonalPorHospital(Long hospitalId) {
         logger.info("Contando personal en hospital ID: {}", hospitalId);
@@ -281,6 +294,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Profesional activo por RUT, o null si no existe. */
     @Override
     public PersonalDTO obtenerPorRut(String rut) {
         logger.info("Obteniendo personal con RUT: {}", rut);
@@ -299,6 +313,7 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Profesional activo por correo, o null si no existe. */
     @Override
     public PersonalDTO obtenerPorEmail(String email) {
         logger.info("Obteniendo personal con email: {}", email);
@@ -317,12 +332,14 @@ public class PersonalServiceImpl implements IPersonalService {
         }
     }
 
+    /** Todo el personal, también los desactivados (panel de administración). */
     @Override
     public List<PersonalDTO> obtenerTodosIncluyendoInactivos() {
         logger.info("Obteniendo todo el personal, incluidos los inactivos");
         return personalRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    /** Activa o desactiva un profesional; 404 si no existe. */
     @Override
     public PersonalDTO cambiarEstado(Long id, boolean activo) {
         logger.info("Cambiando estado del personal ID {} a activo={}", id, activo);
@@ -332,6 +349,7 @@ public class PersonalServiceImpl implements IPersonalService {
         return convertToDTO(personalRepository.save(personal));
     }
 
+    /** Entidad → DTO. */
     private PersonalDTO convertToDTO(Personal personal) {
         PersonalDTO dto = new PersonalDTO();
         dto.setId(personal.getId());

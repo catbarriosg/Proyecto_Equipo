@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/** Lógica de negocio de las sedes de la clínica. */
 @Service
 public class HospitalServiceImpl implements HospitalService {
 
@@ -19,6 +20,7 @@ public class HospitalServiceImpl implements HospitalService {
     @Autowired
     private HospitalRepository repository;
 
+    /** Lista las sedes activas. */
     @Override
     public List<Hospital> obtenerTodos() {
         log.debug("[HospitalService] Consultando todos los hospitales activos");
@@ -27,6 +29,7 @@ public class HospitalServiceImpl implements HospitalService {
         return hospitales;
     }
 
+    /** Busca una sede por ID o lanza 404. */
     @Override
     public Hospital obtenerPorId(Long id) {
         log.debug("[HospitalService] Buscando hospital con ID: {}", id);
@@ -39,6 +42,7 @@ public class HospitalServiceImpl implements HospitalService {
         return hospital;
     }
 
+    /** Filtra por región después de validar que el nombre corresponda a una región de Chile. */
     @Override
     public List<Hospital> obtenerPorRegion(String region) {
         log.debug("[HospitalService] Validando región: {}", region);
@@ -57,6 +61,7 @@ public class HospitalServiceImpl implements HospitalService {
         return hospitales;
     }
 
+    /** Filtra por nivel de complejidad (BAJA, MEDIANA o ALTA). */
     @Override
     public List<Hospital> obtenerPorComplejidad(String nivelComplejidad) {
         log.debug("[HospitalService] Validando nivel de complejidad: {}", nivelComplejidad);
@@ -74,6 +79,7 @@ public class HospitalServiceImpl implements HospitalService {
         return hospitales;
     }
 
+    /** Registra una sede validando que su teléfono y correo no estén usados por otra. */
     @Override
     public Hospital guardarHospital(Hospital hospital) {
         log.debug("[HospitalService] Intentando registrar hospital: {}", hospital.getNombre());
@@ -92,6 +98,7 @@ public class HospitalServiceImpl implements HospitalService {
         return guardado;
     }
 
+    /** Actualiza los datos de una sede existente o lanza 404 si no existe. */
     @Override
     public Hospital actualizarHospital(Long id, Hospital datosNuevos) {
         log.debug("[HospitalService] Actualizando hospital con ID: {}", id);
@@ -116,6 +123,7 @@ public class HospitalServiceImpl implements HospitalService {
         });
     }
 
+    /** Desactiva una sede (soft delete): deja de aparecer en los listados públicos. */
     @Override
     public Hospital desactivarHospital(Long id) {
         log.debug("[HospitalService] Desactivando hospital con ID: {}", id);

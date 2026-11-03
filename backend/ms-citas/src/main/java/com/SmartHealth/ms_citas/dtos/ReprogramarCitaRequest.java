@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+/** Nueva fecha y hora para una cita existente (mismos formatos que al crearla). */
 @Data
 public class ReprogramarCitaRequest {
 

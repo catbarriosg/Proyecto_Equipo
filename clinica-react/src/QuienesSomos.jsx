@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+// Valores institucionales que se muestran como tarjetas
 const valores = [
   {
     icono: '❤️',
@@ -18,6 +19,7 @@ const valores = [
   }
 ]
 
+// Página institucional: descripción de la clínica, misión, visión, valores, video y equipo de desarrollo
 function QuienesSomos() {
   return (
     <main className="quienes-somos-react">
@@ -61,6 +63,7 @@ function QuienesSomos() {
         </div>
       </section>
 
+      {/* Misión y visión */}
       <section className="qs-proposito">
         <div className="qs-seccion-titulo">
           <span className="qs-etiqueta">NUESTRO PROPÓSITO</span>
@@ -92,6 +95,7 @@ function QuienesSomos() {
         </div>
       </section>
 
+      {/* Valores generados a partir del arreglo "valores" */}
       <section className="qs-valores">
         <div className="qs-seccion-titulo">
           <span className="qs-etiqueta">LO QUE NOS REPRESENTA</span>
@@ -110,6 +114,7 @@ function QuienesSomos() {
         </div>
       </section>
 
+      {/* Video de YouTube incrustado (carga diferida con loading="lazy") */}
       <section className="qs-video">
         <div className="qs-seccion-titulo">
           <span className="qs-etiqueta">CONÓCENOS EN VIDEO</span>

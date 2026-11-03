@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manejo centralizado de errores de ms-camas. Clasifica las RuntimeException según su mensaje
+ * para responder 400, 404 o 409 según corresponda.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

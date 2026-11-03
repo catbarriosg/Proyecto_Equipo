@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/** Endpoints REST de triaje (/api/triaje). El gateway los deja solo para el administrador. */
 @RestController
 @RequestMapping("/api/triaje")
 @Tag(name = "Triaje", description = "Sistema de evaluación de urgencia (triaje)")
@@ -24,12 +25,14 @@ public class TriajeController {
     @Autowired
     private TriajeService service;
 
+    /** GET /api/triaje — todas las evaluaciones. */
     @GetMapping
     @Operation(summary = "Listar todos los triajes")
     public ResponseEntity<List<Triaje>> listarTodos() {
         return ResponseEntity.ok(service.obtenerTodos());
     }
 
+    /** POST /api/triaje — registra una evaluación; la puntuación la calcula el servicio, no se recibe del cliente. */
     @PostMapping
     @Operation(summary = "Registrar nuevo triaje")
     @ApiResponses(value = {
@@ -42,18 +45,21 @@ public class TriajeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.registrarTriaje(triaje));
     }
 
+    /** GET /api/triaje/{id} — una evaluación por ID. */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener triaje por ID")
     public ResponseEntity<Triaje> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.obtenerPorId(id));
     }
 
+    /** GET /api/triaje/paciente/{rut} — evaluaciones de un paciente, de la más reciente a la más antigua. */
     @GetMapping("/paciente/{rut}")
     @Operation(summary = "Obtener triajes de un paciente por RUT")
     public ResponseEntity<List<Triaje>> buscarPorRut(@PathVariable String rut) {
         return ResponseEntity.ok(service.obtenerPorRut(rut));
     }
 
+    /** GET /api/triaje/prioridad/{nivel} — evaluaciones con un nivel de urgencia (AZUL, VERDE, AMARILLO, ROJO). */
     @GetMapping("/prioridad/{nivel}")
     @Operation(summary = "Listar triajes por nivel de urgencia")
     public ResponseEntity<List<Triaje>> buscarPorPrioridad(@PathVariable String nivel) {

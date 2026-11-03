@@ -4,6 +4,7 @@ import com.SmartHealth.ms_pacientes.dtos.PacienteDTO;
 
 import java.util.List;
 
+/** Operaciones del servicio de pacientes. La implementación está en PacienteServiceImpl. */
 public interface PacienteService {
     List<PacienteDTO> obtenerTodos(boolean incluirInactivos);
     PacienteDTO crear(PacienteDTO datos);

@@ -6,10 +6,12 @@ import { useCallback, useEffect, useState } from 'react'
  * Si la respuesta llega cuando la clave ya cambió, se descarta.
  */
 export function useCarga(cargar, clave) {
+  // "version" aumenta al llamar recargar(); así se puede repetir la misma consulta (por ejemplo tras cancelar una hora)
   const [version, setVersion] = useState(0)
   const [resultado, setResultado] = useState({ consulta: null, datos: null, error: null })
   const consulta = `${clave}#${version}`
 
+  // Ejecuta la carga cada vez que cambia la consulta. "vigente" evita guardar respuestas de consultas antiguas.
   useEffect(() => {
     let vigente = true
     cargar()
@@ -20,7 +22,9 @@ export function useCarga(cargar, clave) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consulta])
 
+  // Fuerza una nueva carga de los mismos datos
   const recargar = useCallback(() => setVersion((actual) => actual + 1), [])
+  // Está cargando mientras el resultado guardado no corresponda a la consulta actual
   const cargando = resultado.consulta !== consulta
 
   return {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/** Lógica de negocio del inventario de insumos. */
 @Service
 public class InsumoServiceImpl implements InsumoService {
 
@@ -22,6 +23,7 @@ public class InsumoServiceImpl implements InsumoService {
     @Autowired
     private HospitalClient hospitalClient;
 
+    /** Completa los datos de la sede del insumo; si ms-hospitales no responde, el insumo se devuelve igual. */
     private void cargarHospital(Insumo insumo) {
         if (insumo == null || insumo.getHospitalUbicacionId() == null) {
             return;
@@ -36,6 +38,7 @@ public class InsumoServiceImpl implements InsumoService {
         }
     }
 
+    /** Insumos activos con los datos de su sede. */
     @Override
     public List<Insumo> listarTodosActivos() {
         List<Insumo> insumos = insumoRepository.findByActivoTrue();
@@ -43,6 +46,7 @@ public class InsumoServiceImpl implements InsumoService {
         return insumos;
     }
 
+    /** Un insumo por código, o error si no existe. */
     @Override
     public Insumo buscarPorCodigo(String codigo) {
         // Retorna el insumo si existe, si no, lanza un error controlado
@@ -52,6 +56,7 @@ public class InsumoServiceImpl implements InsumoService {
         return insumo;
     }
 
+    /** Registra un insumo verificando que su código no exista. */
     @Override
     public Insumo guardarInsumo(Insumo insumo) {
         // Aquí validamos si el código ya existe antes de guardar
@@ -63,6 +68,7 @@ public class InsumoServiceImpl implements InsumoService {
         return guardado;
     }
 
+    /** Soft delete: marca el insumo como inactivo. */
     @Override
     public void eliminarInsumo(String codigo) {
         Insumo insumo = buscarPorCodigo(codigo);

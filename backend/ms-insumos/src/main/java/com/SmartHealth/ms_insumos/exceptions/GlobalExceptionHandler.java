@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Manejo centralizado de errores de ms-insumos: validaciones (400), negocio (404) y códigos duplicados (409). */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

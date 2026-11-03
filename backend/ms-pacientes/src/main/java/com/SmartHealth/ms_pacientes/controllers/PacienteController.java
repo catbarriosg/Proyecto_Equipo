@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.List;
 
+/** Endpoints REST de las fichas de pacientes (/api/pacientes). Los permisos por rol los aplica el gateway. */
 @RestController
 @RequestMapping("/api/pacientes")
 @Tag(name = "Pacientes", description = "Gestión de pacientes en el sistema")
@@ -23,12 +24,14 @@ public class PacienteController {
     @Autowired
     private PacienteService service;
 
+    /** GET /api/pacientes — lista los pacientes activos (o todos con incluirInactivos=true). */
     @GetMapping
     @Operation(summary = "Listar pacientes (con incluirInactivos=true también muestra los desactivados)")
     public List<PacienteDTO> listar(@RequestParam(defaultValue = "false") boolean incluirInactivos) {
         return service.obtenerTodos(incluirInactivos);
     }
 
+    /** GET /api/pacientes/rut/{rut} — busca un paciente por RUT (lo usa ms-citas cuando el personal agenda). */
     @GetMapping("/rut/{rut}")
     @Operation(summary = "Buscar paciente por RUT")
     @ApiResponses(value = {
@@ -39,12 +42,14 @@ public class PacienteController {
         return service.obtenerPorRut(rut);
     }
 
+    /** GET /api/pacientes/{rut} — misma búsqueda por RUT, mantenida por compatibilidad con otros servicios. */
     @GetMapping("/{rut}")
     @Operation(summary = "Buscar paciente por RUT (ruta anterior, usada por ms-camas y ms-triaje)")
     public PacienteDTO buscarPorRutAnterior(@PathVariable String rut) {
         return service.obtenerPorRut(rut);
     }
 
+    /** GET /api/pacientes/id/{id} — ficha por ID (un paciente solo puede ver la suya). */
     @GetMapping("/id/{id}")
     @Operation(summary = "Obtener paciente por ID")
     @ApiResponses(value = {
@@ -55,6 +60,7 @@ public class PacienteController {
         return service.obtenerPorId(id);
     }
 
+    /** POST /api/pacientes — crea una ficha nueva; responde 409 si el RUT ya existe. */
     @PostMapping
     @Operation(summary = "Crear nuevo paciente")
     @ApiResponses(value = {
@@ -66,12 +72,14 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(pacienteDTO));
     }
 
+    /** PUT /api/pacientes/{id} — actualiza los datos editables de la ficha. */
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar datos del paciente (el RUT no se modifica)")
     public PacienteDTO actualizar(@PathVariable Long id, @Valid @RequestBody PacienteDTO datos) {
         return service.actualizar(id, datos);
     }
 
+    /** PATCH /api/pacientes/{id}/estado — activa o desactiva la ficha. Cuerpo: { "activo": true | false }. */
     @PatchMapping("/{id}/estado")
     @Operation(summary = "Activar o desactivar un paciente")
     public PacienteDTO cambiarEstado(@PathVariable Long id, @RequestBody Map<String, Boolean> cuerpo) {
@@ -82,6 +90,7 @@ public class PacienteController {
         return service.cambiarEstado(id, activo);
     }
 
+    /** DELETE /api/pacientes/{id} — no borra el registro: lo desactiva para conservar su historial. */
     @DeleteMapping("/{id}")
     @Operation(summary = "Desactivar paciente (soft-delete: se conserva su historial)")
     public Map<String, String> eliminar(@PathVariable Long id) {

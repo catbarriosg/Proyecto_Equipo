@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/** Cliente Feign hacia ms-pacientes: obtiene la ficha del paciente por su ID (paciente conectado) o por RUT. */
 @FeignClient(name = "ms-pacientes")
 public interface PacienteClient {
 

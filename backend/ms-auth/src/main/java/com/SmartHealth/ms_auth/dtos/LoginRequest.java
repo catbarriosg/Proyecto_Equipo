@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/** Datos del formulario de inicio de sesión. Las anotaciones de jakarta.validation se revisan con @Valid. */
 @Data
 public class LoginRequest {
 

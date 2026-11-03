@@ -5,6 +5,7 @@ import { useCarga } from './hooks/useCarga.js'
 import { DIAS_ANTICIPACION, fechaLocal, sumarDias } from './utils/agenda.js'
 import { formatearFechaLarga } from './utils/formato.js'
 
+// Abreviaturas de los días; el índice coincide con Date.getDay() (0 = domingo)
 const NOMBRES_DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
 /**
@@ -12,6 +13,7 @@ const NOMBRES_DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
  * "version" permite recargar la disponibilidad desde el padre (por ejemplo, si alguien tomó la hora antes).
  */
 function CalendarioHoras({ medico, sucursalNombre, excluirCitaId, alCambiarSeleccion, version = 0 }) {
+  // La navegación se limita entre hoy y el máximo de días de anticipación permitido (90)
   const hoy = new Date()
   hoy.setHours(0, 0, 0, 0)
   const limite = sumarDias(hoy, DIAS_ANTICIPACION)
@@ -19,28 +21,34 @@ function CalendarioHoras({ medico, sucursalNombre, excluirCitaId, alCambiarSelec
   const [fechaSeleccionada, setFechaSeleccionada] = useState('')
   const [horaSeleccionada, setHoraSeleccionada] = useState('')
 
+  // Los 7 días de la semana visible, a partir de inicioSemana
   const diasSemana = Array.from({ length: 7 }, (_, indice) => sumarDias(inicioSemana, indice))
   const desde = fechaLocal(inicioSemana)
   const hasta = fechaLocal(diasSemana[6])
+  // Consulta la disponibilidad de la semana; la clave cambia con el médico, la semana o la versión, y eso provoca la recarga
   const { datos: disponibilidad, cargando, error, recargar } = useCarga(
     () => api.citas.disponibilidad({ medicoId: medico.id, desde, hasta, excluirCitaId }),
     `${medico.id}|${desde}|${excluirCitaId || ''}|${version}`,
   )
+  // Convierte la respuesta [{ fecha, horas }] en un objeto { '2026-11-05': ['09:00', ...] } para buscar rápido por fecha
   const horasPorDia = Object.fromEntries((disponibilidad || []).map((dia) => [dia.fecha, dia.horas]))
   const horariosDisponibles = horasPorDia[fechaSeleccionada] || []
   const textoRango = `${inicioSemana.toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })} al ${diasSemana[6].toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}`
 
+  // Al elegir un día se borra la hora anterior y se avisa al componente padre
   function elegirFecha(fecha) {
     setFechaSeleccionada(fecha)
     setHoraSeleccionada('')
     alCambiarSeleccion({ fecha, hora: '' })
   }
 
+  // Al elegir una hora se informa al padre la fecha y hora seleccionadas
   function elegirHora(hora) {
     setHoraSeleccionada(hora)
     alCambiarSeleccion({ fecha: fechaSeleccionada, hora })
   }
 
+  // Avanza (1) o retrocede (-1) una semana sin salir del rango permitido
   function cambiarSemana(cantidad) {
     const nuevaSemana = sumarDias(inicioSemana, cantidad * 7)
     if (nuevaSemana < hoy || nuevaSemana > limite) return
@@ -65,6 +73,7 @@ function CalendarioHoras({ medico, sucursalNombre, excluirCitaId, alCambiarSelec
 
       <EstadoCarga cargando={cargando} error={error} alReintentar={recargar} texto="Consultando horas disponibles…" />
 
+      {/* Botones de los días: se deshabilitan los que no tienen horas libres */}
       <div className="calendario-react-dias" role="group" aria-label="Días disponibles">
         {diasSemana.map((dia) => {
           const valor = fechaLocal(dia)
@@ -101,6 +110,7 @@ function CalendarioHoras({ medico, sucursalNombre, excluirCitaId, alCambiarSelec
           <span className="calendario-react-modalidad">Presencial</span>
         </div>
         <p>Selecciona un horario disponible:</p>
+        {/* Horarios del día elegido, o un mensaje si aún no se elige día o ya no quedan horas */}
         {fechaSeleccionada ? (
           horariosDisponibles.length > 0 ? (
             <div className="calendario-react-horas" role="group" aria-label="Horarios disponibles">

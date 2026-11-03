@@ -4,6 +4,7 @@ import com.SmartHealth.ms_historial.dtos.HistorialDTO;
 import com.SmartHealth.ms_historial.models.HistorialClinico;
 import java.util.List;
 
+/** Operaciones del historial clínico. La implementación está en HistorialServiceImpl. */
 public interface HistorialService {
 
     List<HistorialDTO> obtenerTodos();

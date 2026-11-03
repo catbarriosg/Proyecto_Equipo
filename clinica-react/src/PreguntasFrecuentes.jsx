@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import preguntasFrecuentes from './preguntasFrecuentes.js'
 
+// Página de preguntas frecuentes con buscador. Los datos vienen de preguntasFrecuentes.js.
 function PreguntasFrecuentes() {
   const [busqueda, setBusqueda] = useState('')
   const termino = busqueda.trim().toLocaleLowerCase('es')
+  // Filtra las preguntas que contienen el texto buscado y descarta las categorías que quedan vacías
   const gruposVisibles = preguntasFrecuentes
     .map((grupo) => ({
       ...grupo,
@@ -32,6 +34,7 @@ function PreguntasFrecuentes() {
         </div>
       </section>
 
+      {/* Cada pregunta usa <details>/<summary>: se abre y cierra sin necesidad de JavaScript */}
       {gruposVisibles.length > 0 ? (
         gruposVisibles.map((grupo) => (
           <section className="faq-grupo-react" key={grupo.id} aria-label={grupo.categoria}>

@@ -23,6 +23,7 @@ public class CrearUsuarioRequest {
     @Size(max = 120, message = "El nombre no puede superar 120 caracteres.")
     private String nombre;
 
+    // Vínculo con la ficha de paciente (rol PACIENTE) o con el profesional de ms-personal (rol MEDICO)
     private Long pacienteId;
 
     private Long personalId;

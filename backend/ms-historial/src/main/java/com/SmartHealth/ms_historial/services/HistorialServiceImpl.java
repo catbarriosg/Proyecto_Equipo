@@ -17,10 +17,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/** Lógica de negocio del historial clínico. */
 @Service
 public class HistorialServiceImpl implements HistorialService {
 
     private static final Logger log = LoggerFactory.getLogger(HistorialServiceImpl.class);
+    // Orden de las atenciones: fecha descendente (las sin fecha al final) y, a igual fecha, el ID más alto primero
     private static final Comparator<HistorialClinico> MAS_RECIENTE_PRIMERO =
             Comparator.comparing(HistorialClinico::getFecha, Comparator.nullsLast(Comparator.reverseOrder()))
                     .thenComparing(HistorialClinico::getId, Comparator.reverseOrder());
@@ -33,11 +35,13 @@ public class HistorialServiceImpl implements HistorialService {
         this.pacienteClient = pacienteClient;
     }
 
+    /** Todas las atenciones ordenadas de la más reciente a la más antigua. */
     @Override
     public List<HistorialDTO> obtenerTodos() {
         return repository.findAll().stream().sorted(MAS_RECIENTE_PRIMERO).map(this::convertirADTO).toList();
     }
 
+    /** Una atención por ID, revisando que el usuario tenga acceso al paciente. */
     @Override
     public HistorialDTO obtenerPorId(Long id) {
         HistorialClinico historial = repository.findById(id)
@@ -46,6 +50,7 @@ public class HistorialServiceImpl implements HistorialService {
         return convertirADTO(historial);
     }
 
+    /** Registra una atención: valida el paciente, usa la fecha de hoy si no se indica y guarda el registro. */
     @Override
     public HistorialDTO guardar(HistorialDTO historialDTO) {
         log.info("[HistorialService] Guardando nuevo historial para paciente ID: {}", historialDTO.getIdPaciente());
@@ -87,6 +92,7 @@ public class HistorialServiceImpl implements HistorialService {
                 .toList();
     }
 
+    /** Elimina una atención; si no existe responde 404. */
     @Override
     public void eliminar(Long id) {
         if (!repository.existsById(id)) {
@@ -104,6 +110,7 @@ public class HistorialServiceImpl implements HistorialService {
         }
     }
 
+    /** Entidad → DTO (lo que se envía al frontend). */
     private HistorialDTO convertirADTO(HistorialClinico historial) {
         return new HistorialDTO(
                 historial.getId(),
@@ -119,6 +126,7 @@ public class HistorialServiceImpl implements HistorialService {
         );
     }
 
+    /** DTO → entidad (lo que se guarda en la base de datos). */
     private HistorialClinico convertirAEntidad(HistorialDTO dto) {
         HistorialClinico historial = new HistorialClinico();
         historial.setDiagnostico(dto.getDiagnostico());

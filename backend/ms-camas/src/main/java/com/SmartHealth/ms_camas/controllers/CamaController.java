@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Endpoints REST de camas (/api/camas). El gateway los deja solo para el administrador. */
 @RestController
 @RequestMapping("/api/camas")
 @Tag(name = "Camas", description = "Gestión de camas hospitalarias")
@@ -30,6 +31,7 @@ public class CamaController {
     @Autowired
     private CamaService service;
 
+    /** GET /api/camas — camas activas. */
     @GetMapping
     @Operation(summary = "Listar todas las camas activas")
     public ResponseEntity<List<Cama>> listar() {
@@ -37,6 +39,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerTodas());
     }
 
+    /** GET /api/camas/{id} — una cama por ID. */
     @GetMapping("/{id}")
     @Operation(summary = "Obtener cama por ID")
     public ResponseEntity<Cama> buscarPorId(@PathVariable Long id) {
@@ -44,6 +47,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerPorId(id));
     }
 
+    /** GET /api/camas/codigo/{codigo} — una cama por su código (ej. UCI-001). */
     @GetMapping("/codigo/{codigo}")
     @Operation(summary = "Buscar cama por código")
     public ResponseEntity<Cama> buscarPorCodigo(@PathVariable String codigo) {
@@ -51,6 +55,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerPorCodigo(codigo));
     }
 
+    /** GET /api/camas/hospital/{hospitalId} — camas de una sede. */
     @GetMapping("/hospital/{hospitalId}")
     @Operation(summary = "Listar camas por hospital")
     public ResponseEntity<List<Cama>> listarPorHospital(@PathVariable Long hospitalId) {
@@ -58,6 +63,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerPorHospital(hospitalId));
     }
 
+    /** GET /api/camas/hospital/{hospitalId}/disponibles — camas libres de una sede. */
     @GetMapping("/hospital/{hospitalId}/disponibles")
     @Operation(summary = "Listar camas disponibles del hospital")
     public ResponseEntity<List<Cama>> listarDisponiblesPorHospital(@PathVariable Long hospitalId) {
@@ -65,6 +71,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerDisponiblesPorHospital(hospitalId));
     }
 
+    /** GET /api/camas/hospital/{hospitalId}/resumen — totales por estado y porcentaje de ocupación. */
     @GetMapping("/hospital/{hospitalId}/resumen")
     @Operation(summary = "Obtener resumen de ocupación del hospital")
     public ResponseEntity<Map<String, Object>> resumenHospital(@PathVariable Long hospitalId) {
@@ -72,6 +79,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerResumenHospital(hospitalId));
     }
 
+    /** GET /api/camas/estado/{estado} — camas por estado (DISPONIBLE, OCUPADA, MANTENCION, RESERVADA). */
     @GetMapping("/estado/{estado}")
     @Operation(summary = "Listar camas por estado")
     public ResponseEntity<List<Cama>> listarPorEstado(@PathVariable String estado) {
@@ -79,6 +87,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerPorEstado(estado));
     }
 
+    /** GET /api/camas/tipo/{tipo} — camas por tipo (BASICA, UCI, UTI...). */
     @GetMapping("/tipo/{tipo}")
     @Operation(summary = "Listar camas por tipo")
     public ResponseEntity<List<Cama>> listarPorTipo(@PathVariable String tipo) {
@@ -86,6 +95,7 @@ public class CamaController {
         return ResponseEntity.ok(service.obtenerPorTipo(tipo));
     }
 
+    /** POST /api/camas — registra una cama copiando los datos del DTO a la entidad. */
     @PostMapping
     @Operation(summary = "Crear nueva cama")
     @ApiResponses(value = {
@@ -103,6 +113,7 @@ public class CamaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
     }
 
+    /** PUT /api/camas/{id} — actualiza los datos de una cama. */
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar cama existente")
     public ResponseEntity<Cama> actualizar(@PathVariable Long id, @Valid @RequestBody Cama cama) {
@@ -110,6 +121,7 @@ public class CamaController {
         return ResponseEntity.ok(service.actualizarCama(id, cama));
     }
 
+    /** PATCH /api/camas/{id}/estado?estado=&rutPaciente= — cambia el estado; para OCUPADA exige el RUT del paciente. */
     @PatchMapping("/{id}/estado")
     @Operation(summary = "Cambiar estado de cama")
     public ResponseEntity<Cama> cambiarEstado(
@@ -120,6 +132,7 @@ public class CamaController {
         return ResponseEntity.ok(service.actualizarEstado(id, estado, rutPaciente));
     }
 
+    /** DELETE /api/camas/{id} — desactiva la cama (soft delete). */
     @DeleteMapping("/{id}")
     @Operation(summary = "Desactivar cama (soft-delete)")
     public ResponseEntity<Map<String, String>> desactivar(@PathVariable Long id) {

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Endpoints REST de listas de espera (/api/listas-espera). El gateway los deja solo para el administrador. */
 @RestController
 @RequestMapping("/api/listas-espera")
 @CrossOrigin(origins = "*")
@@ -25,6 +26,7 @@ public class ListaEsperaController {
     @Autowired
     private IListaEsperaService listaEsperaService;
 
+    /** POST /api/listas-espera/crear — ingresa a un paciente en una lista de espera. */
     @Operation(summary = "Crear nueva lista de espera para un paciente")
     @PostMapping("/crear")
     public ResponseEntity<?> crearListaEspera(@Valid @RequestBody ListaEsperaDTO listaEsperaDTO) {
@@ -41,6 +43,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/{id} — un registro por ID, o 404. */
     @Operation(summary = "Obtener lista de espera por ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
@@ -63,6 +66,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/todas — todos los registros activos. */
     @Operation(summary = "Listar todas las listas de espera")
     @GetMapping("/todas")
     public ResponseEntity<?> obtenerTodas() {
@@ -79,6 +83,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/paciente/{idPaciente} — listas de espera de un paciente. */
     @Operation(summary = "Listar listas de espera de un paciente")
     @GetMapping("/paciente/{idPaciente}")
     public ResponseEntity<?> obtenerPorPaciente(@PathVariable Long idPaciente) {
@@ -95,6 +100,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/hospital/{idHospital} — listas de espera de una sede. */
     @Operation(summary = "Listar listas de espera de un hospital")
     @GetMapping("/hospital/{idHospital}")
     public ResponseEntity<?> obtenerPorHospital(@PathVariable Long idHospital) {
@@ -111,6 +117,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/estado/{estado} — registros con un estado determinado. */
     @Operation(summary = "Listar listas de espera por estado")
     @GetMapping("/estado/{estado}")
     public ResponseEntity<?> obtenerPorEstado(@PathVariable String estado) {
@@ -127,6 +134,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/ordenadas — registros ordenados por prioridad y antigüedad. */
     @Operation(summary = "Listar listas de espera ordenadas por prioridad")
     @GetMapping("/ordenadas")
     public ResponseEntity<?> obtenerOrdenadas() {
@@ -143,6 +151,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** PUT /api/listas-espera/{id} — actualiza un registro. */
     @Operation(summary = "Actualizar lista de espera existente")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody ListaEsperaDTO listaEsperaDTO) {
@@ -166,6 +175,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** PUT /api/listas-espera/{id}/estado/{nuevoEstado} — cambia el estado (valida que exista en EstadoListaEspera). */
     @Operation(summary = "Cambiar estado de lista de espera")
     @PutMapping("/{id}/estado/{nuevoEstado}")
     public ResponseEntity<?> cambiarEstado(@PathVariable Long id, @PathVariable String nuevoEstado) {
@@ -189,6 +199,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** DELETE /api/listas-espera/{id} — desactiva el registro (soft delete). */
     @Operation(summary = "Eliminar lista de espera (soft delete)")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
@@ -207,6 +218,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/contar-pendientes/hospital/{idHospital} — cantidad de pacientes PENDIENTES en una sede. */
     @GetMapping("/contar-pendientes/hospital/{idHospital}")
     public ResponseEntity<?> contarPendientesPorHospital(@PathVariable Long idHospital) {
         logger.info("Recibido GET contar pendientes para hospital ID: {}", idHospital);
@@ -224,6 +236,7 @@ public class ListaEsperaController {
         }
     }
 
+    /** GET /api/listas-espera/contar-pendientes/paciente/{idPaciente} — listas PENDIENTES de un paciente. */
     @GetMapping("/contar-pendientes/paciente/{idPaciente}")
     public ResponseEntity<?> contarPendientesPorPaciente(@PathVariable Long idPaciente) {
         logger.info("Recibido GET contar pendientes para paciente ID: {}", idPaciente);

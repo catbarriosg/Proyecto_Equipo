@@ -1,7 +1,11 @@
 
+// Menú flotante de accesibilidad presente en todas las páginas.
+// Cada opción agrega o quita una clase CSS en <body> (ver Accesibilidad.css) y algunas usan APIs del navegador:
+// lectura en voz alta (speechSynthesis) y navegación por voz (SpeechRecognition).
 import { useEffect, useState } from "react";
 import "./Accesibilidad.css";
 
+// Estado de cada opción activable; todas parten desactivadas
 const OPCIONES_INICIALES = {
     contraste: false,
     animaciones: false,
@@ -13,6 +17,8 @@ const OPCIONES_INICIALES = {
     guia: false,
 };
 
+// Estados: panel abierto/ampliado, opciones activas, modo de contraste (normal/oscuro/alto),
+// submenú de perfiles, perfil aplicado y si el micrófono está escuchando
 function Accesibilidad() {
     const [abierto, setAbierto] = useState(false);
     const [panelAmplio, setPanelAmplio] = useState(false);
@@ -24,6 +30,7 @@ function Accesibilidad() {
 
     // Aplicar las opciones visuales a la página.
     useEffect(() => {
+        // Relación entre cada opción y la clase CSS que se aplica a <body>
         const clases = {
             contraste: "accesibilidad-contraste",
             animaciones: "accesibilidad-animaciones",
@@ -50,6 +57,7 @@ function Accesibilidad() {
         document.body.classList.remove("accesibilidad-invertido");
 
         return () => {
+            // Limpieza: al cambiar las opciones o desmontar el componente se quitan las clases anteriores
             Object.values(clases).forEach((clase) => {
                 document.body.classList.remove(clase);
             });
@@ -100,6 +108,7 @@ function Accesibilidad() {
         return () => window.removeEventListener("pointermove", moverGuia);
     }, [opciones.guia]);
 
+    // Activa o desactiva una opción individual
     function alternar(opcion) {
         setOpciones((actuales) => ({
             ...actuales,
@@ -112,6 +121,7 @@ function Accesibilidad() {
     }
 
 
+    // Recorre los modos de contraste en ciclo: normal → oscuro → alto → normal
     function cambiarContraste() {
         setModoContraste((actual) => {
             if (actual === "normal") return "oscuro";
@@ -123,6 +133,7 @@ function Accesibilidad() {
     }
 
 
+    // Lee en voz alta el contenido de la página (<main>) con la síntesis de voz del navegador en español de Chile
     function leerPagina() {
         if (!("speechSynthesis" in window)) {
             alert("Tu navegador no admite lectura en voz alta.");
@@ -147,6 +158,7 @@ function Accesibilidad() {
         window.speechSynthesis.speak(lectura);
     }
 
+    // Detiene la lectura en voz alta
     function detenerLectura() {
         if ("speechSynthesis" in window) {
             window.speechSynthesis.cancel();
@@ -183,6 +195,8 @@ function Accesibilidad() {
             );
         };
 
+        // Al reconocer una frase: primero se buscan comandos conocidos (inicio, contacto, subir, bajar...)
+        // y si no coincide ninguno se intenta hacer clic en un enlace cuyo texto se haya dicho
         reconocimiento.onresult = (evento) => {
             const instruccion = evento.results[0][0].transcript
                 .toLowerCase()
@@ -241,6 +255,7 @@ function Accesibilidad() {
         setEscuchando(false);
     }
 
+    // Perfiles predefinidos: reinician todo y activan un conjunto de opciones pensado para cada necesidad
     function aplicarPerfil(perfil) {
         setOpciones(OPCIONES_INICIALES);
         setModoContraste("normal");
@@ -281,6 +296,7 @@ function Accesibilidad() {
         setPerfilesAbiertos(false);
     }
 
+    // Vuelve todas las opciones a su estado inicial
     function restablecer() {
         detenerLectura();
         setOpciones(OPCIONES_INICIALES);
@@ -290,6 +306,7 @@ function Accesibilidad() {
         setPerfilesAbiertos(false);
     }
 
+    // Genera un botón de opción. aria-pressed indica a los lectores de pantalla si está activo.
     function tarjeta(nombre, icono, accion, activa = false) {
         return (
             <button
@@ -324,6 +341,7 @@ function Accesibilidad() {
                 </svg>
             </button>
 
+            {/* Panel de opciones: solo se muestra cuando el botón flotante está abierto */}
             {abierto && (
                 <section
                     id="panel-accesibilidad"
@@ -392,6 +410,7 @@ function Accesibilidad() {
                             <span>{panelAmplio ? "✓" : "○"}</span>
                         </button>
 
+                        {/* Grilla de opciones creada con la función tarjeta() */}
                         <div className="rejilla-accesibilidad">
                             {tarjeta(
                                 "Contraste inteligente",
@@ -479,6 +498,7 @@ function Accesibilidad() {
                 </section>
             )}
 
+            {/* Franja horizontal que sigue al puntero para ayudar a leer línea por línea */}
             {opciones.guia && (
                 <div id="guia-lectura" aria-hidden="true" />
             )}

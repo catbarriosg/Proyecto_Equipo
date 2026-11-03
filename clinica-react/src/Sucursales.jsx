@@ -4,6 +4,7 @@ import EstadoCarga from './components/EstadoCarga.jsx'
 import { useCarga } from './hooks/useCarga.js'
 import { formatearTelefono } from './utils/formato.js'
 
+// Página de sucursales: tarjetas con dirección, teléfono y horario de cada sede, más un mapa de Google Maps
 function Sucursales() {
   const { datos: sucursales, cargando, error, recargar } = useCarga(() => api.sucursales.listar(), 'sucursales')
 
@@ -38,6 +39,7 @@ function Sucursales() {
         </section>
       )}
 
+      {/* Mapa incrustado de la casa matriz */}
       <section className="sucursal-mapa-react">
         <h2>Cómo llegar a nuestra casa matriz</h2>
         <iframe

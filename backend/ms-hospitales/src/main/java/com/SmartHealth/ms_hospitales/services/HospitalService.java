@@ -4,6 +4,7 @@ import com.SmartHealth.ms_hospitales.models.Hospital;
 
 import java.util.List;
 
+/** Operaciones sobre las sedes. La implementación está en HospitalServiceImpl. */
 public interface HospitalService {
     List<Hospital> obtenerTodos();
     Hospital obtenerPorId(Long id);

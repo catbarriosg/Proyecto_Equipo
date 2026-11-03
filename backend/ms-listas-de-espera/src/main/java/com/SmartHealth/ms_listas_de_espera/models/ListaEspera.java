@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
 
+/** Entidad JPA de la tabla "listas_espera". Un registro nuevo parte en estado PENDIENTE. */
 @Data
 @Entity
 @Table(name = "listas_espera")

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Clock;
 import java.time.ZoneId;
 
+/** Configuración del servicio: documentación Swagger con autenticación JWT y el reloj de la clínica. */
 @Configuration
 @OpenAPIDefinition(
     info = @Info(title = "API de citas - Clínica Agenda Médica", version = "1.0"),

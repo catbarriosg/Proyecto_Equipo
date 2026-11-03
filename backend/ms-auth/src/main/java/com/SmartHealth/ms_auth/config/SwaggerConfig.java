@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Documentación OpenAPI del servicio. Declara el esquema "bearerAuth" para poder probar en Swagger UI
+ * los endpoints que requieren el token JWT.
+ */
 @Configuration
 @OpenAPIDefinition(
     info = @Info(title = "API de autenticación - Clínica Agenda Médica", version = "1.0"),

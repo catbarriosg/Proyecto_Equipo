@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+// Estado inicial del formulario (también se usa para limpiarlo después de enviar)
 const formularioVacio = {
   nombre: '',
   correo: '',
@@ -7,11 +8,13 @@ const formularioVacio = {
   mensaje: '',
 }
 
+// Página de contacto con formulario validado en el navegador. Es una demostración: no envía correos.
 function Contacto() {
   const [formulario, setFormulario] = useState(formularioVacio)
   const [errores, setErrores] = useState({})
   const [confirmacion, setConfirmacion] = useState('')
 
+  // Valida un campo y devuelve el mensaje de error, o '' si el valor es correcto
   function validarCampo(campo, valor) {
     const valorLimpio = valor.trim()
 
@@ -34,6 +37,8 @@ function Contacto() {
     return ''
   }
 
+  // Actualiza el campo que se está escribiendo (usa el atributo name del input).
+  // Si el campo ya tenía error, lo vuelve a validar para que el mensaje desaparezca al corregirlo.
   function cambiarCampo(evento) {
     const { name, value } = evento.target
     setFormulario((actual) => ({ ...actual, [name]: value }))
@@ -43,6 +48,7 @@ function Contacto() {
     }
   }
 
+  // Valida todo el formulario al enviar. Si hay errores, mueve el foco al primer campo con error (accesibilidad).
   function enviarFormulario(evento) {
     evento.preventDefault()
     const nuevosErrores = Object.fromEntries(
@@ -74,6 +80,7 @@ function Contacto() {
           <form className="formulario-agenda formulario-contacto-react" onSubmit={enviarFormulario} noValidate>
             <h2>Escríbenos</h2>
             <label htmlFor="contacto-nombre">Nombre completo</label>
+            {/* Cada campo se valida al salir de él (onBlur) y muestra su error debajo */}
             <input id="contacto-nombre" name="nombre" value={formulario.nombre} onChange={cambiarCampo} onBlur={(evento) => setErrores((actuales) => ({ ...actuales, nombre: validarCampo('nombre', evento.target.value) }))} placeholder="Ej: Ana Pérez" autoComplete="name" aria-invalid={Boolean(errores.nombre)} aria-describedby={errores.nombre ? 'error-contacto-nombre' : undefined} />
             {errores.nombre && <small className="contacto-error" id="error-contacto-nombre">{errores.nombre}</small>}
 

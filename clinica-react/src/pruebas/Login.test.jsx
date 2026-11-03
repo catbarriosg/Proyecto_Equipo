@@ -1,3 +1,4 @@
+// Pruebas del inicio de sesión. MemoryRouter simula las rutas en memoria para comprobar la redirección.
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'

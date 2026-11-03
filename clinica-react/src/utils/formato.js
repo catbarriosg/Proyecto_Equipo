@@ -16,6 +16,7 @@ export function formatearFechaLarga(valor) {
   return texto.charAt(0).toUpperCase() + texto.slice(1)
 }
 
+// Traducción de los estados de la cita (como vienen del backend) a texto para mostrar
 const ESTADOS_CITA = {
   SOLICITADA: 'Solicitada',
   CONFIRMADA: 'Confirmada',
@@ -23,6 +24,7 @@ const ESTADOS_CITA = {
   ATENDIDA: 'Atendida',
 }
 
+// "CONFIRMADA" -> "Confirmada"
 export function estadoLegible(estado) {
   return ESTADOS_CITA[estado] || estado
 }
@@ -36,16 +38,19 @@ export function formatearTelefono(telefono) {
   return telefono || ''
 }
 
+// RUT con puntos para mostrar, o un texto por defecto si no hay RUT
 export function mostrarRut(rut) {
   return rut ? formatearRut(rut) : 'No registrado'
 }
 
+// Nombre visible de cada rol de usuario
 const ROLES = {
   PACIENTE: 'Paciente',
   MEDICO: 'Médico',
   ADMINISTRADOR: 'Administración',
 }
 
+// "MEDICO" -> "Médico"
 export function rolLegible(rol) {
   return ROLES[rol] || rol
 }

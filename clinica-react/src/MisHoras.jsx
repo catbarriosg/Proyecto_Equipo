@@ -13,12 +13,15 @@ const estiloAlerta = {
   buttonsStyling: false
 }
 
+// Título y descripción de la página según el rol del usuario
 const TITULOS = {
   PACIENTE: { titulo: 'Mis horas médicas', descripcion: 'Revisa, modifica o cancela tus horas agendadas.' },
   MEDICO: { titulo: 'Mi agenda', descripcion: 'Horas agendadas con tus pacientes.' },
   ADMINISTRADOR: { titulo: 'Horas agendadas', descripcion: 'Todas las horas médicas de la clínica.' },
 }
 
+// Lista de horas médicas. El backend devuelve solo lo que corresponde a cada rol:
+// el paciente ve sus horas, el médico su agenda y el administrador todas las de la clínica.
 function MisHoras() {
   const { usuario } = useSesion()
   const esPaciente = usuario.rol === 'PACIENTE'
@@ -31,12 +34,14 @@ function MisHoras() {
 
   // Las citas que cambian de estado se reemplazan sin volver a cargar toda la lista
   const citas = (citasCargadas || []).map((cita) => actualizadas[cita.id] || cita)
+  // Filtros en el navegador: por estado y por texto (código, paciente, médico o especialidad)
   const termino = busqueda.trim().toLowerCase()
   const citasFiltradas = citas
     .filter((cita) => !filtroEstado || cita.estado === filtroEstado)
     .filter((cita) => !termino || [cita.codigo, cita.pacienteNombre, cita.medicoNombre, cita.especialidad]
       .some((valor) => valor?.toLowerCase().includes(termino)))
 
+  // Médico o administrador marcan la cita como ATENDIDA, previa confirmación con SweetAlert2
   async function marcarAtendida(cita) {
     const respuesta = await Swal.fire({
       ...estiloAlerta, icon: 'question', title: '¿Marcar la hora como atendida?',
@@ -86,6 +91,7 @@ function MisHoras() {
           ) : (
             <ul className="lista-horas">
               {citasFiltradas.map((cita) => {
+                // Una cita activa todavía puede atenderse, modificarse o cancelarse
                 const activa = cita.estado === 'CONFIRMADA' || cita.estado === 'SOLICITADA'
                 return (
                   <li key={cita.id} className="tarjeta-hora">
@@ -103,6 +109,7 @@ function MisHoras() {
                         )}
                       </div>
                       <div className="acciones-hora">
+                        {/* "gestionable" lo calcula el backend: activa y, si es paciente, con más de 24 horas de anticipación */}
                         {cita.gestionable && (
                           <>
                             <Link className="accion-link-hora accion-link-modificar" to={`/modificar-hora?codigo=${encodeURIComponent(cita.codigo)}`}>Modificar hora</Link>

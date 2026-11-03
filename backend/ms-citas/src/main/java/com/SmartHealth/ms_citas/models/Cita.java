@@ -27,6 +27,7 @@ public class Cita {
     @Column(unique = true, length = 20)
     private String codigo;
 
+    // Datos del paciente copiados al reservar (el ID enlaza con ms-pacientes)
     @Column(name = "paciente_id", nullable = false)
     private Long pacienteId;
 
@@ -39,6 +40,7 @@ public class Cita {
     @Column(name = "paciente_correo", length = 120)
     private String pacienteCorreo;
 
+    // Datos del médico copiados al reservar (el ID enlaza con ms-personal)
     @Column(name = "medico_id", nullable = false)
     private Long medicoId;
 
@@ -71,6 +73,7 @@ public class Cita {
     @Column(unique = true, length = 40)
     private String franja;
 
+    // Auditoría: quién creó la cita y con qué rol
     @Column(name = "creado_por_usuario_id")
     private Long creadoPorUsuarioId;
 
@@ -83,12 +86,14 @@ public class Cita {
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
 
+    /** Antes de insertar: guarda la fecha de creación. */
     @PrePersist
     protected void alCrear() {
         creadoEn = LocalDateTime.now();
         actualizadoEn = creadoEn;
     }
 
+    /** Antes de actualizar (@PreUpdate): guarda la fecha de la última modificación. */
     @PreUpdate
     protected void alActualizar() {
         actualizadoEn = LocalDateTime.now();

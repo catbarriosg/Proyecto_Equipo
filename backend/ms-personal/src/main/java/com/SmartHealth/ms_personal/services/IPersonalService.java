@@ -4,6 +4,7 @@ import com.SmartHealth.ms_personal.dtos.PersonalDTO;
 
 import java.util.List;
 
+/** Operaciones del servicio de personal. La implementación está en PersonalServiceImpl. */
 public interface IPersonalService {
 
     PersonalDTO crearPersonal(PersonalDTO personalDTO);

@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/** Cliente Feign hacia ms-pacientes: valida el paciente de la lista de espera. */
 @FeignClient(name = "ms-pacientes", configuration = FeignConfig.class)
 public interface PacienteClient {
     

@@ -15,6 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Endpoints del personal de la clínica (/api/personal), restringidos al administrador por el gateway.
+ * Los tres primeros son los que usa el panel de administración; el resto son consultas adicionales.
+ */
 @RestController
 @RequestMapping("/api/personal")
 public class PersonalController {
@@ -27,18 +31,21 @@ public class PersonalController {
     // ---- Endpoints REST estándar usados por el panel de administración ----
     // (/crear y /todos se mantienen como alias por compatibilidad)
 
+    /** GET /api/personal — personal activo (o todo con incluirInactivos=true). */
     @Operation(summary = "Listar personal (con incluirInactivos=true también muestra los desactivados)")
     @GetMapping
     public List<PersonalDTO> listar(@RequestParam(defaultValue = "false") boolean incluirInactivos) {
         return incluirInactivos ? personalService.obtenerTodosIncluyendoInactivos() : personalService.obtenerTodos();
     }
 
+    /** POST /api/personal — registra un profesional y responde 201. */
     @Operation(summary = "Crear nuevo personal")
     @PostMapping
     public ResponseEntity<PersonalDTO> crear(@Valid @RequestBody PersonalDTO personalDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(personalService.crearPersonal(personalDTO));
     }
 
+    /** PATCH /api/personal/{id}/estado — activa o desactiva un profesional. Cuerpo: { "activo": true | false }. */
     @Operation(summary = "Activar o desactivar personal")
     @PatchMapping("/{id}/estado")
     public PersonalDTO cambiarEstado(@PathVariable Long id, @RequestBody Map<String, Boolean> cuerpo) {
@@ -49,6 +56,7 @@ public class PersonalController {
         return personalService.cambiarEstado(id, activo);
     }
 
+    /** POST /api/personal/crear — alias de crear (se mantiene por compatibilidad). */
     @Operation(summary = "Crear nuevo personal en el sistema")
     @PostMapping("/crear")
     public ResponseEntity<?> crearPersonal(@Valid @RequestBody PersonalDTO personalDTO) {
@@ -65,6 +73,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/{id} — un profesional activo, o 404 si no existe. */
     @Operation(summary = "Obtener personal por ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
@@ -87,6 +96,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/todos — alias de listar el personal activo. */
     @Operation(summary = "Listar todo el personal")
     @GetMapping("/todos")
     public ResponseEntity<?> obtenerTodos() {
@@ -103,6 +113,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/hospital/{hospitalId} — personal de una sede. */
     @Operation(summary = "Listar personal por hospital")
     @GetMapping("/hospital/{hospitalId}")
     public ResponseEntity<?> obtenerPorHospital(@PathVariable Long hospitalId) {
@@ -119,6 +130,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/rol/{rol} — personal por rol (MEDICO, ENFERMERO, ADMINISTRATIVO, TECNICO u OTRO). */
     @Operation(summary = "Listar personal por rol")
     @GetMapping("/rol/{rol}")
     public ResponseEntity<?> obtenerPorRol(@PathVariable String rol) {
@@ -135,6 +147,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/departamento/{departamento} — personal de un departamento. */
     @Operation(summary = "Listar personal por departamento")
     @GetMapping("/departamento/{departamento}")
     public ResponseEntity<?> obtenerPorDepartamento(@PathVariable String departamento) {
@@ -151,6 +164,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/rut/{rut} — un profesional por RUT, o 404. */
     @Operation(summary = "Obtener personal por RUT")
     @GetMapping("/rut/{rut}")
     public ResponseEntity<?> obtenerPorRut(@PathVariable String rut) {
@@ -173,6 +187,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/email/{email} — un profesional por correo, o 404. */
     @Operation(summary = "Obtener personal por email")
     @GetMapping("/email/{email}")
     public ResponseEntity<?> obtenerPorEmail(@PathVariable String email) {
@@ -195,6 +210,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/medicos/hospital/{hospitalId} — médicos de una sede. */
     @Operation(summary = "Listar médicos de un hospital")
     @GetMapping("/medicos/hospital/{hospitalId}")
     public ResponseEntity<?> obtenerMedicosPorHospital(@PathVariable Long hospitalId) {
@@ -211,6 +227,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/enfermeros/hospital/{hospitalId} — enfermeros de una sede. */
     @Operation(summary = "Listar enfermeros de un hospital")
     @GetMapping("/enfermeros/hospital/{hospitalId}")
     public ResponseEntity<?> obtenerEnfermerosPorHospital(@PathVariable Long hospitalId) {
@@ -227,6 +244,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/especialidad/{especialidad} — profesionales de una especialidad. */
     @Operation(summary = "Listar personal por especialidad")
     @GetMapping("/especialidad/{especialidad}")
     public ResponseEntity<?> obtenerPorEspecialidad(@PathVariable String especialidad) {
@@ -243,6 +261,7 @@ public class PersonalController {
         }
     }
 
+    /** PUT /api/personal/{id} — actualiza los datos de un profesional. */
     @Operation(summary = "Actualizar personal existente")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody PersonalDTO personalDTO) {
@@ -266,6 +285,7 @@ public class PersonalController {
         }
     }
 
+    /** DELETE /api/personal/{id} — desactiva al profesional (soft delete). */
     @Operation(summary = "Eliminar personal (soft delete)")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
@@ -284,6 +304,7 @@ public class PersonalController {
         }
     }
 
+    /** GET /api/personal/contar/hospital/{hospitalId} — cantidad de personal activo en una sede. */
     @GetMapping("/contar/hospital/{hospitalId}")
     public ResponseEntity<?> contarPersonalPorHospital(@PathVariable Long hospitalId) {
         logger.info("Recibido GET contar personal en hospital ID: {}", hospitalId);

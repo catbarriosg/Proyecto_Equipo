@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/** Acceso a la tabla "camas". Las consultas ...ActivaTrue ignoran las camas desactivadas. */
 public interface CamaRepository extends JpaRepository<Cama, Long> {
 
     Optional<Cama> findByCodigo(String codigo);

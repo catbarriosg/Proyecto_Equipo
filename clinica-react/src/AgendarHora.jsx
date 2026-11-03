@@ -9,6 +9,7 @@ import { useCarga } from './hooks/useCarga.js'
 import { formatearFecha } from './utils/formato.js'
 import { formatearRut, normalizarRut, rutValido } from './utils/rut.js'
 
+// Estilo propio para las alertas de SweetAlert2 (usa las clases CSS de la clínica en vez de las de la librería)
 const estiloAlerta = {
   customClass: { popup: 'clinica-swal-popup', confirmButton: 'clinica-swal-confirm' },
   buttonsStyling: false
@@ -20,6 +21,10 @@ function cargarCatalogos() {
     .then(([especialidades, medicos, sucursales]) => ({ especialidades, medicos, sucursales }))
 }
 
+// Página para agendar una hora médica. Se adapta al rol:
+//   PACIENTE      → la hora queda a su nombre
+//   MEDICO        → agenda en su propia agenda ingresando el RUT del paciente
+//   ADMINISTRADOR → agenda con cualquier médico ingresando el RUT del paciente
 function AgendarHora() {
   const { usuario } = useSesion()
   const esPaciente = usuario.rol === 'PACIENTE'
@@ -32,6 +37,7 @@ function AgendarHora() {
     especialidad: parametros.get('especialidad') || '',
     medicoId: parametros.get('medico') || '',
   })
+  // Datos del formulario. versionAgenda se incrementa para obligar al calendario a recargar la disponibilidad.
   const [rutPaciente, setRutPaciente] = useState('')
   const [motivo, setMotivo] = useState('')
   const [fecha, setFecha] = useState('')
@@ -39,6 +45,8 @@ function AgendarHora() {
   const [enviando, setEnviando] = useState(false)
   const [versionAgenda, setVersionAgenda] = useState(0)
 
+  // Valores derivados del estado (se recalculan en cada render, no se guardan en useState):
+  // especialidad actual, médicos de esa especialidad, médico elegido y nombre de su sucursal
   const especialidades = catalogos?.especialidades || []
   const medicos = catalogos?.medicos || []
   const medicoPropio = esMedico ? medicos.find((medico) => medico.id === usuario.personalId) : null
@@ -52,25 +60,30 @@ function AgendarHora() {
     || (medicosDisponibles.length === 1 ? medicosDisponibles[0] : null)
   const sucursalNombre = catalogos?.sucursales.find((sucursal) => sucursal.id === medicoElegido?.sucursalId)?.nombre
 
+  // Borra la fecha y hora elegidas (se usa al cambiar de médico o especialidad)
   function reiniciarHorario() {
     setFecha('')
     setHora('')
   }
 
+  // Al cambiar de especialidad se limpia el médico porque ya no corresponde
   function cambiarEspecialidad(event) {
     setSeleccion({ especialidad: event.target.value, medicoId: '' })
     reiniciarHorario()
   }
 
+  // Al cambiar de médico se limpia el horario porque su disponibilidad es distinta
   function cambiarMedico(event) {
     setSeleccion((actual) => ({ ...actual, medicoId: event.target.value }))
     reiniciarHorario()
   }
 
+  // Muestra una alerta de SweetAlert2 con el estilo de la clínica
   async function avisar(icon, title, text) {
     await Swal.fire({ ...estiloAlerta, icon, title, text, confirmButtonText: 'Entendido' })
   }
 
+  // Valida RUT (si corresponde), médico y horario; luego crea la cita en la API y muestra el comprobante con el código
   async function manejarEnvio(event) {
     event.preventDefault()
     if (!esPaciente && !rutValido(rutPaciente)) {
@@ -173,6 +186,7 @@ function AgendarHora() {
             </div>
           </div>
 
+          {/* El calendario aparece al elegir médico; la "key" lo reinicia por completo si cambia el médico o la versión */}
           {medicoElegido && (
             <CalendarioHoras
               key={`${medicoElegido.id}-${versionAgenda}`}

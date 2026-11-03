@@ -21,10 +21,15 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Lógica de negocio de la agenda. Todas las operaciones obtienen primero la identidad del usuario
+ * (Identidad.actual()) para aplicar las reglas de permisos según su rol.
+ */
 @Service
 public class CitaService {
 
     private static final Logger log = LoggerFactory.getLogger(CitaService.class);
+    // Estados que ocupan un horario y máximo de días que se pueden consultar de una vez
     private static final Set<EstadoCita> ESTADOS_ACTIVOS = EnumSet.of(EstadoCita.SOLICITADA, EstadoCita.CONFIRMADA);
     private static final int MAXIMO_DIAS_CONSULTA = 31;
 
@@ -60,11 +65,13 @@ public class CitaService {
                 .toList();
     }
 
+    /** Detalle de una cita, solo si el usuario tiene acceso a ella. */
     public CitaDTO obtener(Long id) {
         Identidad yo = Identidad.actual();
         return aDTO(buscarConAcceso(id, yo), yo);
     }
 
+    /** Busca una cita por su código de reserva (si no tiene acceso responde lo mismo que si no existiera). */
     public CitaDTO obtenerPorCodigo(String codigo) {
         Identidad yo = Identidad.actual();
         Cita cita = repositorio.findByCodigoIgnoreCase(codigo.trim())
@@ -85,12 +92,14 @@ public class CitaService {
             throw ApiException.solicitudInvalida("Consulta como máximo " + MAXIMO_DIAS_CONSULTA + " días a la vez.");
         }
 
+        // Horas ya tomadas agrupadas por día: { 2026-11-05: [10:00, 11:30], ... }
         Map<LocalDate, Set<LocalTime>> ocupadas = repositorio
                 .findByMedicoIdAndFechaBetweenAndEstadoIn(medicoId, inicio, fin, ESTADOS_ACTIVOS).stream()
                 .filter(cita -> !cita.getId().equals(excluirCitaId))
                 .collect(Collectors.groupingBy(Cita::getFecha,
                         Collectors.mapping(Cita::getHora, Collectors.toSet())));
 
+        // Para cada día: bloques de atención menos las horas ocupadas
         List<DiaDisponibleDTO> dias = new ArrayList<>();
         for (LocalDate dia = inicio; !dia.isAfter(fin); dia = dia.plusDays(1)) {
             Set<LocalTime> tomadas = ocupadas.getOrDefault(dia, Set.of());
@@ -105,6 +114,13 @@ public class CitaService {
 
     // ------------------------------------------------------------------ Operaciones
 
+    /**
+     * Agenda una hora:
+     * 1. Valida que el médico exista (y si quien agenda es médico, que sea su propia agenda).
+     * 2. Resuelve el paciente (el propio paciente o el RUT ingresado por el personal).
+     * 3. Valida que el horario esté libre para el médico y para el paciente.
+     * 4. Guarda la cita y genera su código de reserva con el ID (AM-000042).
+     */
     @Transactional
     public CitaDTO crear(CrearCitaRequest datos) {
         Identidad yo = Identidad.actual();
@@ -142,6 +158,7 @@ public class CitaService {
         return aDTO(guardada, yo);
     }
 
+    /** Cambia la fecha y hora de una cita activa, aplicando las mismas validaciones que al crearla. */
     @Transactional
     public CitaDTO reprogramar(Long id, ReprogramarCitaRequest datos) {
         Identidad yo = Identidad.actual();
@@ -163,6 +180,7 @@ public class CitaService {
         return aDTO(guardada, yo);
     }
 
+    /** Cancela una cita activa. Al actualizar la franja, el horario queda libre para otra persona. */
     @Transactional
     public CitaDTO cancelar(Long id) {
         Identidad yo = Identidad.actual();
@@ -193,6 +211,10 @@ public class CitaService {
 
     // ------------------------------------------------------------------ Reglas
 
+    /**
+     * Reglas de reserva: el horario debe estar dentro de la atención de la clínica, el médico no puede tener
+     * otra cita activa a esa hora y el paciente tampoco. citaActual se excluye al reprogramar.
+     */
     private void validarHorarioLibre(Long medicoId, Long pacienteId, LocalDate fecha, LocalTime hora, Long citaActual) {
         if (!agenda.esReservable(fecha, hora)) {
             throw ApiException.solicitudInvalida("El horario elegido no está dentro de la atención de la clínica "
@@ -211,6 +233,7 @@ public class CitaService {
         }
     }
 
+    /** Verifica que la cita esté activa y, si quien actúa es paciente, que falten más de 24 horas. */
     private void exigirGestionable(Cita cita, Identidad yo, String accion) {
         if (!cita.getEstado().estaActiva()) {
             throw ApiException.solicitudInvalida("Esta reserva está " + cita.getEstado().name().toLowerCase()
@@ -232,6 +255,7 @@ public class CitaService {
         }
     }
 
+    /** Reglas de visibilidad: llamadas internas y administrador ven todo; paciente y médico solo lo suyo. */
     private boolean tieneAcceso(Cita cita, Identidad yo) {
         if (yo.esInterna() || yo.esAdministrador()) return true;
         if (yo.esPaciente()) return cita.getPacienteId().equals(yo.pacienteId());
@@ -239,12 +263,14 @@ public class CitaService {
         return false;
     }
 
+    /** Busca una cita por ID respetando los permisos del usuario (404 si no existe o no le pertenece). */
     private Cita buscarConAcceso(Long id, Identidad yo) {
         return repositorio.findById(id)
                 .filter(cita -> tieneAcceso(cita, yo))
                 .orElseThrow(() -> ApiException.noEncontrado("No encontramos la reserva solicitada."));
     }
 
+    /** Calcula el campo "gestionable" del DTO: si el usuario todavía puede modificar o cancelar la cita. */
     private boolean esGestionable(Cita cita, Identidad yo) {
         if (!cita.getEstado().estaActiva()) return false;
         return yo.esPaciente()
@@ -252,12 +278,14 @@ public class CitaService {
                 : agenda.esFutura(cita.getFecha(), cita.getHora());
     }
 
+    /** Convierte la cita en DTO incluyendo el cálculo de "gestionable" para el usuario actual. */
     private CitaDTO aDTO(Cita cita, Identidad yo) {
         return CitaDTO.desde(cita, esGestionable(cita, yo));
     }
 
     // ------------------------------------------------------------------ Otros servicios
 
+    /** Pide el médico a ms-personal; si no existe o está inactivo lanza 404. */
     private MedicoDTO obtenerMedico(Long medicoId) {
         try {
             MedicoDTO medico = medicoClient.obtenerPorId(medicoId);
@@ -270,6 +298,10 @@ public class CitaService {
         }
     }
 
+    /**
+     * Determina el paciente de la cita: si quien agenda es paciente, es él mismo; si es médico o
+     * administrador, se busca por el RUT ingresado. La ficha debe estar activa.
+     */
     private PacienteDTO resolverPaciente(Identidad yo, String rutPaciente) {
         PacienteDTO paciente;
         try {
@@ -291,6 +323,7 @@ public class CitaService {
         return paciente;
     }
 
+    /** ID de paciente de la cuenta conectada; error 403 si la cuenta no tiene ficha asociada. */
     private static Long exigirPacienteId(Identidad yo) {
         if (yo.pacienteId() == null) {
             throw ApiException.prohibido("Tu cuenta no está asociada a una ficha de paciente.");
@@ -298,6 +331,7 @@ public class CitaService {
         return yo.pacienteId();
     }
 
+    /** ID de profesional de la cuenta conectada; error 403 si la cuenta no está asociada a un médico. */
     private static Long exigirPersonalId(Identidad yo) {
         if (yo.personalId() == null) {
             throw ApiException.prohibido("Tu cuenta no está asociada a un profesional.");
@@ -305,6 +339,7 @@ public class CitaService {
         return yo.personalId();
     }
 
+    /** Convierte "AAAA-MM-DD" en LocalDate; si la fecha no es válida responde 400. */
     private static LocalDate leerFecha(String valor) {
         try {
             return LocalDate.parse(valor);
@@ -313,6 +348,7 @@ public class CitaService {
         }
     }
 
+    /** Convierte "HH:mm" en LocalTime; si no es una hora válida responde 400. */
     private static LocalTime leerHora(String valor) {
         try {
             return LocalTime.parse(valor);

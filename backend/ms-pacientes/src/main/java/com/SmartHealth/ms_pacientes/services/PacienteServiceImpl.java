@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/** Lógica de negocio de las fichas de pacientes. */
 @Service
 public class PacienteServiceImpl implements PacienteService {
 
@@ -25,6 +26,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Autowired
     private HistorialClient historialClient;
 
+    /** Completa el ID del historial clínico del paciente consultando a ms-historial. */
     private void cargarHistorialClinico(Paciente paciente) {
         try {
             List<HistorialDTO> historiales = historialClient.obtenerPorIdPaciente(paciente.getId());
@@ -37,12 +39,14 @@ public class PacienteServiceImpl implements PacienteService {
         }
     }
 
+    /** Lista los pacientes, solo activos o todos según el parámetro. */
     @Override
     public List<PacienteDTO> obtenerTodos(boolean incluirInactivos) {
         List<Paciente> pacientes = incluirInactivos ? repository.findAll() : repository.findByActivoTrue();
         return pacientes.stream().map(PacienteDTO::desde).toList();
     }
 
+    /** Crea una ficha: normaliza y valida el RUT, verifica que no exista y guarda el paciente. */
     @Override
     public PacienteDTO crear(PacienteDTO datos) {
         String rut = normalizarRut(datos.getRut());
@@ -59,6 +63,7 @@ public class PacienteServiceImpl implements PacienteService {
         return PacienteDTO.desde(guardado);
     }
 
+    /** Busca por RUT (acepta el RUT con puntos), revisando que el usuario tenga acceso a la ficha. */
     @Override
     public PacienteDTO obtenerPorRut(String rut) {
         Paciente paciente = repository.findByRut(normalizarRut(rut))
@@ -68,6 +73,7 @@ public class PacienteServiceImpl implements PacienteService {
         return PacienteDTO.desde(paciente);
     }
 
+    /** Busca por ID, revisando que el usuario tenga acceso a la ficha. */
     @Override
     public PacienteDTO obtenerPorId(Long id) {
         verificarAcceso(id);
@@ -85,6 +91,7 @@ public class PacienteServiceImpl implements PacienteService {
         return PacienteDTO.desde(repository.save(paciente));
     }
 
+    /** Activa o desactiva una ficha (soft delete). */
     @Override
     public PacienteDTO cambiarEstado(Long id, boolean activo) {
         Paciente paciente = buscar(id);
@@ -92,11 +99,13 @@ public class PacienteServiceImpl implements PacienteService {
         return PacienteDTO.desde(repository.save(paciente));
     }
 
+    /** Busca la entidad por ID o lanza 404. */
     private Paciente buscar(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> ApiException.noEncontrado("No encontramos al paciente con ID " + id + "."));
     }
 
+    /** Copia los campos que se pueden editar, limpiando espacios y dejando el correo en minúsculas. */
     private static void copiarDatosEditables(PacienteDTO datos, Paciente paciente) {
         paciente.setNombreCompleto(datos.getNombreCompleto().trim());
         paciente.setCorreo(datos.getCorreo().trim().toLowerCase());
@@ -113,6 +122,7 @@ public class PacienteServiceImpl implements PacienteService {
         }
     }
 
+    /** Quita puntos y espacios y pasa la K a mayúscula: "12.345.678-k" → "12345678-K". */
     private static String normalizarRut(String rut) {
         return rut == null ? null : rut.replace(".", "").replace(" ", "").trim().toUpperCase();
     }
@@ -124,6 +134,7 @@ public class PacienteServiceImpl implements PacienteService {
         }
         String cuerpo = rut.substring(0, rut.indexOf('-'));
         char verificador = rut.charAt(rut.length() - 1);
+        // Módulo 11: se multiplican los dígitos de derecha a izquierda por 2, 3, 4, 5, 6, 7 y se vuelve a empezar
         int suma = 0;
         int factor = 2;
         for (int i = cuerpo.length() - 1; i >= 0; i--) {
@@ -137,6 +148,7 @@ public class PacienteServiceImpl implements PacienteService {
         }
     }
 
+    /** Convierte textos vacíos en null. */
     private static String vacioANulo(String valor) {
         return valor == null || valor.isBlank() ? null : valor.trim();
     }

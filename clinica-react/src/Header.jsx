@@ -20,14 +20,18 @@ const OPCIONES_POR_ROL = {
   ],
 }
 
+// Encabezado del sitio: logo, menú de navegación principal y menú "Mi cuenta".
+// El menú de cuenta cambia según haya sesión y según el rol del usuario.
 function Header() {
   const { usuario, cerrarSesion } = useSesion()
   const navegar = useNavigate()
+  // Estados para abrir/cerrar el panel de cuenta y el menú en pantallas pequeñas
   const [cuentaAbierta, setCuentaAbierta] = useState(false)
   const [menuAbierto, setMenuAbierto] = useState(false)
   const cerrarCuenta = () => setCuentaAbierta(false)
   const cerrarMenu = () => setMenuAbierto(false)
 
+  // Cierra la sesión y vuelve a la página de inicio
   function salir() {
     cerrarCuenta()
     cerrarSesion()
@@ -41,6 +45,7 @@ function Header() {
           <img src="/logo.png" alt="Clínica Agenda Médica" />
         </Link>
 
+        {/* Menú principal: en celulares se muestra/oculta con el botón ☰ (clase "abierto") */}
         <nav className={`menu-principal${menuAbierto ? ' abierto' : ''}`} aria-label="Navegación principal" id="menu-principal">
           <Link to="/" onClick={cerrarMenu}>Inicio</Link>
           <Link to="/quienes-somos" onClick={cerrarMenu}>Quiénes somos</Link>
@@ -58,6 +63,7 @@ function Header() {
               onClick={() => setCuentaAbierta(!cuentaAbierta)}>
               <span aria-hidden="true">👤</span> {usuario ? usuario.nombre.split(' ')[0] : 'Mi cuenta'} <span aria-hidden="true">▾</span>
             </button>
+            {/* Panel desplegable: con sesión muestra las opciones del rol; sin sesión, los accesos de cada portal */}
             {cuentaAbierta && (
               <div className="menu-cuenta-panel" id="opciones-cuenta">
                 {usuario ? (
@@ -82,6 +88,7 @@ function Header() {
               </div>
             )}
           </div>
+          {/* Botón hamburguesa para el menú en dispositivos móviles */}
           <button className="menu-movil-boton" type="button" aria-label="Abrir menú principal"
             aria-expanded={menuAbierto} aria-controls="menu-principal"
             onClick={() => setMenuAbierto(!menuAbierto)}>☰</button>

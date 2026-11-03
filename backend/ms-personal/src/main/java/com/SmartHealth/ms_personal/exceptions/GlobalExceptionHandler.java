@@ -28,11 +28,13 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /** Errores de negocio lanzados con ApiException. */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Map<String, Object>> manejarApi(ApiException ex) {
         return respuesta(ex.getEstado(), ex.getCodigo(), ex.getMessage(), null);
     }
 
+    /** Fallas de @Valid: se informa el mensaje de cada campo inválido. */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> manejarValidacion(MethodArgumentNotValidException ex) {
         Map<String, String> errores = new LinkedHashMap<>();
@@ -42,18 +44,21 @@ public class GlobalExceptionHandler {
         return respuesta(HttpStatus.BAD_REQUEST, "VALIDACION_FALLIDA", mensaje, errores);
     }
 
+    /** JSON mal formado o con tipos incorrectos. */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> manejarCuerpoInvalido(HttpMessageNotReadableException ex) {
         return respuesta(HttpStatus.BAD_REQUEST, "SOLICITUD_INVALIDA",
                 "El cuerpo de la solicitud no tiene un formato válido.", null);
     }
 
+    /** Parámetro de la URL con un tipo inválido. */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, Object>> manejarParametroInvalido(MethodArgumentTypeMismatchException ex) {
         return respuesta(HttpStatus.BAD_REQUEST, "SOLICITUD_INVALIDA",
                 "El parámetro '" + ex.getName() + "' no tiene un valor válido.", null);
     }
 
+    /** Registro duplicado según las restricciones únicas de la base de datos (RUT, correo...). */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> manejarDuplicado(DataIntegrityViolationException ex) {
         log.warn("Violación de integridad: {}", ex.getMostSpecificCause().getMessage());
@@ -81,6 +86,7 @@ public class GlobalExceptionHandler {
                 "Un servicio de la clínica no está disponible en este momento. Intenta nuevamente.", null);
     }
 
+    /** Recurso inexistente: 404. */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, Object>> manejarNoEncontrado(ResourceNotFoundException ex) {
         return respuesta(HttpStatus.NOT_FOUND, "NO_ENCONTRADO", ex.getMessage(), null);
@@ -92,6 +98,7 @@ public class GlobalExceptionHandler {
         return respuesta(HttpStatus.BAD_REQUEST, "SOLICITUD_INVALIDA", ex.getMessage(), null);
     }
 
+    /** Cualquier otro error: se registra en el log y se responde 500. */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> manejarGeneral(Exception ex) {
         log.error("Error inesperado", ex);
@@ -99,6 +106,7 @@ public class GlobalExceptionHandler {
                 "Ocurrió un error inesperado. Intenta nuevamente.", null);
     }
 
+    /** Construye el cuerpo JSON común de los errores. */
     private ResponseEntity<Map<String, Object>> respuesta(HttpStatus estado, String codigo, String mensaje,
                                                           Map<String, String> errores) {
         Map<String, Object> cuerpo = new LinkedHashMap<>();

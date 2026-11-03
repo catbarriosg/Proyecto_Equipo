@@ -2,6 +2,7 @@ import { fechaLocal, sumarDias } from '../../utils/agenda.js'
 
 // Datos de ejemplo de la base simulada. Son los mismos que carga el backend en init-scripts/01-smarthealth-init.sql.
 
+// Catálogo de especialidades que ofrece la clínica (el slug se usa en la URL: /medicos?especialidad=pediatria)
 export const especialidades = [
   { id: 1, nombre: 'Medicina General', slug: 'medicina-general', icono: '🩺', descripcion: 'Atención médica integral para la prevención, diagnóstico y tratamiento de distintas condiciones de salud.', activa: true },
   { id: 2, nombre: 'Pediatría', slug: 'pediatria', icono: '👶', descripcion: 'Atención médica especializada para niños y adolescentes, acompañando su crecimiento y desarrollo.', activa: true },
@@ -11,6 +12,7 @@ export const especialidades = [
   { id: 6, nombre: 'Dermatología', slug: 'dermatologia', icono: '🧴', descripcion: 'Evaluación, diagnóstico y tratamiento de enfermedades de la piel, el cabello y las uñas.', activa: true },
 ]
 
+// Sedes de la clínica con su dirección, contacto, horario e imagen
 export const sucursales = [
   { id: 1, nombre: 'Santiago Centro', direccion: 'Av. Salud 1234, Santiago', comuna: 'Santiago', region: 'Metropolitana', telefono: '+56223456789', correo: 'santiago.centro@clinicaagendamedica.cl', horario: ['Lunes a viernes: 08:00 a 20:00', 'Sábados: 09:00 a 14:00'], imagenUrl: '/fachada-clinica.png', descripcionImagen: 'Fachada de la sucursal Santiago Centro' },
   { id: 2, nombre: 'Providencia', direccion: 'Av. Providencia 2456, Providencia', comuna: 'Providencia', region: 'Metropolitana', telefono: '+56223456790', correo: 'providencia@clinicaagendamedica.cl', horario: ['Lunes a viernes: 08:00 a 19:00', 'Sábados: 09:00 a 13:00'], imagenUrl: '/recepcion-clinica.png', descripcionImagen: 'Recepción de la sucursal Providencia' },
@@ -18,11 +20,13 @@ export const sucursales = [
   { id: 4, nombre: 'La Florida', direccion: 'Av. Vicuña Mackenna 7890, La Florida', comuna: 'La Florida', region: 'Metropolitana', telefono: '+56223456792', correo: 'laflorida@clinicaagendamedica.cl', horario: ['Lunes a viernes: 09:00 a 19:00', 'Sábados: 09:00 a 14:00'], imagenUrl: '/box-clinica.png', descripcionImagen: 'Box de atención de la sucursal La Florida' },
 ]
 
+// Fábrica de registros de médico: completa los campos que se repiten (rol, departamento, teléfono, activo)
 const medico = (id, nombre, rut, email, especialidad, hospitalId, descripcion, imagenUrl) => ({
   id, nombre, rut, email, telefono: `+5691234568${id - 1}`, rol: 'MEDICO', especialidad, departamento: 'Consulta ambulatoria',
   hospitalId, descripcion, imagenUrl, activo: true,
 })
 
+// Equipo médico. hospitalId indica en qué sucursal atiende cada profesional.
 export const personal = [
   medico(1, 'Dr. Juan Pérez', '13579246-2', 'dr.juan@clinica.cl', 'Medicina General', 1, 'Atención médica integral para la prevención, diagnóstico y tratamiento de distintas condiciones de salud.', '/logo-hombre.png'),
   medico(2, 'Dra. María González', '14680357-1', 'dra.maria@clinica.cl', 'Pediatría', 2, 'Atención médica especializada para niños y adolescentes, acompañando su crecimiento y desarrollo.', '/logo-mujer.png'),
@@ -32,11 +36,13 @@ export const personal = [
   medico(6, 'Dra. Camila Rojas', '11222333-9', 'dra.camila@clinica.cl', 'Dermatología', 2, 'Evaluación y atención de enfermedades de la piel, cabello y uñas.', '/logo-mujer.png'),
 ]
 
+// Fichas de pacientes de ejemplo
 export const pacientes = [
   { id: 1, rut: '16543210-K', nombreCompleto: 'Ana Pérez', correo: 'ana.perez@gmail.com', fechaNacimiento: '1990-04-12', prevision: 'Fonasa', telefono: '+56987654321', activo: true },
   { id: 2, rut: '15432109-8', nombreCompleto: 'Carlos Soto', correo: 'carlos.soto@gmail.com', fechaNacimiento: '1985-09-03', prevision: 'Isapre Colmena', telefono: '+56987654322', activo: true },
 ]
 
+// Cuentas de acceso: una por rol. pacienteId / personalId vinculan la cuenta con su ficha.
 // Las contraseñas se cifran al cargar la base (ver baseDatos.js)
 export const cuentas = [
   { id: 1, correo: 'admin@clinica.cl', contrasena: 'Admin123!', rol: 'ADMINISTRADOR', nombre: 'Administración Clínica', pacienteId: null, personalId: null },
@@ -52,7 +58,9 @@ function diasDesdeHoy(dias) {
   return fechaLocal(fecha)
 }
 
+// Genera citas de ejemplo con fechas relativas a hoy, para que siempre haya horas futuras y pasadas
 export function crearCitasIniciales() {
+  // Arma una cita copiando los datos del paciente y del médico (igual que hace ms-citas en el backend)
   const cita = (id, paciente, medicoId, fecha, hora, estado, motivo) => {
     const profesional = personal.find((item) => item.id === medicoId)
     return {
@@ -71,6 +79,7 @@ export function crearCitasIniciales() {
   ]
 }
 
+// Atenciones pasadas de la paciente Ana Pérez (se muestran en "Historial de atenciones")
 export function crearHistorialInicial() {
   return [
     { id: 1, idPaciente: 1, fecha: '2026-08-15', especialidad: 'Medicina General', idMedico: 1, medicoNombre: 'Dr. Juan Pérez', motivo: 'Control médico general', diagnostico: 'Estado de salud general estable', tratamiento: 'Mantener controles médicos periódicos.', idCita: null },

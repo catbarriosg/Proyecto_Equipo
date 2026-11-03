@@ -1,8 +1,10 @@
 // Reglas del horario de la clínica (las mismas que aplica ms-citas en el backend):
 // lunes a viernes 08:00-19:30, sábado 09:00-13:30, domingo cerrado, bloques de 30 minutos.
+// Se puede reservar hasta 90 días hacia adelante y gestionar (modificar/cancelar) con 24 horas de anticipación
 export const DIAS_ANTICIPACION = 90
 export const HORAS_MINIMAS_GESTION = 24
 
+// Date -> "AAAA-MM-DD" usando la hora local (toISOString usaría UTC y podría cambiar el día)
 export function fechaLocal(fecha) {
   const anio = fecha.getFullYear()
   const mes = String(fecha.getMonth() + 1).padStart(2, '0')
@@ -10,6 +12,7 @@ export function fechaLocal(fecha) {
   return `${anio}-${mes}-${dia}`
 }
 
+// Devuelve una nueva fecha desplazada "cantidad" días (no modifica la original)
 export function sumarDias(fecha, cantidad) {
   const resultado = new Date(fecha)
   resultado.setDate(resultado.getDate() + cantidad)
@@ -21,6 +24,7 @@ export function aFecha(valor) {
   return new Date(`${valor}T12:00:00`)
 }
 
+// Une fecha "AAAA-MM-DD" y hora "HH:mm" en un objeto Date para poder comparar momentos
 export function fechaHora(fecha, hora) {
   return new Date(`${fecha}T${hora}:00`)
 }
@@ -33,6 +37,7 @@ export function horariosDelDia(valorFecha, ahora = new Date()) {
   const inicio = esSabado ? 9 * 60 : 8 * 60
   const fin = esSabado ? 13 * 60 + 30 : 19 * 60 + 30
   const horarios = []
+  // Recorre el día en minutos desde la apertura hasta el último bloque, de 30 en 30
   for (let minutos = inicio; minutos <= fin; minutos += 30) {
     const hora = `${String(Math.floor(minutos / 60)).padStart(2, '0')}:${String(minutos % 60).padStart(2, '0')}`
     if (fechaHora(valorFecha, hora) > ahora) horarios.push(hora)
@@ -40,12 +45,14 @@ export function horariosDelDia(valorFecha, ahora = new Date()) {
   return horarios
 }
 
+// Una hora es reservable si está entre hoy y el límite de 90 días y es un bloque de atención que todavía no pasa
 export function esReservable(fecha, hora, ahora = new Date()) {
   const hoy = fechaLocal(ahora)
   const limite = fechaLocal(sumarDias(ahora, DIAS_ANTICIPACION))
   return fecha >= hoy && fecha <= limite && horariosDelDia(fecha, ahora).includes(hora)
 }
 
+// Regla de negocio: el paciente solo puede modificar o cancelar si faltan más de 24 horas para la cita
 export function faltanMasDe24Horas(fecha, hora, ahora = new Date()) {
   return fechaHora(fecha, hora) - ahora > HORAS_MINIMAS_GESTION * 60 * 60 * 1000
 }

@@ -1,5 +1,6 @@
 package com.SmartHealth.ms_listas_de_espera.models;
 
+/** Niveles de prioridad de una lista de espera, de menor (BAJA) a mayor (CRITICA). */
 public enum Prioridad {
     BAJA("Baja"),
     NORMAL("Normal"),
@@ -14,6 +15,7 @@ public enum Prioridad {
         this.descripcion = descripcion;
     }
 
+    /** Descripción de la prioridad para mostrar. */
     public String getDescripcion() {
         return descripcion;
     }

@@ -6,6 +6,7 @@ import { useSesion } from './context/useSesion.js'
 import { useCarga } from './hooks/useCarga.js'
 import { formatearFecha, formatearTelefono, mostrarRut } from './utils/formato.js'
 
+// Opciones de previsión de salud disponibles en Chile
 const PREVISIONES = ['Fonasa', 'Isapre Banmédica', 'Isapre Colmena', 'Isapre Consalud', 'Isapre Cruz Blanca',
   'Isapre Nueva Masvida', 'Isapre Vida Tres', 'Particular']
 
@@ -16,6 +17,7 @@ function EditarContacto({ paciente, alGuardar, alCancelar }) {
   const [error, setError] = useState('')
   const [guardando, setGuardando] = useState(false)
 
+  // Valida el teléfono y guarda los cambios en la ficha mediante la API
   async function guardar(evento) {
     evento.preventDefault()
     const telefonoLimpio = telefono.replace(/\s/g, '')
@@ -56,13 +58,16 @@ function EditarContacto({ paciente, alGuardar, alCancelar }) {
   )
 }
 
+// Página "Mi perfil": muestra los datos de la ficha del paciente conectado y permite editar teléfono y previsión
 function PerfilPaciente() {
   const { usuario } = useSesion()
+  // Carga la ficha del paciente asociada a la cuenta (usuario.pacienteId)
   const { datos: pacienteCargado, cargando, error, recargar } = useCarga(
     () => api.pacientes.obtener(usuario.pacienteId), usuario.pacienteId)
   const [pacienteEditado, setPacienteEditado] = useState(null)
   const [editando, setEditando] = useState(false)
   const [aviso, setAviso] = useState('')
+  // Después de editar se muestra la versión actualizada sin volver a consultar la API
   const paciente = pacienteEditado || pacienteCargado
 
   return (

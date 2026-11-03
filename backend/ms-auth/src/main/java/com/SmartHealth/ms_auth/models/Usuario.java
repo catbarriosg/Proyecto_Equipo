@@ -32,6 +32,7 @@ public class Usuario {
     @Column(nullable = false, length = 120)
     private String nombre;
 
+    // Vínculos con las fichas de otros microservicios (solo se guarda el ID, no hay relación de base de datos)
     @Column(name = "paciente_id")
     private Long pacienteId;
 
@@ -44,6 +45,7 @@ public class Usuario {
     @Column(name = "creado_en", updatable = false)
     private LocalDateTime creadoEn;
 
+    /** Antes de insertar (@PrePersist): registra la fecha de creación y guarda el correo en minúsculas. */
     @PrePersist
     protected void alCrear() {
         creadoEn = LocalDateTime.now();

@@ -53,12 +53,14 @@ public class MovimientoInsumo {
     private Long hospitalId; // Hospital donde ocurrió el movimiento
 
     // Calcular diferencia
+    /** Diferencia de stock que produjo el movimiento (positiva si entró, negativa si salió). */
     @Transient
     public Integer calcularDiferencia() {
         return cantidadDespues - cantidadAntes;
     }
 
     // Validar integridad
+    /** Revisa que la variación de stock sea coherente con el tipo de movimiento. */
     @Transient
     public boolean esValido() {
         if (tipoMovimiento == null) return false;
