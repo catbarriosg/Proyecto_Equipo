@@ -11,7 +11,7 @@ include:
 
 services:
   frontend:
-    build: ./clinica-react
+    build: ./frontend
     container_name: clinica-frontend
     ports:
       - "3000:80"

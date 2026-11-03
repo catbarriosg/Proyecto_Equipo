@@ -7,10 +7,11 @@ Aplicación web para consultar la clínica y gestionar horas médicas: un fronte
 ```text
 Proyecto_Equipo/
 ├── backend/            Microservicios Spring Boot (gateway, auth, citas, pacientes, personal…)
-├── clinica-react/      Frontend en React + Vite (pruebas en src/pruebas/)
-├── Versión-1/          Primera versión del sitio en HTML, CSS y JavaScript (Evaluación Parcial 1)
-├── docker-compose.yml  Levanta el sistema completo
-└── INTEGRACION.md      Arquitectura, cuentas de prueba y reglas de negocio
+├── frontend/           Frontend en React + Vite (pruebas en src/pruebas/)
+├── docs/               Integración, ERS, informe de pruebas y ejemplos de peticiones a la API
+├── legacy/
+│   └── version-1-html/ Primera versión del sitio en HTML, CSS y JavaScript (Evaluación Parcial 1)
+└── docker-compose.yml  Levanta el sistema completo
 ```
 
 ## Cómo levantarlo
@@ -21,12 +22,12 @@ Sistema completo (requiere Docker Desktop):
 docker compose up --build
 ```
 
-Luego abrir http://localhost:3000. Las cuentas de demostración están en [INTEGRACION.md](INTEGRACION.md).
+Luego abrir http://localhost:3000. Las cuentas de demostración están en [docs/INTEGRACION.md](docs/INTEGRACION.md).
 
 Solo el frontend, sin backend (datos simulados en el navegador):
 
 ```bash
-cd clinica-react
+cd frontend
 npm install
 echo VITE_USE_API=false > .env.local
 npm run dev
@@ -35,7 +36,7 @@ npm run dev
 ## Pruebas
 
 ```bash
-cd clinica-react
+cd frontend
 npm test            # ejecuta las pruebas unitarias
 npm run coverage    # genera el reporte de cobertura en coverage/index.html
 ```

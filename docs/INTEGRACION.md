@@ -1,6 +1,6 @@
 # Integración frontend React + backend SmartHealth
 
-Este documento explica cómo quedó conectado el frontend (`clinica-react/`) con el backend de microservicios (`backend/`, adaptado desde SmartHealth para que la **clínica** sea el foco del sistema).
+Este documento explica cómo quedó conectado el frontend (`frontend/`) con el backend de microservicios (`backend/`, adaptado desde SmartHealth para que la **clínica** sea el foco del sistema).
 
 ## Cómo levantar el sistema
 
@@ -31,10 +31,10 @@ docker compose --profile internos up -d
 
 ```bash
 docker compose up --build ms-gateway ms-auth ms-citas ms-pacientes ms-personal ms-hospitales ms-historial
-cd clinica-react && npm install && npm run dev      # http://localhost:5173
+cd frontend && npm install && npm run dev      # http://localhost:5173
 ```
 
-Vite reenvía `/api` al gateway (`vite.config.js`). Para trabajar **sin backend** (base simulada en `localStorage`), crea `clinica-react/.env.local` con `VITE_USE_API=false`.
+Vite reenvía `/api` al gateway (`vite.config.js`). Para trabajar **sin backend** (base simulada en `localStorage`), crea `frontend/.env.local` con `VITE_USE_API=false`.
 
 ### Cuentas de demostración
 

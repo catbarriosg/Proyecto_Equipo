@@ -2,7 +2,7 @@
 
 Esta carpeta guarda la primera versión del sitio, entregada en la Evaluación Parcial 1. Ya no forma parte de la aplicación actual: se conserva como referencia de cómo era el proyecto antes de migrarlo a React.
 
-La versión actual está en `clinica-react/` (frontend) y `backend/` (microservicios). Ver el [README principal](../README.md).
+La versión actual está en `frontend/` y `backend/` (microservicios). Ver el [README principal](../../README.md).
 
 ## Cómo abrirla
 
