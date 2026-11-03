@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -29,6 +30,18 @@ class FeignTimeoutIntegrationTest {
 
     @MockBean
     private HospitalClient hospitalClient;
+
+    /** Solicitud de ejemplo hacia ms-hospitales: Feign exige un Request no nulo al crear sus excepciones. */
+    private static Request solicitudHospital() {
+        return Request.create(
+            Request.HttpMethod.GET,
+            "http://ms-hospitales/api/hospitales/1",
+            Collections.emptyMap(),
+            null,
+            StandardCharsets.UTF_8,
+            null
+        );
+    }
 
     @Test
     @DisplayName("HospitalClient exitoso retorna HospitalDTO sin timeout")
@@ -55,7 +68,7 @@ class FeignTimeoutIntegrationTest {
         when(hospitalClient.obtenerHospitalPorId(anyLong()))
             .thenThrow(new FeignException.ServiceUnavailable(
                 "Service unavailable: ms-hospitales timeout",
-                null,
+                solicitudHospital(),
                 null,
                 Collections.emptyMap()
             ));
@@ -76,7 +89,7 @@ class FeignTimeoutIntegrationTest {
         
         FeignException exception = new FeignException.NotFound(
             "Hospital no encontrado",
-            null,
+            solicitudHospital(),
             null,
             Collections.emptyMap()
         );
@@ -91,7 +104,7 @@ class FeignTimeoutIntegrationTest {
         // Timeout: Servicio lento o caído
         FeignException timeout = new FeignException.ServiceUnavailable(
             "Timeout",
-            null,
+            solicitudHospital(),
             null,
             Collections.emptyMap()
         );
@@ -99,7 +112,7 @@ class FeignTimeoutIntegrationTest {
         // NotFound: Hospital no existe
         FeignException notFound = new FeignException.NotFound(
             "No encontrado",
-            null,
+            solicitudHospital(),
             null,
             Collections.emptyMap()
         );
@@ -132,7 +145,7 @@ class FeignTimeoutIntegrationTest {
             when(hospitalClient.obtenerHospitalPorId(anyLong()))
                 .thenThrow(new FeignException.ServiceUnavailable(
                     "Timeout",
-                    null,
+                    solicitudHospital(),
                     null,
                     Collections.emptyMap()
                 ));

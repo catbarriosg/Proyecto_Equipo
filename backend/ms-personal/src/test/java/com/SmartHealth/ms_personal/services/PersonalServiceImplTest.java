@@ -633,7 +633,7 @@ class PersonalServiceImplTest {
         void testTelefonoMenor8Digitos_Invalido() {
             // Editar acá para cambiar test y ejecutar nuevas validaciones
             // Otros valores inválidos: "123", "12345", "+56123" (muy corto)
-            personal.setTelefono("123456789");
+            personal.setTelefono("1234567");
 
             Set<ConstraintViolation<Personal>> violations = validator.validate(personal);
             assertFalse(violations.isEmpty(), "Teléfono < 8 dígitos debe causar violación");
@@ -699,7 +699,7 @@ class PersonalServiceImplTest {
         void testDepartamentoNulo_Invalido() {
             // Editar acá para cambiar test y ejecutar nuevas validaciones
             // Otros valores inválidos: "", "   ", departamentos invalidos
-            personal.setDepartamento("a");
+            personal.setDepartamento(null);
 
             Set<ConstraintViolation<Personal>> violations = validator.validate(personal);
             assertFalse(violations.isEmpty(), "Departamento nulo debe causar violación");
